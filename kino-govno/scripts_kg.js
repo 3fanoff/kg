@@ -98,7 +98,7 @@ jQuery(function(){
 	/* /tooltips */
 	
 	/* Add comment forms */
-	if($('#text_comm').length > 0) $('#text_comm').autoResize({extraSpace:16,limit:500});
+	if($('#text_comm').length > 0) $('#text_comm').autoResize({extraSpace:16});
 	inputFlash('flash','nofocus');
 	disSubmit('text_comm','add_comm');
 	/* /Add comment forms */
