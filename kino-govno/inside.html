@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ru-ru">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Kino-Govno.com - Вся правда о Голливуде</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+<meta name="viewport" content="width=1100"> 
+<!--<script type="text/javascript" src="http://kino-govno.com/js/jquery.1.7.2.min.js"></script>-->
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<!--<script type="text/javascript" src="http://kino-govno.com/js/jquery.js"></script>
+<script type="text/javascript" src="jsui/js/jquery-1.8.3.js"></script>-->
+<script type="text/javascript" src="jsui/js/jquery-ui-1.9.2.custom.min.js"></script>
+<script type="text/javascript" src="jsui/js/textarea_autoresize.js"></script>
+<script type="text/javascript" src="scripts_kg.js"></script>
+<!--<script type="text/javascript" src="http://kino-govno.com/poll/inc/js/poll.js"></script>
+<script type="text/javascript" src="http://kino-govno.com/js/jquery.tableSort.js"></script>-->
+
+<link rel="stylesheet" type="text/css" href="http://kino-govno.com/css/kg_head.css"/>
+<link rel="stylesheet" type="text/css" href="http://kino-govno.com/css/movies.css"/>
+<link rel="stylesheet" type="text/css" href="http://kino-govno.com/yota/stl.css"/>
+<link rel="stylesheet" type="text/css" href="buttons.css"/>
+<script type="text/javascript" src="http://kino-govno.com/js/new.js"></script>
+<!--<script type="text/javascript" src="http://kino-govno.com/js/jquery.lightbox_me.js"></script>-->
+<script type="text/javascript" src="buttons.js"></script>
+<script type="text/javascript" src="http://ulogin.ru/js/ulogin.js"></script>
+<link rel="stylesheet" type="text/css" href="new.css"/>
+<link rel="stylesheet" type="text/css" href="main.css"/>
+<link rel="stylesheet" type="text/css" href="comments.css"/>
+<script>		
+		// remote scripting library
+		// (c) copyright 2005 modernmethod, inc
+		var sajax_debug_mode = false;
+		var sajax_request_type = "POST";
+		var sajax_target_id = "";
+		var sajax_failure_redirect = "";
+		
+		function sajax_debug(text) {
+			if (sajax_debug_mode)
+				alert(text);
+		}
+		
+ 		function sajax_init_object() {
+ 			sajax_debug("sajax_init_object() called..")
+ 			
+ 			var A;
+ 			
+ 			var msxmlhttp = new Array(
+				'Msxml2.XMLHTTP.5.0',
+				'Msxml2.XMLHTTP.4.0',
+				'Msxml2.XMLHTTP.3.0',
+				'Msxml2.XMLHTTP',
+				'Microsoft.XMLHTTP');
+			for (var i = 0; i < msxmlhttp.length; i++) {
+				try {
+					A = new ActiveXObject(msxmlhttp[i]);
+				} catch (e) {
+					A = null;
+				}
+			}
+ 			
+			if(!A && typeof XMLHttpRequest != "undefined")
+				A = new XMLHttpRequest();
+			if (!A)
+				sajax_debug("Could not create connection object.");
+			return A;
+		}
+		
+		var sajax_requests = new Array();
+		
+		function sajax_cancel() {
+			for (var i = 0; i < sajax_requests.length; i++) 
+				sajax_requests[i].abort();
+		}
+		
+		function sajax_do_call(func_name, args) {
+			var i, x, n;
+			var uri;
+			var post_data;
+			var target_id;
+			
+			sajax_debug("in sajax_do_call().." + sajax_request_type + "/" + sajax_target_id);
+			target_id = sajax_target_id;
+			if (typeof(sajax_request_type) == "undefined" || sajax_request_type == "") 
+				sajax_request_type = "GET";
+			
+			uri = "/";
+			if (sajax_request_type == "GET") {
+			
+				if (uri.indexOf("?") == -1) 
+					uri += "?rs=" + escape(func_name);
+				else
+					uri += "&rs=" + escape(func_name);
+				uri += "&rst=" + escape(sajax_target_id);
+				uri += "&rsrnd=" + new Date().getTime();
+				
+				for (i = 0; i < args.length-1; i++) 
+					uri += "&rsargs[]=" + escape(args[i]);
+
+				post_data = null;
+			} 
+			else if (sajax_request_type == "POST") {
+				post_data = "rs=" + escape(func_name);
+				post_data += "&rst=" + escape(sajax_target_id);
+				post_data += "&rsrnd=" + new Date().getTime();
+				
+				for (i = 0; i < args.length-1; i++) 
+					post_data = post_data + "&rsargs[]=" + escape(args[i]);
+			}
+			else {
+				alert("Illegal request type: " + sajax_request_type);
+			}
+			
+			x = sajax_init_object();
+			if (x == null) {
+				if (sajax_failure_redirect != "") {
+					location.href = sajax_failure_redirect;
+					return false;
+				} else {
+					sajax_debug("NULL sajax object for user agent:\n" + navigator.userAgent);
+					return false;
+				}
+			} else {
+				x.open(sajax_request_type, uri, true);
+				// window.open(uri);
+				
+				sajax_requests[sajax_requests.length] = x;
+				
+				if (sajax_request_type == "POST") {
+					x.setRequestHeader("Method", "POST " + uri + " HTTP/1.1");
+					x.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				}
+			
+				x.onreadystatechange = function() {
+					if (x.readyState != 4) 
+						return;
+
+					sajax_debug("received " + x.responseText);
+				
+					var status;
+					var data;
+					var txt = x.responseText.replace(/^\s*|\s*$/g,"");
+					status = txt.charAt(0);
+					data = txt.substring(2);
+
+					if (status == "") {
+						// let's just assume this is a pre-response bailout and let it slide for now
+					} else if (status == "-") 
+						alert("Error: " + data);
+					else {
+						if (target_id != "") 
+							document.getElementById(target_id).innerHTML = eval(data);
+						else {
+							try {
+								var callback;
+								var extra_data = false;
+								if (typeof args[args.length-1] == "object") {
+									callback = args[args.length-1].callback;
+									extra_data = args[args.length-1].extra_data;
+								} else {
+									callback = args[args.length-1];
+								}
+								callback(eval(data), extra_data);
+							} catch (e) {
+								sajax_debug("Caught error " + e + ": Could not eval " + data );
+							}
+						}
+					}
+				}
+			}
+			
+			sajax_debug(func_name + " uri = " + uri + "/post = " + post_data);
+			x.send(post_data);
+			sajax_debug(func_name + " waiting..");
+			delete x;
+			return true;
+		}
+		
+				
+		// wrapper for grade		
+		function x_grade() {
+			sajax_do_call("grade",
+				x_grade.arguments);
+		}
+		
+				
+		// wrapper for useraction		
+		function x_useraction() {
+			sajax_do_call("useraction",
+				x_useraction.arguments);
+		}
+		
+				
+		// wrapper for addtofavorites		
+		function x_addtofavorites() {
+			sajax_do_call("addtofavorites",
+				x_addtofavorites.arguments);
+		}
+		
+		
+	function do_val(val) {
+	}
+	
+	function txt_cb(val) {
+		//document.getElementById('rating6331').innerHTML=35;
+		//$('rating'+n).innerHTML=Math.round(val*10)+'%.';
+
+	}
+
+	function useraction(id, action, num)
+	{
+		list= new Array ("delete", "ban", "good", "best");
+		colors = new Array ("red", "black", "green", "darkorange");
+		document.getElementById("button_" + action + String(id)).disabled=true;
+		document.getElementById("button_" + action + String(id)).style.color="lightgrey";
+		if (action == "delete") document.getElementById("comment" + num).style.textDecoration="line-through";
+		else
+		if (action == "good") document.getElementById("comment" + num).style.textDecoration="none";
+		
+		for (i=0; i<list.length; i++)
+		{
+			if (list[i]!=action && document.getElementById("button_" + list[i] + String(id)))
+			{
+				document.getElementById("button_" + list[i] + String(id)).disabled=false;
+				document.getElementById("button_" + list[i] + String(id)).style.color=colors[i];
+			}
+		}
+		x_useraction(id, action, do_val);
+	}
+	
+	function addtofavorites_do (text)
+	{
+		alert (text);
+	}
+	
+	function addtofavorites (member, idnews, action)
+	{
+		x_addtofavorites (member, idnews, action, addtofavorites_do);
+	}
+		
+</script>
+</head>
+
+<body>
+	<div id="fb-root"></div>
+	<div id="scrolltop">Наверх</div>
+    <!-- ============== TOP BAR ============== -->
+	<div class="ten_topbar">
+		<a class="ten_logo_small" href="http://www.kino-govno.com/">&nbsp;</a>
+		<ul id="jsddm">
+			<li>
+            	<a href="/">Всё &#9662;</a>
+				<ul>
+                	<li><a href="/news">Новости</a></li
+                    ><li><a href="/reviews">Рецензии</a></li>
+                    <li><a href="/episodes">Эпизодники</a></li>
+                    <li><a href="/trailers">Трейлеры</a></li>
+                    <li><a href="/box">Бокс-офис</a></li>
+                </ul>
+			</li>
+			<li>
+            	<a href="/movies">Кино &#9662;</a>
+				<ul>
+                	<li><a href="/news/main">Новости</a></li>
+                    <li><a href="/reviews">Рецензии</a></li>
+                    <li><a href="/trailers">Трейлеры</a></li>
+                    <li><a href="/releases">Кинопремьеры</a></li>
+                    <li><a href="/box">Бокс-офис США</a></li>
+                    <li><a href="/boxrussia">Бокс-офис России</a></li>
+                    <li><a href="/boxworld">Международный бокс-офис</a></li>
+					<li><a href="/releases/">Кинопремьеры</a></li>
+				</ul>
+			</li>
+			<li>
+            	<a href="/anime">Аниме &#9662;</a>
+				<ul>
+                	<li><a href="/news/anime">Новости</a></li>
+                    <li><a href="/episodes/anime">Эпизодники</a></li>
+                    <li><a href="/reviews/anime">Рецензии</a></li>
+                    <li><a href="/trailers/anime">Трейлеры</a></li>
+                    <li><a href="/boxanime">Продажи Blu-ray и DVD</a></li>
+                    <li><a href="/news/tags/system/preview">Сезонные превью</a></li>
+                </ul>
+			</li>
+			<li>
+            	<a href="/games">Игры &#9662;</a>
+				<ul>
+                	<li><a href="/news/games">Новости</a></li>
+                    <li><a href="/reviews/games">Рецензии</a></li>
+                    <li><a href="/trailers/games">Трейлеры</a></li>
+                    <li><a href="/news/system/spoon">Ложка дёгтя</a></li>
+                </ul>
+			</li>
+			<li>
+            	<a href="/tv">Сериалы &#9662;</a>
+				<ul>
+                	<li><a href="/news/tv">Новости</a></li>
+                    <li><a href="/episodes/tv">Эпизодники</a></li>
+                    <li><a href="/reviews/tv">Рецензии</a></li>
+                    <li><a href="/trailers/tv">Трейлеры</a></li>
+                </ul>
+			</li>
+			<li>
+            	<a href="#">Общение &#9662;</a>
+				<ul>
+                	<li><a href="http://www.kg-forum.ru">Форум</a></li>
+                    <li><a href="/mnenie">Мнение</a></li>
+                    <li><a href="/kniga">Книга</a></li>
+                </ul>
+			</li>
+			<li>
+            	<a href="#">И ещё&hellip; &#9662;</a>
+				<ul>
+                	<li><a href="/releases/">Кинопремьеры</a></li>
+					<li><a href="/news/hate">Ненависть</a></li>
+                    <li><a href="/news/tags/system/cosplay">Косплей</a></li>
+                    <li><a href="/news/fanart">Фанарт</a></li>
+                </ul>
+			</li>
+		</ul>
+		<div class="ten_search">
+		<form method="post" action="/search"><input type="text" name="s_str" id="s_str" value="Поиск" onFocus="if ( value == 'Поиск' ) { value = ''; }" onBlur="if ( value == '' ) { value = 'Поиск'; }" class="input"><input type="submit" id="search_submit" value="ОК"><select class="styled" name="search_section"><option value="all">по всему сайту</option><option value="movies">по фильмам</option><option value="anime">по аниме</option><option value="tv">по сериалам</option><option value="games">по играм</option></select></form>
+		</div>
+		<div class="clr"></div>
+	</div>
+	<!-- ============== //TOP BAR ============== -->
+    <!-- ============== FRONT ROW ============== -->
+	<div class="des_front">
+		<style type="text/css">
+			.des_front {position: relative; z-index: 0; width: 1100px; height: 170px; margin: 0 auto; line-height: 0;}
+			/* Default: {position: relative; z-index: 0; width: 1100px; height: 170px; margin: 0 auto;} */
+			/* Branding: {position: relative; z-index: 0; width: 1100px; height: 300px; margin: 0 auto;} */
+			/* Parallax: {position: relative; z-index: 3; width: 100%; height: 400px;} */
+			.des_front a {text-decoration: none !important;}
+		</style>
+    	<a href="/" id="ten_frontrow_logo">&nbsp;</a>
+		<a href="#" id="ten_frontrow_link">&nbsp;</a>
+		<div id="ten_frontrow_slogan">Метагалактический мегакинопортал</div>
+	</div>
+	<!-- ============== //FRONT ROW ============== --> 
+	<!-- ============== EARS ============== -->
+    <div class="ten_ears_wrap">
+        <a href="#" id="ten_ear1" style="background-image: url('http://kino-govno.com/earsnews/40182.jpg');"><span>«КГ-Аудиоподкаст» №2</span></a>
+        <a href="#" id="ten_ear2" style="background-image: url('http://kino-govno.com/earsnews/40193.jpg');"><span><i>Рецензия на игру</i> Resident Evil 6</span></a>
+        <a href="#" id="ten_ear3" style="background-image: url('http://kino-govno.com/earsnews/40211.jpg');"><span><i>Рецензия на игру</i> A New Beginning</span></a>
+        <a href="#" id="ten_ear4" style="background-image: url('http://kino-govno.com/earsnews/40165.jpg');"><span><i>Рецензия на игру</i> Gears of War: Judgment</span></a>
+        <div class="clr"></div>
+    </div>
+	<!-- ============== //EARS ============== --> 
+    <!-- ============== CONTENT ============== -->
+    <div class="ten_content_wrap">
+    	<div class="ten_col3_wrap">
+        	<div class="ten_col2_wrap">
+            	<div class="ten_col1_wrap">
+					<div class="ten_col1">
+                    	<!-- DRAGBOX -->
+                    	<div class="blist redesign_border" id="column_reviews">
+                        	<div class="options_box"><a href="javascript:void(0);" class="close"></a></div>
+                            <div class="addblock_box"></div>
+                        	<h2 class="column_header" style="text-align: center;">Обсуждение рецензий</h2>
+                            <br>
+                            <div id="reviews_" class="column_list">
+                            	<span id="reviews_header_all" onClick="change_list ('reviews', 'all');" class="column_dashed">Все</span>
+                                <span id="reviews_header_movies" onClick="change_list ('reviews', 'movies');" class="column_selected">Кино</span>
+                                <span id="reviews_header_anime" onClick="change_list ('reviews', 'anime');" class="column_dashed">Аниме</span>
+                                <span id="reviews_header_games" onClick="change_list ('reviews', 'games');" class="column_dashed">Игры</span>
+                                <span id="reviews_header_tv" onClick="change_list ('reviews', 'tv');" class="column_dashed">Сериалы</span>
+                            </div>
+                            <div id="reviews_list_all" class="hidden"></div>
+                            <div id="reviews_list_movies">
+                            	<ul>
+                                	<li><a href="#">Транс</a> (106)</li>
+                                    <li><a href="#">Гостья</a> (60)</li>
+                                    <li><a href="#">Семейка Крудс</a> (35)</li>
+                                    <li><a href="#">G.i. Joe: Бросок кобры - 2</a> (93)</li>
+                                    <li><a href="#">Семейка Крудс</a> (35)</li>
+                                    <li><a href="#">Джек – покоритель великанов</a> (20)</li>
+                                    <li><a href="#">Оз: Великий и ужасный</a> (74)</li>
+                                    <li><a href="#">Побочный эффект</a> (15)</li>
+                                    <li><a href="#">Мама</a> (44)</li>
+                                    <li><a href="#">Тайна перевала Дятлова</a> (67)</li>
+                                    <li><a href="#">Что творят мужчины</a> (150)</li>
+                                    <li><a href="#">Метро</a> (221)</li>
+                                    <li><a href="#">Возвращение героя</a> (68)</li>
+                                    <li><a href="#">Мастер</a> (31)</li>
+                                    <li><a href="#">Невозможное</a> (27)</li>
+								</ul>
+                            </div>
+                            <div id="reviews_list_anime" class="hidden"></div>
+                            <div id="reviews_list_games" class="hidden"></div>
+                            <div id="reviews_list_tv" class="hidden"></div>
+                        </div>
+                        <!-- DRAGBOX YOTA -->
+                        <div class="yota_top_widget">
+      						<div class="widget_container">
+      							<span style="margin:0;padding:0;font-family:'YotaInterFaceLt',Verdana,Geneva,sans-serif;font-size:18px;color:#C00;font-weight:bold;">
+                                Лучшее на Play Смотрите онлайн</span>
+          						<ul class="yota_top_list">
+                                	<li><a href="#" target="_blank" rel="nofollow">Доспехи Бога 3: Зодиак</a><a href="#" class="yota_watch" target="_blank" rel="nofollow"></a></li>
+                                    <li><a href="#" target="_blank" rel="nofollow">Экипаж</a><a href="#" class="yota_watch" target="_blank" rel="nofollow"></a></li>
+                                    <li><a href="#" target="_blank" rel="nofollow">Гладиаторы Рима</a><a href="#" class="yota_watch" target="_blank" rel="nofollow"></a></li>
+                                    <li><a href="#" target="_blank" rel="nofollow">007: Координаты «Скайфолл»</a><a href="#" class="yota_watch" target="_blank" rel="nofollow"></a></li>
+                                    <li><a href="#" target="_blank" rel="nofollow">Арго</a><a href="#" class="yota_watch" target="_blank" rel="nofollow"></a></li>
+                                    <li><a href="#" target="_blank" rel="nofollow">Джентльмены, удачи!</a><a href="#" class="yota_watch" target="_blank" rel="nofollow"></a></li>
+                                    <li><a href="#" target="_blank" rel="nofollow">Судья Дредд</a><a href="#" class="yota_watch" target="_blank" rel="nofollow"></a></li>
+                               	</ul>
+          						<a href="#" target="_blank">Что такое Play?</a>
+        					</div>
+      					</div>
+                        <!-- DRAGBOX -->
+                        <div class="blist redesign_border" id="column_episodes">
+                        	<div class="options_box"><a href="javascript:void(0);" class="close"></a></div>
+                            <div class="addblock_box"></div>
+                        	<h2 class="column_header" style="text-align: center;">Эпизодники</h2>
+                            <br>
+                            <div id="episodes_tv" class="column_list">
+                            	<span id="episodes_header_all" onClick="change_list ('episodes', 'all');" class="column_selected">Все</span>
+                                <span id="episodes_header_anime" onClick="change_list ('episodes', 'anime');" class="column_dashed">Аниме</span>
+                                <span id="episodes_header_tv" onClick="change_list ('episodes', 'tv');" class="column_dashed">Сериалы</span>
+                            </div>
+                            <div id="episodes_list_all">
+                            	<ul>
+                                	<li><a href="/comments/40295-igra-prestolov--3x01/">«Игра престолов» — 3x01</a> (2)</li>
+                                    <li><a href="/comments/40269-magi-labirint-magii--21minus25-final/">«Маги: Лабиринт магии» — 21&minus;25 (финал)</a> (1)</li>
+                                    <li><a href="/comments/40266-strela--1x19/">«Стрела» — 1x19</a> (5)</li>
+                                    <li><a href="/comments/40263-bezumnye-prikljuchenija-dzhodzho--21minus24/">«Безумные приключения ДжоДжо» — 21&minus;24</a> (7)</li>
+                                    <li><a href="/comments/40209-strela--1x18/">«Стрела» — 1x18</a> (3)</li>
+                                    <li><a href="/comments/40166-gintama--56minus63/">«Гинтама'» — 56&minus;63</a> (2)</li>
+                                    <li><a href="/comments/40164-magi-labirint-magii--18minus20/">«Маги: Лабиринт магии» — 18&minus;20</a> (8)</li>
+                                    <li><a href="/comments/40155-doktor-kto--7x07/">«Доктор Кто» — 7x07</a> (32)</li>
+                                    <li><a href="/comments/40124-spartak-vojna-prokljatyh--3x08/">«Спартак: Война проклятых» — 3x08</a> (3)</li>
+                                    <li><a href="/comments/40047-strela--1x17/">«Стрела» — 1x17</a> (14)</li>
+                                    <li><a href="/comments/39997-spartak-vojna-prokljatyh--3x07/">«Спартак: Война проклятых» — 3x07</a> (1)</li>
+                                    <li><a href="/comments/39879-spartak-vojna-prokljatyh--3x06/">«Спартак: Война проклятых» — 3x06</a> (2)</li>
+                                    <li><a href="/comments/39753-spartak-vojna-prokljatyh--3x05/">«Спартак: Война проклятых» — 3x05</a> (1)</li>
+                                    <li><a href="/comments/39698-strela--1x16/">«Стрела» — 1x16</a> (7)</li>
+                                    <li><a href="/comments/39695-bezumnye-prikljuchenija-dzhodzho--20/">«Безумные приключения ДжоДжо» — 20</a> (1)</li>
+                                </ul>
+                            </div>
+                            <div id="episodes_list_anime" class="hidden"></div>
+                            <div id="episodes_list_tv" class="hidden"></div>
+                        </div>
+                    </div>
+					<div class="ten_col2">
+						<div style="height: 151px;">
+                        	<a href="http://yotaplay.ru/movie/life-of-pi?promo=true&amp;affid=http://kino-govno.com" target="_blank" rel="nofollow">
+                            	<img src="http://kino-govno.com/yota/banners/lifeofpi/620x150.jpg" width="620" height="150" style="border: 0;" alt="" title=""/>
+                            </a>
+                        </div>
+                    	<div id="alltabs">
+                            <div id="tabs">
+                                <ul>
+                                    <li style="width: 105px;"><a href="#" class="tab_all" onmouseover="$('[id*=subtabs_]').hide(); $('#subtabs_all').show();">Всё</a></li>
+                                    <li style="width: 103px;"><a href="#" class="tab_movies active" onmouseover="$('[id*=subtabs_]').hide(); $('#subtabs_movies').show();">Кино</a></li>
+                                    <li style="width: 103px;"><a href="#" class="tab_anime" onmouseover="$('[id*=subtabs_]').hide(); $('#subtabs_anime').show();">Аниме</a></li>
+                                    <li style="width: 103px;"><a href="#" class="tab_tv" onmouseover="$('[id*=subtabs_]').hide(); $('#subtabs_tv').show();">ТВ</a></li>
+                                    <li style="width: 103px;"><a href="#" class="tab_games" onmouseover="$('[id*=subtabs_]').hide(); $('#subtabs_games').show();">Игры</a></li>
+                                    <li style="width: 103px;"><a href="#" class="tab_other" onmouseover="$('[id*=subtabs_]').hide(); $('#subtabs_other').show();">И ещё…</a></li>
+                                </ul>
+                            </div>
+                            <div style="display: none;" id="subtabs_all">
+                                <ul>
+                                    <li style="width: 103px;"><a href="/news/all/news">Новости</a></li>
+                                    <li style="width: 103px;"><a href="/news/all/reviews">Рецензии</a></li>
+                                    <li style="width: 103px;"><a href="/news/all/episodes">Эпизодники</a></li>
+                                    <li style="width: 103px;"><a href="/news/all/video">Трейлеры</a></li>
+                                    <li style="width: 103px;"><a href="/news/all/gallery">Галерея</a></li>
+                                    <li style="width: 105px;"><a href="/news/all/box">Бокс-офис</a></li>
+                                </ul>
+                            </div>
+                            <div style="display: block;" id="subtabs_movies">
+                                <ul>
+                                    <li style="width: 124px;"><a href="/news/main/news">Новости</a></li>
+                                    <li style="width: 124px;"><a href="/news/main/reviews">Рецензии</a></li>
+                                    <li style="width: 124px;"><a href="/news/main/video">Трейлеры</a></li>
+                                    <li style="width: 124px;"><a href="/news/main/gallery">Галерея</a></li>
+                                    <li style="width: 124px;"><a href="/news/main/box">Бокс-офис</a></li>
+                                </ul>
+                            </div>
+                            <div style="display: none;" id="subtabs_anime">
+                                <ul>
+                                    <li style="width: 103px;"><a href="/news/anime/news">Новости</a></li>
+                                    <li style="width: 103px;"><a href="/news/anime/reviews">Рецензии</a></li>
+                                    <li style="width: 103px;"><a href="/news/anime/episodes">Эпизодники</a></li>
+                                    <li style="width: 103px;"><a href="/news/anime/video">Трейлеры</a></li>
+                                    <li style="width: 103px;"><a href="/news/anime/gallery">Галерея</a></li>
+                                    <li style="width: 105px;"><a href="/news/anime/box">Бокс-офис</a></li>
+                                </ul>
+                            </div>
+                            <div style="display: none;" id="subtabs_tv">
+                                <ul>
+                                    <li style="width: 124px;"><a href="/news/tv/news">Новости</a></li>
+                                    <li style="width: 124px;"><a href="/news/tv/reviews">Рецензии</a></li>
+                                    <li style="width: 124px;"><a href="/news/tv/episodes">Эпизодники</a></li>
+                                    <li style="width: 124px;"><a href="/news/tv/video">Трейлеры</a></li>
+                                    <li style="width: 124px;"><a href="/news/tv/gallery">Галерея</a></li>
+                                </ul>
+                            </div>
+                            <div style="display: none;" id="subtabs_games">
+                                <ul>
+                                    <li style="width: 124px;"><a href="/news/games/news">Новости</a></li>
+                                    <li style="width: 124px;"><a href="/news/games/reviews">Рецензии</a></li>
+                                    <li style="width: 124px;"><a href="/news/games/video">Трейлеры</a></li>
+                                    <li style="width: 124px;"><a href="/news/games/gallery">Галерея</a></li>
+                                    <li style="width: 124px;"><a href="/news/games/other">Статьи</a></li>
+                                </ul>
+                            </div>
+                            <div style="display: none;" id="subtabs_other">
+                                <ul>
+                                    <li style="width: 155px;"><a href="/news/hate">Ненависть</a></li>
+                                    <li style="width: 155px;"><a href="/news/blog">Блог</a></li>
+                                    <li style="width: 155px;"><a href="/news/makingof">Кухня КГ</a></li>
+                                    <li style="width: 155px;"><a href="/news/fanart">Фанарт</a></li>
+                                </ul>
+                            </div>
+                		</div>
+                		<div class="ten_col2_content">
+                            <!-- NEWS_02 -->
+                            <div class="news_box movies_cat">
+                                <div class="tooltip_gr"></div>
+                                <div class="settings"></div>
+                                <div class="news_cat op"><span class="cat">/ Бокс-офис</span><span class="date">29 апреля, 08:10</span></div>
+                               	<div class="news_title op">
+                                	<div class="count">211</div>
+                                	<a href="#" target="_blank" class="news_head">Постеры: «Стартрек: Возмездие»</a>
+                                </div>
+                                <div class="news_author op"><a href="#">Юрий Лущинский</a></div>
+                                <div class="news_text op">
+                                    <p style="text-align: justify;">Галерея нашего сайта пополнилась постерами фильма «<a href="/movies/startrek2">Стартрек: Возмездие</a>»:</p>
+                                    <div style="text-align: center;">
+                                        <div class="n_i_t">
+                                            <a href="http://kino-govno.com/movies/startrek2/gallery/posters/18" target="_blank" alt="Постер 1 --> Стартрек: Возмездие">
+                                                <img src="http://media.kino-govno.com/movies/s/startrek2/posters/startrek2_18s.jpg" style="margin: 5px 2px;" class="newspic_sb" alt="">
+                                            </a>
+                                            <div class="socials"></div>
+                                        </div>
+                                        <div class="n_i_t">
+                                            <a href="http://kino-govno.com/movies/startrek2/gallery/posters/19" target="_blank" alt="Постер 2 --> Стартрек: Возмездие">
+                                                <img src="http://media.kino-govno.com/movies/s/startrek2/posters/startrek2_19s.jpg" style="margin: 5px 2px;" class="newspic_sb" alt="">
+                                            </a>
+                                            <div class="socials"></div>
+                                        </div>
+                                        <div class="n_i_t">
+                                            <a href="http://kino-govno.com/movies/startrek2/gallery/posters/20" target="_blank" alt="Постер 3 --> Стартрек: Возмездие">
+                                                <img src="http://media.kino-govno.com/movies/s/startrek2/posters/startrek2_20s.jpg" style="margin: 5px 2px;" class="newspic_sb" alt="" />
+                                            </a>
+                                            <div class="socials"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clr"></div>
+								<div class="news_tags op">
+                                    <div class="news_date">
+                                        Метки: <a href="/news/tags/system/reviews" class="t-tag">рецензии</a>, 
+                                        <a href="/news/tags/system/video" class="t-tag">видео</a>, 
+                                        <a href="/news/tags/movies/ironman3" class="t-tag">«Железный человек - 3»</a>
+                                    </div>
+                                    <div style="float: left" class="news_date">
+                                        <a target="_blank" class="news_comms" href="#">496 комментариев </a>
+                                    </div>
+								</div>       
+                                <div class="news_border"></div>
+                            </div>
+						</div>
+                        <div class="comments_news">
+                        	<h2>Комментарии</h2>
+                        	<a name="comments" href="#"></a>
+                        	<div class="filter fp">
+                            	<a href="u_popular#comments" rel="nofollow">Популярные</a>|
+                                <a href="u_unpopular#comments" rel="nofollow">Непопулярные</a>|
+                                <a href="u_kg#comments" rel="nofollow">Всеяредакция</a>
+                            </div>
+                            <div class="fp">
+                                Страницы: 
+  								<a href="/comments/41086-trejler-filma-gagarin-pervyj-v-kosmose/p_1#comments" rel="nofollow">1</a>| 2 |
+                                <a href="/comments/41086-trejler-filma-gagarin-pervyj-v-kosmose/p_0#comments" rel="nofollow">все</a>
+                            </div>
+                            <ul class="comments_list">
+                            	<li>
+                                	<div class="head">
+                                    	<a class="num" href="javascript:pasteN('<font color=black>1.,</font> <font color=#c10202>RedNeXIII</font>')">1.</a>
+                                		<div class="user" id="user1"><a href="#comments" style="color: #c10202;" rel="nofollow">RedNeXIII</a></div>
+                                        <span class="date">Вчера, 23:25</span>
+                                    	<span class="carma" id="karma783299"><font color="green">+5</font></span>
+                                        <div class="clr"></div>
+                                        <span class="status">Читатель</span>
+                                    </div>
+                                    <div class="body" id="comment1" name="comment1">
+                                    	ничего не имею против фильма, но, бля, сколько уже можно! девятый!
+                                        <p class="bquote">
+                                        	<a onmouseover="copyQ();" href="javascript:quoteText(1);">Цитировать</a>
+                                        	<span>выделенный текст или всё сообщение</span>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                	<div class="head">
+                                    	<a class="num" href="javascript:pasteN('<font color=black>2.,</font> <font color=#c10202>Slim_Dayspring</font>')">2.</a>
+                                		<div class="user" id="user2"><a href="#comments" style="color: #c10202;" rel="nofollow">Slim_Dayspring</a></div>
+                                        <span class="date">Вчера, 23:26</span>
+                                    	<span class="carma" id="karma783300"><font color="red">-3</font></span>
+                                        <div class="clr"></div>
+                                        <span class="status">Читатель</span>
+                                    </div>
+                                    <div class="body" id="comment2" name="comment2">
+                                    	Склей все трейлеры и получишь фильм
+                                        <p class="bquote">
+                                        	<a onmouseover="copyQ();" href="javascript:quoteText(2);">Цитировать</a>
+                                        	<span>выделенный текст или всё сообщение</span>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                	<div class="head">
+                                    	<a class="num" href="javascript:pasteN('<font color=black>3.,</font> <font color=#c10202>Lешик в Dурмане</font>')">3.</a>
+                                		<div class="user" id="user3"><a href="#comments" style="color: #c10202;" rel="nofollow">Lешик в Dурмане</a></div>
+                                        <span class="date">Вчера, 23:32</span>
+                                    	<span class="carma" id="karma783301"><font color="green">+3</font></span>
+                                        <div class="clr"></div>
+                                        <span class="status">Читатель</span>
+                                    </div>
+                                    <div class="body" id="comment3" name="comment3">
+                                    	Зак прекрати :), МЫ ВСЕ ПОЛЮБАСУ ИДЕМ,  это уже факт. Потому что некоторые уже по стоп 
+                                        кадру разбирают ролики, так им невтерпеж, ибо пахнет эпиком.
+                                        <p class="bquote">
+                                        	<a onmouseover="copyQ();" href="javascript:quoteText(3);">Цитировать</a>
+                                        	<span>выделенный текст или всё сообщение</span>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                	<div class="head">
+                                    	<a class="num" href="javascript:pasteN('<font color=black>4.,</font> <font color=#c10202>TimLawyer</font>')">4.</a>
+                                		<div class="user" id="user4"><a href="#comments" style="color: #c10202;" rel="nofollow">TimLawyer</a></div>
+                                        <span class="date">Сегодня, 0:20 </span>
+                                    	<span class="carma" id="karma783319"><font color="green">+15</font></span>
+                                        <div class="clr"></div>
+                                        <span class="status">Читатель</span>
+                                    </div>
+                                    <div class="body" id="comment4" name="comment4">
+                                    	Когда я нарочно зашел на КГ за очередным телероликом к Человеку из стали, я думал, что 
+                                        у меня разыгралось воображение, паранойя или типа того...Но нет: зашел и правда новый телеролик.
+                                        <p class="bquote">
+                                        	<a onmouseover="copyQ();" href="javascript:quoteText(4);">Цитировать</a>
+                                        	<span>выделенный текст или всё сообщение</span>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                	<div class="head">
+                                    	<a class="num" href="javascript:pasteN('<font color=black>5.,</font> <font color=#000>Bra</font>')">5.</a>
+                                		<div class="user" id="user5"><a href="#comments" style="color:#000;" rel="nofollow">Bra</a></div>
+                                        <span class="date">Сегодня, 01:29</span>
+                                    	<span class="carma" id="karma783357"><font color="red">–3</font></span>
+                                        <div class="clr"></div>
+                                        <span class="status">Читатель</span>
+                                    </div>
+                                    <div class="body" id="comment5" name="comment5">
+                                    	<pre><b>№13, Зmky</b></pre>
+                                        <pre>Только плиз намекните, если вдруг в каком-нибудь новом ролике промелькнет Снайдеровское сло-мо, я можно сказать ради этого все ролики и смотрел) в надежде, что где-нибудь, да появится))</pre>
+                                        Сло-мо не будет. Нолан не одобряет. 
+                                        <p class="bquote">
+                                        	<a onmouseover="copyQ();" href="javascript:quoteText(5);">Цитировать</a>
+                                        	<span>выделенный текст или всё сообщение</span>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                	<div class="head">
+                                    	<a class="num" href="javascript:pasteN('<font color=black>6.,</font> <font color=#c10202>regulum</font>')">6.</a>
+                                		<div class="user" id="user6"><a href="#comments" style="color: #c10202;" rel="nofollow">regulum</a></div>
+                                        <span class="date">Сегодня, 13:56</span>
+                                    	<span class="carma" id="karma783433"><font color="green">+7</font></span>
+                                        <div class="clr"></div>
+                                        <span class="status">Читатель</span>
+                                    </div>
+                                    <div class="body" id="comment6" name="comment6">
+                                    	Какая агрессивная рекламная кампания у фильма, просто жесть. Теперь наверное только последнее чмо на это кино не пойдет)) 
+                                        Похоже создатели взяли целью перешагнуть через труп "Мстителей"))
+                                        <p class="bquote">
+                                        	<a onmouseover="copyQ();" href="javascript:quoteText(6);">Цитировать</a>
+                                        	<span>выделенный текст или всё сообщение</span>
+                                        </p>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="comments_form">
+                            	<div class="auth_block">
+                                	<div class="logged">
+                                    	<img src="images/comm_nophoto.png" width="30" height="30" alt=" " />
+                                        <div class="nickname">Иван Иванов</div>
+                                        <a href="javascript:void(0);" onClick="$('.auth_block .logged, .add_comment').hide();$('.auth_block .unauth').show();" class="logout">выйти</a>
+                                        <a href="#" class="options"></a>
+                                    </div>
+                                	<div class="unauth" style="display:none;">
+                                    	<span>Авторизуйтесь, чтобы комментировать: </span>
+                                        <div id="uLogin" style="display:inline-block; position:relative; top:4px;" data-ulogin="display=small;fields=first_name,last_name;providers=vkontakte,facebook,twitter,livejournal,mailru;hidden=odnoklassniki,google,yandex,youtube,googleplus;redirect_uri=http%3A%2F%2F">
+                                        </div>
+                                        <div class="enter_forum">Или <a href="javascript:void(0);" onClick="$(this).parent().addClass('open');">войдите через наш форум</a></div>
+                                        <div class="enter_site">
+                                        <form name="enter_site" action="#" method="post">
+                                        	<input type="text" class="flash" name="e_login" value="Логин"/>
+                                            <input type="password" class="flash" name="e_pass" value="Пароль" />
+                                            <input type="submit" class="sbutton" value="Войти" />
+                                            <a href="#">Регистрация</a>
+                                        </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sys_msg red">Комментарий отправлен на модерацию</div>
+                                <div class="add_comment">
+                                	<form name="add_comm" action="#" method="post" id="add_comm">
+                                    	<div class="l_col">
+                                        	<textarea name="text" id="text_comm" class="flash">Ваш комментарий</textarea>
+                                            <input type="submit" class="sbutton" value="Отправить"/>
+                                            <div class="helpers">
+                                            	<span class="hot">[CTRL+Enter]</span>
+                                            	<span class="def">Пожалуйста, не забывайте скрывать спойлеры</span>
+                                            </div>
+                                        </div>
+                                        <div class="r_col">
+                                        	<div class="mark">
+                                        		<input type="button" class="spoiler" onclick="text_spoiler()" name="spoiler" value="Спойлер" />
+                                            	<span class="helper">Спойлер [Ctrl+S]</span>
+                                            	<input type="button" class="bold" onclick="text_bold()" name="bold" value="Жирный"/>
+                                            	<span class="helper">Жирный [Ctrl+B]</span>
+                                            	<input type="button" class="italic" onclick="text_italic()" name="italic" value="Италик"/>
+                                            	<span class="helper">Курсив [Ctrl+I]</span>
+                                            	<input type="button" class="strike" onclick="text_strike()" name="strike" value="Зачеркнуть"/>
+                                            	<span class="helper">Зачеркнутый [Ctrl+P]</span>
+                                            </div>
+                                        </div>
+                                        <div class="clr"></div>
+                                    </form>
+                                </div>
+                                <div class="sp-50"></div>
+                            </div>
+                        </div>
+					</div>
+                    <div class="ten_col3">
+						<form action="" method="post" name="login" onsubmit="return ValidateForm()">
+                            <div class="ten_userbar">
+                                <input type="text" name="username" id="ten_login_username" value="Логин" />
+                                <input type="password" name="password" id="ten_login_password" value="Пароль" />
+                                <input type="hidden" name="CookieDate" value="1" />
+                                <input type="hidden" name="Privacy" value="0" />
+                                <input type="hidden" name="redirect" value="http://www.kino-govno.com/" />
+                                <input type="hidden" name="loginaction" value="login" />
+                                <input type="submit" name="submit" id="ten_login_submit" value="Войти на сайт"><a href="http://www.kg-forum.ru" class="ten_register">Регистрация</a>
+                            </div>
+						</form>
+                        <!-- DRAGBOX -->
+                        <div class="blist redesign_border" id="column_topnews">
+                        	<div class="options_box"><a href="javascript:void(0);" class="close"></a></div>
+                            <div class="addblock_box"></div>
+                        	<h2 class="column_header" style="text-align: center;">Самые обсуждаемые новости за неделю</h2>
+                            <br>
+                            <div id="topnews_tv" class="column_list">
+                            	<span id="topnews_header_all" onClick="change_list ('topnews', 'all');" class="column_selected">Все</span> 
+                                <span id="topnews_header_movies" onClick="change_list ('topnews', 'movies');" class="column_dashed">Кино</span> 
+                                <span id="topnews_header_anime" onClick="change_list ('topnews', 'anime');" class="column_dashed">Аниме</span> 
+                                <span id="topnews_header_games" onClick="change_list ('topnews', 'games');" class="column_dashed">Игры</span> 
+                                <span id="topnews_header_tv" onClick="change_list ('topnews', 'tv');" class="column_dashed">Сериалы</span> 
+                            </div>
+                            <div id="topnews_list_all">
+                            	<ul>
+                                	<li><a href="#">Анонс трейлера фильма «Голодные игры: И вспыхнет пламя»</a> (157)</li>
+                                    <li><a href="#">Трейлер фильма «Телекинез»</a> (142)</li>
+                                    <li><a href="#">Обсуждение фильма «Транс»</a> (106)</li>
+                                    <li><a href="#">Трейлер фильма «Вигиландия»</a> (83)</li>
+                                    <li><a href="#">Бесславная смерть LucasArts</a> (68)</li>
+                                    <li><a href="#">Вся правда о «Зловещих мертвецах» — ретроспектива серии</a> (66)</li>
+                                    <li><a href="#">Бокс-офис США  за 5−7 апреля (в миллионах долларов)</a> (65)</li>
+                                    <li><a href="#">Первый международный трейлер фильма «Гонка»</a> (65)</li>
+                                    <li><a href="#">Рецензия на фильм «Гостья»</a> (60)</li>
+                                    <li><a href="#">Бокс-офис России за четверг, 4 апреля</a> (58)</li>
+                                </ul>
+                            </div>
+                            <div id="topnews_list_movies" class="hidden"></div>
+                            <div id="topnews_list_anime" class="hidden"></div>
+                            <div id="topnews_list_games" class="hidden"></div>
+                            <div id="topnews_list_tv" class="hidden"></div>
+                        </div>
+                        <!-- DRAGBOX -->
+                        <div class="blist redesign_border" id="column_toptrailers">
+                        	<div class="options_box"><a href="javascript:void(0);" class="close"></a></div>
+                            <div class="addblock_box"></div>
+                        	<h2 class="column_header" style="text-align: center;">Самые популярные трейлеры</h2>
+                            <br>
+                            <div id="toptrailers_tv" class="column_list">
+                            	<span id="toptrailers_header_all" onClick="change_list ('toptrailers', 'all');" class="column_selected">Все</span> 
+                                <span id="toptrailers_header_movies" onClick="change_list ('toptrailers', 'movies');" class="column_dashed">Кино</span> 
+                                <span id="toptrailers_header_anime" onClick="change_list ('toptrailers', 'anime');" class="column_dashed">Аниме</span> 
+                                <span id="toptrailers_header_games" onClick="change_list ('toptrailers', 'games');" class="column_dashed">Игры</span> 
+                                <span id="toptrailers_header_tv" onClick="change_list ('toptrailers', 'tv');" class="column_dashed">Сериалы</span> 
+                            </div>
+                            <div id="toptrailers_list_all">
+                            	<ul>
+                                	<li><a href="#">Обливион</a> — 97%</li>
+                                    <li><a href="#">Зловещие Мертвецы. Черная книга</a> — 96%</li>
+                                    <li><a href="#">Человек из стали</a> — 94%</li>
+                                    <li><a href="#">Конец света</a> — 93%</li>
+                                    <li><a href="#">Великий Гэтсби</a> — 93%</li>
+                                    <li><a href="#">Гонка</a> — 91%</li>
+                                    <li><a href="#">Телекинез</a> — 91%</li>
+                                    <li><a href="#">Железный человек - 3</a> — 91%</li>
+                                    <li><a href="#">Dexter</a> — 88%</li>
+                                    <li><a href="#">Железный человек - 3</a> — 84%</li>
+                                    <li><a href="#">Только Бог простит</a> — 83%</li>
+                                    <li><a href="#">Вигиландия</a> — 83%</li>
+                                    <li><a href="#">Пипец-2</a> — 82%</li>
+                                    <li><a href="#">Железный человек - 3</a> — 68%</li>
+                                    <li><a href="#">Телекинез</a> — 62%</li>
+                                </ul>
+                            </div>
+                            <div id="toptrailers_list_movies" class="hidden"></div>
+                            <div id="toptrailers_list_anime" class="hidden"></div>
+                            <div id="toptrailers_list_games" class="hidden"></div>
+                            <div id="toptrailers_list_tv" class="hidden"></div>
+                        </div>
+                        <!-- DRAGBOX -->
+                        <div class="blist redesign_border" id="column_galleryupdates">
+                        	<div class="options_box"><a href="javascript:void(0);" class="close"></a></div>
+                            <div class="addblock_box"></div>
+                        	<h2 class="column_header" style="text-align: center;">Обновления в галерее</h2>
+                            <br>
+                            <div id="galleryupdates_tv" class="column_list">
+                            	<span id="galleryupdates_header_all" onClick="change_list ('galleryupdates', 'all');" class="column_selected">Все</span>
+                                <span id="galleryupdates_header_movies" onClick="change_list ('galleryupdates', 'movies');" class="column_dashed">Кино</span> 
+                                <span id="galleryupdates_header_anime" onClick="change_list ('galleryupdates', 'anime');" class="column_dashed">Аниме</span> 
+                                <span id="galleryupdates_header_games" onClick="change_list ('galleryupdates', 'games');" class="column_dashed">Игры</span> 
+                                <span id="galleryupdates_header_tv" onClick="change_list ('galleryupdates', 'tv');" class="column_dashed">Сериалы</span> 
+                            </div>
+                            <div id="galleryupdates_list_all">
+                            	<ul>
+                                	<li><a href="#">Game of Thrones</a> — 25 кадров</li>
+                                    <li><a href="#">Эффект Колибри</a> — 1 постер</li>
+                                    <li><a href="#">300 спартанцев: Расцвет империи</a> — 2 кадра</li>
+                                    <li><a href="#">Continuum</a> — 1 постер</li>
+                                    <li><a href="#">Мальчишник. Часть III</a> — 1 постер</li>
+                                    <li><a href="#">Элизиум</a> — 1 постер</li>
+                                    <li><a href="#">12 месяцев</a> — 1 постер</li>
+                                    <li><a href="#">Университет Монстров</a> — 1 постер</li>
+                                    <li><a href="#">Я очень возбужден</a> — 1 постер</li>
+                                    <li><a href="#">Одинокий рейнджер</a> — 1 постер</li>
+                                </ul>
+                            </div>
+                            <div id="galleryupdates_list_movies" class="hidden"></div>
+                            <div id="galleryupdates_list_anime" class="hidden"></div>
+                            <div id="galleryupdates_list_games" class="hidden"></div>
+                            <div id="galleryupdates_list_tv" class="hidden"></div>
+                        </div>
+					</div>
+            </div>
+        </div>
+    </div>
+    <div class="clr"></div>
+    <!-- ============== //CONTENT ============== -->
+    <!-- ============== FOOTER ============== -->
+	<div class="ten_footer_wrap">
+    	<div class="ten_slogan">Нам насрать на ваши чарты</div>
+        <div class="ten_footer">
+        	<!--noindex--><p>&copy; 2002&ndash;2013 КГ<br><a href="http://www.kg-daily.ru/" rel="nofollow">КГ-Дэйли</a> &#8212; это тоже мы</p>
+            <p><a href="/team/" rel="nofollow">Всеяредакция</a><br><!--/noindex--><a href="/adv/">Размещение рекламы</a></p>
+            <p>Копирование материалов возможно только c разрешения редакции.<br>В противном случае это будет называться уже другим словом.</p>
+        </div>
+    </div>
+    <div style="display:none;">
+    	<form method="get" action="#" name="news_settings">
+        	<div class="head">Фильтр новостей по темам и меткам</div>
+            <div class="body">
+                <span class="theme movies">Новости о фильмах</span>
+                <div class="toggler" data-name="movies_cat"  data-val="1"></div>
+                <span class="theme anime">Новости об аниме</span>
+                <div class="toggler" data-name="anime_cat" data-val="2"></div>
+                <span class="theme games">Новости об играх</span>
+                <div class="toggler" data-name="games_cat"  data-val="1"></div>
+                <span class="theme tvs">Новости о сериалах</span>
+                <div class="toggler" data-name="tv_cat" data-val="1"></div>
+                <div class="sp"></div>
+                <div id="tag_filter">
+                    <div class="tag_zone add">
+                        <span class="title">Метки этой новости</span>
+                        <ul class="tags"></ul>
+                        <div class="clr"></div>
+                    </div>
+                    <div class="tag_zone del">
+                        <span class="title">Не показывать новости с этими метками</span>
+                        <ul class="tags"></ul>
+                        <div class="clr"></div>
+                        <input type="text" value="" name="del_tags" />
+                    </div>
+                </div>
+                <div class="advanced">
+                	<a href="#">Расширенные настройки</a>
+                	<input type="submit" value="Сохранить" class="sbutton"/>
+                    <div class="clr"></div>
+                </div>
+                
+            </div>
+    	</form>
+    </div>
+    <!-- ============== //FOOTER ============== -->
+                         
+
+</body>
+</html>
