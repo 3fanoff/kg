@@ -4,8 +4,31 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Галерея - метки</title>
 <style type="text/css">
-.img {position:relative; float:left;}
+.img {position:relative; width:800px; margin:auto;}
 .img img {position:relative; z-index:10;}
+.img a.nav {
+	display:block;
+	width:40%;
+	height:300px;
+	position:absolute;
+	z-index:90;
+	top:0;
+}
+.img a.nav:hover span {opacity:0.3;-moz-opacity:0.3;-webkit-opacity:0.3;filter:alpha(opacity=30);}
+.img a.nav.prev {left:-40px;}
+.img a.nav.next {right:-40px;}
+.img a.nav span {
+	width:40px;
+	background:#000;
+	height:inherit;
+	opacity:0;-moz-opacity:0;-webkit-opacity:0;filter:alpha(opacity=0);
+	transition:all 0.4s;
+}
+.img a.nav span:hover {
+	opacity:0.6;-moz-opacity:0.6;-webkit-opacity:0.6;filter:alpha(opacity=60);
+}
+.img a.nav.prev span {float:left;}
+.img a.nav.next span {float:right;}
 .note-box {
 	position:absolute;
 	display:none;
@@ -118,6 +141,7 @@
 	display:inline-block;
 	padding:4px 6px;
 }
+.button.del {background:#903;}
 .clear {
 	display:block;
 	clear:both;
@@ -126,22 +150,14 @@
 <script type="text/javascript" src="http://kino-govno.com/js/jquery.1.7.2.min.js"></script>
 <script type="text/javascript" src="jsui/jquery-ui-1.9.2.custom.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-	/*$('.note-box .box').resizable({
-		handles: "se",
-		autoHide:true
-	}).parent().draggable({
-		containment:"parent",
-		cursor:"move",
-		snap:true,
-		snapMode:'outer'
-	});*/
+$(function(){
 	var imgX = $('.img').offset().left,
 		imgY = $('.img').offset().top,
-		out = 1;
+		imgH = $('.img img').height();
+		out = hov = 1;
+		console.log(imgH);
 	//запускаем режим создания комментария
-	$('.button').click(function(){
-		$(this).hide();//скрываем эту кнопку
+	$('.button.add').click(function(){
 		inImg(); //делаем все комментарии видимыми
 		clicked = 1;
 		out = 0;
@@ -151,7 +167,7 @@ $(document).ready(function(){
 			ptop = e.pageY - imgY;
 			$is = $(this);
 			if(clicked){
-				$is.append('<div class="note-box"><div class="box"></div></div>');
+				$is.append('<div class="note-box new"><div class="box"></div></div>');
 				$is.find('.note-box:last').css({'left':pleft,'top':ptop,'display':'block'}).draggable({
 					containment:"parent",
 					cursor:"move",
@@ -166,11 +182,15 @@ $(document).ready(function(){
 				clicked = 0;
 			}
 		});
+		$(this).hide().after('<div class="button del">Отменить</div>');//скрываем эту кнопку и показываем "отменить"
 		//скрываем карму
 		$('.note-box .carma').hide();
+		//скрываем перелистывание
+		$('a.nav').hide();
 	});
 	
 	$('.img').hover(inImg, outImg);
+	$('a.nav').height(imgH);//высота для зон навигации
 	$('.carma').carma();
 	
 	//сохраняем комментарий
@@ -189,27 +209,35 @@ $(document).ready(function(){
             							<input type="hidden" value="0" name="carma2" />\
         							</div>');
 				$is.parent().remove();//удаляем textarea
-				$('.note-box .carma').show().carma();//показываем и запускаем карму
-				$('.button').show();//показываем кнопку
-				clicked = 0;
-				out = 1;
+				blocks();//манипуляции с блоками
 			}
 		});
 	});
 	//отменяем добавление комментария
-	$(document).on('click','.note-box .tool b',function(){
-		$is = $(this);
-		$is.parents('.note-box').remove();
-		clicked = 0;
-		out = 1;
-		$('.button').show();//показываем кнопку
-		$('.note-box .carma').show();//показываем карму
+	$(document).on('click','.note-box .tool b, .button.del',function(){
+		$('.note-box.new').remove();
+		blocks();
+		if ($(this).hasClass('del')){
+			hov = 0;
+			outImg();
+		}
 	});
+	
 	function inImg(){
-		if(out) $('.note-box').css('opacity',0).show().animate({'opacity':1}, 800, function(){});
+		if (out && hov) $('.note-box').css('opacity',0).show().animate({'opacity':1}, 800, function(){});
+		hov = 0;
 	}
 	function outImg(){
-		if(out) $('.note-box').animate({'opacity':0}, 400);
+		if (out && !hov) $('.note-box').animate({'opacity':0}, 400);
+		hov = 1;
+	}
+	function blocks(){
+		clicked = 0;
+		out = 1;
+		$('.button.add').show();//показываем кнопку
+		$('.button.del').remove();//удаляем кнопку отмены
+		$('.note-box .carma').show().carma();//показываем и запускаем карму
+		$('a.nav').show();//показываем перелистывание
 	}
 });
 
@@ -264,7 +292,9 @@ $(document).ready(function(){
 <body>
 
 <div class="img">
-	<img src="http://media.kino-govno.com/images/pacificrim/pacificrim_5.jpg" alt=" " width="800"/>
+	<a href="#previous" class="nav prev"><span>&nbsp;</span></a>
+    <a href="#next" class="nav next"><span>&nbsp;</span></a>
+	<img src="http://media.kino-govno.com/images/pacificrim/pacificrim_5.jpg" alt=" " width="800" height="600"/>
     <div class="note-box" style="left:232px;top:9px;">
     	<div class="box" style="height:120px;width:74px;"></div>
         <div class="note">Бла-бла текст</div>
@@ -297,6 +327,6 @@ $(document).ready(function(){
     </div>
 </div>
 <div class="clear" style="height:20px;"></div>
-<div class="button">Добавить комментарий</div>
+<div class="button add">Добавить комментарий</div>
 </body>
 </html>
