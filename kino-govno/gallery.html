@@ -27,8 +27,6 @@ $(function(){
 				thumbs: {width:	35, height: 35, position: 'top'}
 			},
 			afterLoad: function(){
-				//eq = this.element.parent().index();
-				//img = this.element.attr('href');
 				this.outer.prepend('<div class="comments" onclick="$.fancybox.close();lock=1">+</div>');
 			},
 			afterClose: function(){
@@ -36,7 +34,6 @@ $(function(){
 				if(lock){
 					$.fancybox.reposition();
 					this.element.parents('li').find('a.comm').trigger('click');
-					//$('.gallery_box ul.hide li:eq(' + eq + ') a.ajax').trigger('click');
 					lock = 0;
 				}
 			}
@@ -47,7 +44,6 @@ $(function(){
 			prevEffect: 'none',
 			autoSize:	false,
 			height: 'auto',
-			//width:'100%',
 			maxWidth: 1200,
 			padding: 0,
 			fitToView: false,
@@ -55,31 +51,25 @@ $(function(){
 			type: 'ajax',
 			wrapCSS: 'edit_mode',
 			arrows: true,
-			ajax: {
-				dataType: 'html'
-			},
+			ajax: { dataType: 'html' },
 			beforeLoad: function(){
 				if(!window.wFancy) wFancy = '100%';
 				this.width = wFancy;
 			},
 			beforeShow: function(){
-				//img = this.element.parents('li').find('a.pic').attr('href');
 				img = this.element.data().pic;
+				this.inner.find('img').attr('src', img);//подставляем картинку
 				out = hov = 1;
-				this.inner.find('img').attr('src', img);
-				//this.inner.find('.img_edit').prepend('<img src="' + img + '" width="100%" />');
-				$('.carma').carma();
-				$.fancybox.update()
+				$.fancybox.update();
 			},
 			afterLoad: function(){
-				//eq = this.element.parent().index();
 				this.outer.prepend('<div class="comments back" onclick="$.fancybox.close();lock=1">&larr;</div>');
+				$.getJSON('noteboxes.json', met.render);//получаем данные о подписях
 			},
 			afterClose: function(){
 				if(lock){
 					//$.fancybox.reposition();
 					this.element.parents('li').find('a.pic').trigger('click');
-					//$('.gallery_box ul:first li:eq(' + eq + ') a.pic').trigger('click');
 					lock = 0;
 				}
 			},
@@ -92,187 +82,203 @@ $(function(){
 				}
 			}
 		});
-		img_edit();
+		met.edit();
 });
 var met = {
-		position: function(_w, _h){
-			rat_x = (_w/note_x),
-			rat_y = (_h/note_y),
-			rat_x = Math.floor(rat_x*100)/100,
-			rat_y = Math.floor(rat_y*100)/100;
-		},
-		sides: function(_w, _h){
-			rat_w = (_w/note_w);
-			rat_h = (_h/note_h);
-			rat_w = Math.floor(rat_w*100)/100;
-			rat_h = Math.floor(rat_h*100)/100;
-		},
-		inImg: function(){
-			if (out && hov){
-				$('.note-box').css('opacity',0).show().animate({'opacity':1}, 800);
-				//console.log('in: ' + out, hov);
-				hov = 0;
-			}
-		},
-		outImg: function(){
-			if (out && !hov) {
-				$('.note-box').animate({'opacity':0}, 400);
-				//console.log('out: ' + out, hov);
-				hov = 1;
-			}
-		},
-		blocks: function(){
-			clicked = 0;
-			out = 1;
-			$('.button.add').show();//показываем кнопку
-			$('.button.del').hide();//скрываем кнопку отмены
-			$('.note-box .carma').show().carma();//показываем и запускаем карму
+	init: function(){
+		$zone = $( _zone ),
+		imgX = $zone.offset().left,
+		imgY = $zone.offset().top,
+		imgH = $zone.height(),
+		imgW = $zone.width();//wFancy;
+	},
+	position: function(_w, _h){
+		rat_x = (_w/note_x),
+		rat_y = (_h/note_y),
+		rat_x = Math.floor(rat_x*100)/100,
+		rat_y = Math.floor(rat_y*100)/100;
+	},
+	sides: function(_w, _h){
+		rat_w = (_w/note_w);
+		rat_h = (_h/note_h);
+		rat_w = Math.floor(rat_w*100)/100;
+		rat_h = Math.floor(rat_h*100)/100;
+	},
+	inImg: function(){
+		if (out && hov){
+			$('.note-box').css('opacity',0).show().animate({'opacity':1}, 800);
+			hov = 0;
 		}
-};
-function img_edit(){
-	//out = hov = 1;
-	$d = $(document);
-	_zone = '.img_edit';
-	//запускаем режим создания комментария
-	$d.on('click','.button.add', function(){
-		$zone = $( _zone );
-		met.inImg(); //делаем все комментарии видимыми
-		var	imgX = $zone.offset().left,
-			imgY = $zone.offset().top,
-			imgH = $zone.height(),
-			imgW = wFancy;
-		clicked = 1;
-		out = resize = tool = 0;
-		$zone.append('<div class="note-box new"><div class="box"></div></div>');
-		//включаем добавление комментария
-		$d.on('mousemove.edit', _zone, function(e){
-			p_left = e.pageX - imgX,
-			p_top = e.pageY - imgY;
-			/*if (p_left >= imgW){
-				xpos = imgW;
-			} else if (p_left <= 0){
-				xpos = 0;
-			} else {
-				xpos = p_left;
-			}
-			if (p_top >= imgH){
-				ypos = imgH;
-			} else if (p_top <= 0){
-				ypos = 0;
-			} else {
-				ypos = p_top;
-			}*/
-			ypos= p_top, xpos = p_left;
-			//console.log(ypos, p_top);
-			$('.note-box.new').css({'left':xpos,'top':ypos,'display':'block'})
-			.resizable({
-				handles:'se',
-				maxHeight: 200,
-				maxWidth: 200,
-				containment: '.img_edit',
-				create: function() {
-					note_w = note_h = 50;
-					met.sides(imgW, imgH);
-					//console.log($(this).parent().data().ratio.ratio_w);
-				},
-				start: function(){
-					resize = 1;
-				},
-				stop: function(e, ui) {
-					$el = ui.element;
-					if (ui.size.width < 50) $el.width(50) ;
-					if (ui.size.height < 50) $el.height(50);
-					note_w = $el.width();//ui.size.width;
-					note_h = $el.height();//ui.size.height;
-					met.sides(imgW, imgH);
+	},
+	outImg: function(){
+		if (out && !hov) {
+			$('.note-box').animate({'opacity':0}, 400);
+			hov = 1;
+		}
+	},
+	blocks: function(){
+		clicked = 0;
+		out = 1;
+		$('.button.add').show();//показываем кнопку
+		$('.button.del').hide();//скрываем кнопку отмены
+		$('.note-box .carma').show().carma();//показываем и запускаем карму
+	},
+	render: function(_data){
+		met.init();//инициализируем размеры
+		//рендерим подписи
+		$.each(_data, function(i, p){
+			var nW = Math.round(imgW/p.width),
+				nH = Math.round(imgH/p.height),
+				nX = Math.round(imgW/p.x),
+				nY = Math.round(imgH/p.y);
+			$zone.append('<div class="' + _note + '" id="note' + i + '">\
+							<div class="box"></div>\
+							<div class="note"><span>' + p.text + '</span></div>\
+							<div class="carma">\
+								<a href="javascript:void(0);" class="minus">&minus;</a>\
+								<a href="javascript:void(0);" class="plus">+</a>\
+								<span></span>\
+								<input type="hidden" value="0" name="carma' + i + '" />\
+							</div>\
+						</div>');
+			$('#note' + i, $zone).css({width: nW, height: nH, left: nX, top: nY, display: 'block'});
+		});
+		$('.carma', $zone).carma();//запускаем карму
+		hov = 0;
+	},
+	edit: function(){
+		_zone = '.img_edit';
+		_note = 'note-box';
+		$d = $(document);
+		
+		//запускаем режим создания комментария
+		$d.on('click','.button.add', function(){
+			met.inImg(); //делаем все комментарии видимыми
+			$zone = $( _zone );
+			clicked = 1;
+			out = resize = tool = 0;
+			$zone.append('<div class="' + _note + ' new"><div class="box"></div></div>');
+			
+			//включаем добавление комментария
+			$d.on('mousemove.edit', _zone, function(e){
+				$nbox = $('.' + _note + '.new');
+				xPos = e.pageX - imgX,
+				yPos = e.pageY - imgY;
+				
+				$nbox.css({'left':xPos,'top':yPos,'display':'block'})
+				.resizable({
+					handles	:	'se',
+					maxHeight:	200,
+					maxWidth:	200,
+					containment: _zone,
+					create: function() {
+						note_w = note_h = 50;
+						met.sides(imgW, imgH);
+						//console.log($(this).parent().data().ratio.ratio_w);
+					},
+					start: function(){
+						resize = 1;
+					},
+					stop: function(e, ui) {
+						$el = ui.element;
+						if (ui.size.width < 50) $el.width(50) ;
+						if (ui.size.height < 50) $el.height(50);
+						note_w = $el.width();//ui.size.width;
+						note_h = $el.height();//ui.size.height;
+						met.sides(imgW, imgH);
+					}
+				});//устанавливаем resizable
+				$d.on('mousedown.edit', _zone, function(){
+					$d.off('mousemove.edit');
+					if (clicked){
+						$nbox.css({'left':xPos,'top':yPos})
+						.draggable({
+							containment: _zone,
+							cursor: 'move',
+							snap: true,
+							snapMode: 'outer',
+							create: function() {
+								note_x = $(this).position().left,
+								note_y = $(this).position().top;
+								met.position(imgW, imgH);
+							},
+							stop: function(e, ui) {
+								note_x = ui.position.left,
+								note_y = ui.position.top;
+								met.position(imgW, imgH);
+							}
+						});
+						clicked = 0;
+					}
+				});
+				
+			});
+			$d.on('mouseup.edit', _zone, function(){
+				$nbox = $('.' + _note + '.new');
+				if (!tool) {
+					$nbox.append('<div class="tool"><textarea name="note"/><span>Сохранить</span><b>х</b></div>');
+					tool = 1
 				}
-			});//устанавливаем resizable
-			$d.on('mousedown.edit', _zone, function(e){
-				$d.off('mousemove.edit');
-				if (clicked){
-					$('.note-box.new').css({'left':xpos,'top':ypos})
-					.draggable({
-						containment:'parent',
-						cursor:'move',
-						snap:true,
-						snapMode:'outer',
-						create: function() {
-							note_x = $(this).position().left,
-							note_y = $(this).position().top;
-							met.position(imgW, imgH);
-						},
-						stop: function(e, ui) {
-							note_x = ui.position.left,
-							note_y = ui.position.top;
-							met.position(imgW, imgH);
-						}
-					});
-					clicked = 0;
+				if (!resize){
+					$nbox.animate({'width':50,'height':50});
+					resize = 1;
 				}
 			});
-			
+			$(this).hide();//скрываем эту кнопку
+			$('.button.del').show();// и показываем "отменить"
+			$('.' + _note + ' .carma').hide();//скрываем карму
 		});
-		$d.on('mouseup.edit', _zone, function(e){
-			if (!tool) {
-				$('.note-box.new').append('<div class="tool"><textarea name="note"/><span>Сохранить</span><b>х</b></div>');
-				tool = 1
-			}
-			if (!resize){
-				$('.note-box.new').animate({'width':50,'height':50});
-				resize = 1;
-			}
+		//$('.img_edit').hover(met.inImg, met.outImg);
+		
+		$d.on('mouseenter.hover', _zone, met.inImg);
+		$d.on('mouseleave.hover', _zone, met.outImg);
+		
+		//сохраняем комментарий
+		$d.on('click', '.' + _note + '.new .tool span', function(){
+			$this = $(this);
+			txt = $this.prev().val();
+			$.ajax({
+				type: "GET",
+				//url: 'http://3fan.ru/',
+				dataType: 'html',
+				data: { // данные о соотношенях; текст
+					width: rat_w,
+					height: rat_h,
+					x: rat_x,
+					y: rat_y,
+					text: txt,
+					codename: $('.gallery_box').data().code
+				},
+				success: function(){
+					$this.parents('.' + _note).removeClass('new')
+						.draggable("destroy").append('<div class="note"><span>' + txt + '</span></div>')
+						.resizable("destroy");
+					//добавляем карму в созданный комментарий
+					$this.parent().after('<div class="carma">\
+											<a href="javascript:void(0);" class="minus">&minus;</a>\
+											<a href="javascript:void(0);" class="plus">+</a>\
+											<span></span>\
+											<input type="hidden" value="0" name="carma2" />\
+										</div>');
+					$this.parent().remove();//удаляем textarea
+					met.blocks();//проводим манипуляции с блоками
+				}
+			});
 		});
-		$(this).hide();//скрываем эту кнопку
-		$('.button.del').show();// и показываем "отменить"
-		$('.note-box .carma').hide();//скрываем карму
-	});
-	//$('.img_edit').hover(met.inImg, met.outImg);
-	$d.on('mouseenter.hover', _zone, met.inImg);
-	$d.on('mouseleave.hover', _zone, met.outImg);
-	
-	//сохраняем комментарий
-	$d.on('click','.note-box.new .tool span',function(){
-		$this = $(this);
-		txt = $this.prev().val();
-		$.ajax({
-			type: "GET",
-			url: 'http://3fan.ru/',
-			dataType: 'html',
-			data: { // данные о соотношенях; текст
-				width: rat_w,
-				height: rat_h,
-				x: rat_x,
-				y: rat_y,
-				text: txt,
-				codename: $('.gallery_box').data().code
-			},
-			success: function(){
-				$this.parents('.note-box').removeClass('new').draggable("destroy")
-					.append('<div class="note"><span>' + txt + '</span></div>')
-					//.children('.box')
-					.resizable("destroy");
-				//добавляем карму в созданный комментарий
-				$this.parent().after('<div class="carma">\
-										<a href="javascript:void(0);" class="minus">&minus;</a>\
-										<a href="javascript:void(0);" class="plus">+</a>\
-										<span></span>\
-										<input type="hidden" value="0" name="carma2" />\
-									</div>');
-				$this.parent().remove();//удаляем textarea
-				met.blocks();//проводим манипуляции с блоками
+		//отменяем добавление комментария
+		$d.on('click','.' + _note + ' .tool b, .button.del',function(){
+			$('.' + _note + '.new').remove();
+			met.blocks();
+			if ($(this).hasClass('del')){
+				hov = 0;
+				met.outImg();
 			}
 		});
-	});
-	//отменяем добавление комментария
-	$d.on('click','.note-box .tool b, .button.del',function(){
-		$('.note-box.new').remove();
-		met.blocks();
-		if ($(this).hasClass('del')){
-			hov = 0;
-			met.outImg();
-		}
-	});
-}
+	}
+};
+/**
+	CARMA
+**/
 (function($){
 	var acts = {
 		color: function(_is){
