@@ -1,0 +1,568 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru-ru">
+<head>
+<title>Кадры фильма «Штурм Белого дома»</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="keywords" content="Штурм Белого дома" />
+<meta name="description" content="Штурм Белого дома"/>
+<meta http-equiv="content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="http://kino-govno.com/brands/monstersuniversity/main.css" /> 
+<link rel="stylesheet" type="text/css" href="gallery3.css"/>
+<link rel="stylesheet" type="text/css" href="jquery.fancybox.css"/>
+<link rel="stylesheet" type="text/css" href="jquery.fancybox-thumbs.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="jsui/js/jquery.fancybox.pack.js"></script>
+<script type="text/javascript" src="jsui/js/jquery.fancybox-thumbs.js"></script>
+<script type="text/javascript" src="jsui/jquery-ui-1.9.2.custom.min.js"></script>
+<script type="text/javascript">
+$(function(){
+		//FANCIES
+		lock = 0;//lock ajax load
+		$('.gallery_box a[rel="gal"]').fancybox({
+			nextEffect: 'fade',
+			prevEffect: 'fade',
+			padding: 0,
+			maxWidth: 1200,
+			helpers: {
+				thumbs: {width:	35, height: 35, position: 'top'}
+			},
+			afterLoad: function(){
+				//eq = this.element.parent().index();
+				//img = this.element.attr('href');
+				this.outer.prepend('<div class="comments" onclick="$.fancybox.close();lock=1">+</div>');
+			},
+			afterClose: function(){
+				wFancy = this.outer.parents('.fancybox-wrap').width();
+				if(lock){
+					$.fancybox.reposition();
+					this.element.parents('li').find('a.comm').trigger('click');
+					//$('.gallery_box ul.hide li:eq(' + eq + ') a.ajax').trigger('click');
+					lock = 0;
+				}
+			}
+		});
+		
+		$('.gallery_box a[rel="ajax"]').fancybox({
+			nextEffect: 'none',
+			prevEffect: 'none',
+			autoSize:	false,
+			height: 'auto',
+			//width:'100%',
+			maxWidth: 1200,
+			padding: 0,
+			fitToView: false,
+			scrolling: 'no',
+			type: 'ajax',
+			wrapCSS: 'edit_mode',
+			arrows: true,
+			ajax: {
+				dataType: 'html'
+			},
+			beforeLoad: function(){
+				if(!window.wFancy) wFancy = '100%';
+				this.width = wFancy;
+			},
+			beforeShow: function(){
+				//img = this.element.parents('li').find('a.pic').attr('href');
+				img = this.element.data().pic;
+				out = hov = 1;
+				this.inner.find('img').attr('src', img);
+				//this.inner.find('.img_edit').prepend('<img src="' + img + '" width="100%" />');
+				$('.carma').carma();
+				$.fancybox.update()
+			},
+			afterLoad: function(){
+				//eq = this.element.parent().index();
+				this.outer.prepend('<div class="comments back" onclick="$.fancybox.close();lock=1">&larr;</div>');
+			},
+			afterClose: function(){
+				if(lock){
+					//$.fancybox.reposition();
+					this.element.parents('li').find('a.pic').trigger('click');
+					//$('.gallery_box ul:first li:eq(' + eq + ') a.pic').trigger('click');
+					lock = 0;
+				}
+			},
+			helpers: {
+				thumbs: {
+					width:	35, height: 35, position: 'top',
+					source: function(el){
+						return el.element.parents('li').find('img').attr('src');
+					}
+				}
+			}
+		});
+		img_edit();
+});
+var met = {
+		position: function(_w, _h){
+			rat_x = (_w/note_x),
+			rat_y = (_h/note_y),
+			rat_x = Math.floor(rat_x*100)/100,
+			rat_y = Math.floor(rat_y*100)/100;
+		},
+		sides: function(_w, _h){
+			rat_w = (_w/note_w);
+			rat_h = (_h/note_h);
+			rat_w = Math.floor(rat_w*100)/100;
+			rat_h = Math.floor(rat_h*100)/100;
+		},
+		inImg: function(){
+			if (out && hov){
+				$('.note-box').css('opacity',0).show().animate({'opacity':1}, 800);
+				//console.log('in: ' + out, hov);
+				hov = 0;
+			}
+		},
+		outImg: function(){
+			if (out && !hov) {
+				$('.note-box').animate({'opacity':0}, 400);
+				//console.log('out: ' + out, hov);
+				hov = 1;
+			}
+		},
+		blocks: function(){
+			clicked = 0;
+			out = 1;
+			$('.button.add').show();//показываем кнопку
+			$('.button.del').hide();//скрываем кнопку отмены
+			$('.note-box .carma').show().carma();//показываем и запускаем карму
+		}
+};
+function img_edit(){
+	//out = hov = 1;
+	$d = $(document);
+	_zone = '.img_edit';
+	//запускаем режим создания комментария
+	$d.on('click','.button.add', function(){
+		$zone = $( _zone );
+		met.inImg(); //делаем все комментарии видимыми
+		var	imgX = $zone.offset().left,
+			imgY = $zone.offset().top,
+			imgH = $zone.height(),
+			imgW = wFancy;
+		clicked = 1;
+		out = resize = tool = 0;
+		$zone.append('<div class="note-box new"><div class="box"></div></div>');
+		//включаем добавление комментария
+		$d.on('mousemove.edit', _zone, function(e){
+			p_left = e.pageX - imgX,
+			p_top = e.pageY - imgY;
+			/*if (p_left >= imgW){
+				xpos = imgW;
+			} else if (p_left <= 0){
+				xpos = 0;
+			} else {
+				xpos = p_left;
+			}
+			if (p_top >= imgH){
+				ypos = imgH;
+			} else if (p_top <= 0){
+				ypos = 0;
+			} else {
+				ypos = p_top;
+			}*/
+			ypos= p_top, xpos = p_left;
+			//console.log(ypos, p_top);
+			$('.note-box.new').css({'left':xpos,'top':ypos,'display':'block'})
+			.resizable({
+				handles:'se',
+				maxHeight: 200,
+				maxWidth: 200,
+				containment: '.img_edit',
+				create: function() {
+					note_w = note_h = 50;
+					met.sides(imgW, imgH);
+					//console.log($(this).parent().data().ratio.ratio_w);
+				},
+				start: function(){
+					resize = 1;
+				},
+				stop: function(e, ui) {
+					$el = ui.element;
+					if (ui.size.width < 50) $el.width(50) ;
+					if (ui.size.height < 50) $el.height(50);
+					note_w = $el.width();//ui.size.width;
+					note_h = $el.height();//ui.size.height;
+					met.sides(imgW, imgH);
+				}
+			});//устанавливаем resizable
+			$d.on('mousedown.edit', _zone, function(e){
+				$d.off('mousemove.edit');
+				if (clicked){
+					$('.note-box.new').css({'left':xpos,'top':ypos})
+					.draggable({
+						containment:'parent',
+						cursor:'move',
+						snap:true,
+						snapMode:'outer',
+						create: function() {
+							note_x = $(this).position().left,
+							note_y = $(this).position().top;
+							met.position(imgW, imgH);
+						},
+						stop: function(e, ui) {
+							note_x = ui.position.left,
+							note_y = ui.position.top;
+							met.position(imgW, imgH);
+						}
+					});
+					clicked = 0;
+				}
+			});
+			
+		});
+		$d.on('mouseup.edit', _zone, function(e){
+			if (!tool) {
+				$('.note-box.new').append('<div class="tool"><textarea name="note"/><span>Сохранить</span><b>х</b></div>');
+				tool = 1
+			}
+			if (!resize){
+				$('.note-box.new').animate({'width':50,'height':50});
+				resize = 1;
+			}
+		});
+		$(this).hide();//скрываем эту кнопку
+		$('.button.del').show();// и показываем "отменить"
+		$('.note-box .carma').hide();//скрываем карму
+	});
+	//$('.img_edit').hover(met.inImg, met.outImg);
+	$d.on('mouseenter.hover', _zone, met.inImg);
+	$d.on('mouseleave.hover', _zone, met.outImg);
+	
+	//сохраняем комментарий
+	$d.on('click','.note-box.new .tool span',function(){
+		$this = $(this);
+		txt = $this.prev().val();
+		$.ajax({
+			type: "GET",
+			url: 'http://3fan.ru/',
+			dataType: 'html',
+			data: { // данные о соотношенях; текст
+				width: rat_w,
+				height: rat_h,
+				x: rat_x,
+				y: rat_y,
+				text: txt,
+				codename: $('.gallery_box').data().code
+			},
+			success: function(){
+				$this.parents('.note-box').removeClass('new').draggable("destroy")
+					.append('<div class="note"><span>' + txt + '</span></div>')
+					//.children('.box')
+					.resizable("destroy");
+				//добавляем карму в созданный комментарий
+				$this.parent().after('<div class="carma">\
+										<a href="javascript:void(0);" class="minus">&minus;</a>\
+										<a href="javascript:void(0);" class="plus">+</a>\
+										<span></span>\
+										<input type="hidden" value="0" name="carma2" />\
+									</div>');
+				$this.parent().remove();//удаляем textarea
+				met.blocks();//проводим манипуляции с блоками
+			}
+		});
+	});
+	//отменяем добавление комментария
+	$d.on('click','.note-box .tool b, .button.del',function(){
+		$('.note-box.new').remove();
+		met.blocks();
+		if ($(this).hasClass('del')){
+			hov = 0;
+			met.outImg();
+		}
+	});
+}
+(function($){
+	var acts = {
+		color: function(_is){
+			if(_is.find('input[type="hidden"]').val() < 0){
+				_is.parent().addClass('mn');
+			} else if(_is.find('input[type="hidden"]').val() > 5){
+				_is.parent().addClass('pl');
+			} else {
+				_is.parent().removeClass('mn').removeClass('pl');
+			}
+		},
+		change: function(_val, _inp){
+			var sum = parseInt(_inp.val())+parseInt(_val);
+			_inp.val()=="NaN" ? sum = 0 : sum;
+			_inp.val(sum);
+		},
+		prints: function(_inp){
+			_inp.prev('span').text(_inp.val());
+		}
+	}
+	$.fn.carma = function(){
+		return this.each(function(){
+			var input = $(this).find('input[type="hidden"]');
+				$is = $(this);
+			acts.prints(input);
+			acts.color($is);
+			if (input.val() == "NaN"){
+				input.val('0');
+				acts.prints(input);
+				acts.color($is);
+			}
+			$is.on('click', '.minus', function(){
+				acts.change(-1, input);
+				acts.prints(input);
+				acts.color($(this).parent());
+			});
+			$is.on('click', '.plus', function(){
+				acts.change(1, input);
+				acts.prints(input);
+				acts.color($(this).parent());
+			});
+		});
+	}
+})(jQuery);
+</script>
+<style type="text/css">
+    .des_front {position: relative; z-index: 0; width: 1100px; height: 300px; margin: 0 auto; line-height: 0;}
+    /* Parallax: {position: relative; z-index: 3; width: 100%; height: 400px;} */
+    .des_front a {text-decoration: none !important;}
+</style>
+</head>
+	
+<body>	
+<!-- ============== TOP BAR ============== -->
+<div class="ten_topbar">
+	<a class="ten_logo_small" href="http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS8%3D">&nbsp;</a>
+	<ul id="jsddm">
+			<li>
+            	<a href="/">Всё &#9662;</a>
+				<ul>
+                	<li><a href="/news">Новости</a></li
+                    ><li><a href="/reviews">Рецензии</a></li>
+                    <li><a href="/episodes">Эпизодники</a></li>
+                    <li><a href="/trailers">Трейлеры</a></li>
+                    <li><a href="/box">Бокс-офис</a></li>
+                </ul>
+			</li>
+			<li>
+            	<a href="/movies">Кино &#9662;</a>
+				<ul>
+                	<li><a href="/news/main">Новости</a></li>
+                    <li><a href="/reviews">Рецензии</a></li>
+                    <li><a href="/trailers">Трейлеры</a></li>
+                    <li><a href="/releases">Кинопремьеры</a></li>
+                    <li><a href="/box">Бокс-офис США</a></li>
+                    <li><a href="/boxrussia">Бокс-офис России</a></li>
+                    <li><a href="/boxworld">Международный бокс-офис</a></li>
+					<li><a href="/releases/">Кинопремьеры</a></li>
+				</ul>
+			</li>
+			<li>
+            	<a href="/anime">Аниме &#9662;</a>
+				<ul>
+                	<li><a href="/news/anime">Новости</a></li>
+                    <li><a href="/episodes/anime">Эпизодники</a></li>
+                    <li><a href="/reviews/anime">Рецензии</a></li>
+                    <li><a href="/trailers/anime">Трейлеры</a></li>
+                    <li><a href="/boxanime">Продажи Blu-ray и DVD</a></li>
+                    <li><a href="/news/tags/system/preview">Сезонные превью</a></li>
+                </ul>
+			</li>
+			<li>
+            	<a href="/games">Игры &#9662;</a>
+				<ul>
+                	<li><a href="/news/games">Новости</a></li>
+                    <li><a href="/reviews/games">Рецензии</a></li>
+                    <li><a href="/trailers/games">Трейлеры</a></li>
+                    <li><a href="/news/system/spoon">Ложка дёгтя</a></li>
+                </ul>
+			</li>
+			<li>
+            	<a href="/tv">Сериалы &#9662;</a>
+				<ul>
+                	<li><a href="/news/tv">Новости</a></li>
+                    <li><a href="/episodes/tv">Эпизодники</a></li>
+                    <li><a href="/reviews/tv">Рецензии</a></li>
+                    <li><a href="/trailers/tv">Трейлеры</a></li>
+                </ul>
+			</li>
+			<li>
+            	<a href="#">Общение &#9662;</a>
+				<ul>
+                	<li><a href="http://www.kg-forum.ru">Форум</a></li>
+                    <li><a href="/mnenie">Мнение</a></li>
+                    <li><a href="/kniga">Книга</a></li>
+                </ul>
+			</li>
+			<li>
+            	<a href="#">И ещё&hellip; &#9662;</a>
+				<ul>
+                	<li><a href="/releases/">Кинопремьеры</a></li>
+					<li><a href="/news/hate">Ненависть</a></li>
+                    <li><a href="/news/tags/system/cosplay">Косплей</a></li>
+                    <li><a href="/news/fanart">Фанарт</a></li>
+                </ul>
+			</li>
+		</ul>
+	<div class="ten_search">
+		<form method="post" action="/search">
+        	<input type="text" name="s_str" id="s_str" value="Поиск" onFocus="if ( value == 'Поиск' ) { value = ''; }" onBlur="if ( value == '' ) { value = 'Поиск'; }" class="input" />
+            <input type="submit" id="search_submit" value="ОК" />
+        	<select class="styled" name="search_section">
+            	<option value="all">по всему сайту</option>
+                <option value="movies">по фильмам</option>
+                <option value="anime">по аниме</option>
+                <option value="tv">по сериалам</option>
+                <option value="games">по играм</option>
+            </select>
+        </form>
+		</div>
+	<div class="clr"></div>
+</div>
+<!-- ============== //TOP BAR ============== -->
+
+<!-- ============== FRONT ROW ============== -->
+<div class="des_front">
+	<a href="#" target="_blank" id="ten_frontrow_link">&nbsp;</a>
+	<a href="#" id="ten_frontrow_trailer">&nbsp;</a>
+	<div id="ten_animatic">
+		<div id="container15113" align="center" style="border: 0; width: 620px; height: 280px;">
+        </div>
+	</div>
+</div>
+<div class="trailerb" id="trailerbox">
+	<div class="selector"></div>
+		<div class="trailer" id="trailer_ins">
+			<div align="center" style="border: 0; background: #000000; width: 512px; height: 234px;">
+        	</div>
+		</div>
+</div>
+<!-- ============== //FRONT ROW ============== --> 
+ 
+<!-- ============== EARS ============== -->
+<div class="ten_ears_wrap">
+    <a href="#" id="ten_ear1" style="background-image: url('http://kino-govno.com/earsnews/40182.jpg');"><span>«КГ-Аудиоподкаст» №2</span></a>
+    <a href="#" id="ten_ear2" style="background-image: url('http://kino-govno.com/earsnews/40193.jpg');"><span><i>Рецензия на игру</i> Resident Evil 6</span></a>
+    <a href="#" id="ten_ear3" style="background-image: url('http://kino-govno.com/earsnews/40211.jpg');"><span><i>Рецензия на игру</i> A New Beginning</span></a>
+    <a href="#" id="ten_ear4" style="background-image: url('http://kino-govno.com/earsnews/40165.jpg');"><span><i>Рецензия на игру</i> Gears of War: Judgment</span></a>
+    <div class="clr"></div>
+</div>
+<!-- ============== //EARS ============== --> 
+<table width="100%" cellspacing="0" cellpadding="0" class="new_header">
+	<tr>
+		<td>&nbsp;</td>
+		<td width="790" align="left" valign="top">
+            <table cellspacing="0" cellpadding="0" class="new_header_content">
+                <tr>
+                    <td width="20"><a href="http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbQ%3D%3D">КГ</a></td>
+                    <td width="40"><div class="new_header_rarr">&nbsp;</div></td>
+                    <td><a href="#">Штурм Белого дома</a><br /><span class="new_header_small">White House Down</span></td>
+                    <td width="40"><div class="new_header_rarr">&nbsp;</div></td>
+                    <td><a href="#" class="now">Кадры&nbsp;(20)</a><br /><a href="#">Постеры&nbsp;(8)</a><br /><font class="off">Разное</font><br /><font class="off">Обои</font><br /><font class="off">Фанарт</font><br /></td>
+                </tr>
+            </table>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+<div style="background-color: #FFFFFF;">
+	<div style="height: 20px;">&nbsp;</div>
+    <div class="nav navposters">
+    	<div class="navleft">Показывать по: 9 / <a href="#">15</a> / <a href="#">Все</a></div>
+		<div class="navright pgposters">Страница: <span class="sel">3</span><span><a href="#">2</a></span><span><a href="#">1</a></span></div><div class="clearer">&nbsp;</div>
+    </div>
+    <div class="gallery_box" data-code="whitehousedown">
+    	<ul>
+        	<li>
+            	<a href="pictures/whitehousedown_19.jpg" class="pic" rel="gal"><img src="pictures/whitehousedown_19s.jpg" alt=" " /></a>
+                <p>(12) <a href="photo_ajax.html" class="comm" rel="ajax" data-pic="pictures/whitehousedown_19.jpg">Комментарии</a></p>
+            </li>
+            <li>
+            	<a href="pictures/whitehousedown_13.jpg" class="pic" rel="gal"><img src="pictures/whitehousedown_13s.jpg" alt=" " /></a>
+                <p>(17) <a href="photo_ajax.html" class="comm" rel="ajax" data-pic="pictures/whitehousedown_13.jpg">Комментарии</a></p>
+            </li>
+            <li>
+            	<a href="pictures/whitehousedown_14.jpg" class="pic" rel="gal"><img src="pictures/whitehousedown_14s.jpg" alt=" " /></a>
+                <p>(4) <a href="photo_ajax.html" class="comm" rel="ajax" data-pic="pictures/whitehousedown_14.jpg">Комментарии</a></p>
+            </li>
+            <li>
+            	<a href="pictures/whitehousedown_15.jpg" class="pic" rel="gal"><img src="pictures/whitehousedown_15s.jpg" alt=" " /></a>
+                <p>(57) <a href="photo_ajax.html" class="comm" rel="ajax" data-pic="pictures/whitehousedown_15.jpg">Комментарии</a></p>
+            </li>
+            <li>
+            	<a href="pictures/whitehousedown_16.jpg" class="pic" rel="gal"><img src="pictures/whitehousedown_16s.jpg" alt=" " /></a>
+                <p>(34) <a href="photo_ajax.html" class="comm" rel="ajax" data-pic="pictures/whitehousedown_16.jpg">Комментарии</a></p>
+            </li>
+            <li>
+            	<a href="pictures/whitehousedown_17.jpg" class="pic" rel="gal"><img src="pictures/whitehousedown_17s.jpg" alt=" " /></a>
+                <p>(3) <a href="photo_ajax.html" class="comm" rel="ajax" data-pic="pictures/whitehousedown_17.jpg">Комментарии</a></p>
+            </li>
+            <li>
+            	<a href="pictures/whitehousedown_18.jpg" class="pic" rel="gal"><img src="pictures/whitehousedown_18s.jpg" alt=" " /></a>
+                <p>(13) <a href="photo_ajax.html" class="comm" rel="ajax" data-pic="pictures/whitehousedown_18.jpg">Комментарии</a></p>
+            </li>
+            <li>
+            	<a href="pictures/whitehousedown_12.jpg" class="pic" rel="gal"><img src="pictures/whitehousedown_12s.jpg" alt=" " /></a>
+                <p>(12) <a href="photo_ajax.html" class="comm" rel="ajax" data-pic="pictures/whitehousedown_12.jpg">Комментарии</a></p>
+           	</li>
+            <li>
+            	<a href="pictures/whitehousedown_20.jpg" class="pic" rel="gal"><img src="pictures/whitehousedown_20s.jpg" alt=" " /></a>
+                <p>(24) <a href="photo_ajax.html" class="comm" rel="ajax" data-pic="pictures/whitehousedown_20.jpg">Комментарии</a></p>
+            </li>
+        </ul>
+    </div>
+    <div class="nav navposters">
+        <div class="navright"><a href="#">Стр. 2</a></div>
+        <div class="clearer">&nbsp;</div>
+	</div>
+</div>
+<!-- ============== FOOTER ============== -->
+	<div class="ten_footer_wrap">
+    	<div class="ten_slogan">Нам насрать на ваши чарты</div>
+        <div class="ten_footer">
+        	<!--noindex--><p>&copy; 2002&ndash;2013 КГ<br /><a href="http://www.kg-daily.ru/" rel="nofollow">КГ-Дэйли</a> &#8212; это тоже мы</p>
+            <p><a href="/team/" rel="nofollow">Всеяредакция</a><br /><!--/noindex--><a href="/adv/">Размещение рекламы</a></p>
+            <p>Копирование материалов возможно только c разрешения редакции.<br />В противном случае это будет называться уже другим словом.</p>
+        </div>
+    </div>
+<!-- ============== //FOOTER ============== -->
+    <div style="display:none;">
+    	<form method="post" name="news_settings" action="#">
+        	<div class="head">Фильтр новостей по темам и меткам</div>
+            <div class="body">
+                <span class="theme movies">Новости о фильмах</span>
+                <div class="toggler" data-name="movies_cat" data-val="1"></div>
+                <span class="theme anime">Новости об аниме</span>
+                <div class="toggler" data-name="anime_cat" data-val="2"></div>
+                <span class="theme games">Новости об играх</span>
+                <div class="toggler" data-name="games_cat"  data-val="2"></div>
+                <span class="theme tvs">Новости о сериалах</span>
+                <div class="toggler" data-name="tv_cat" data-val="2"></div>
+                <div class="sp"></div>
+                <div id="tag_filter">
+                    <div class="tag_zone add">
+                        <span class="title">Метки этой новости</span>
+                        <ul class="tags"></ul>
+                        <div class="clr"></div>
+                    </div>
+                    <div class="tag_zone del">
+                        <span class="title">Не показывать новости с этими метками</span>
+                        <ul class="tags"></ul>
+                        <div class="clr"></div>
+                        <input type="text" value="" name="del_tags" />
+                    </div>
+                </div>
+                <div class="advanced">
+                	<a href="http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS91c2Vyc2V0dGluZ3Mv">Расширенные настройки</a>
+                	<input type="submit" value="Сохранить" class="sbutton" name="save_news_settings"/>
+                    <div class="clr"></div>
+                </div>
+            </div>
+    	</form>
+        <div id="help_tool">
+            <div class="head">Популярная новость, скрытая настройками</div>
+            <div class="body"><p class="prim">Примечание: популярные новости, даже скрытые настройками, всё равно выводятся — в свёрнутом виде, как эта</p>
+            	<a href="http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS91c2Vyc2V0dGluZ3Mv">Настройки новостей</a>
+            	<div class="clr"></div>
+            </div>
+        </div>
+    </div> 
+ 
+</body>
+</html> 
