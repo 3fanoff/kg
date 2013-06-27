@@ -22,6 +22,47 @@
 $(document).ready(function()
 	{$('[title]').qtip({position: {my: 'bottom center', at: 'top center', adjust: {x: 12, y: -6}}});}
 );
+
+/**** 26.06.2013 ***/
+$(function(){});
+function sectTab(){
+	$is = $(this);
+	$(this).addClass('act').siblings().removeClass('act');
+	$.ajax({
+		url:'temp_box.html',
+		dataType: 'html',
+		success: function(data){
+			/* временное */
+			cont = $(data).html();
+			$is.parent().nextAll('.body').html('<ul class="list">' + cont + '</ul>');
+		}
+	});
+}
+function addMore(){
+	$is = $(this);
+	$cx = $is.parents('ul.list');
+	$anc = $is.parent('span');
+	clsTemp = '.temp_box';
+	$.ajax({
+		url: 'temp_box.html',
+		dataType: 'html',
+		beforeSend: function(){
+			$anc.hide();
+		},
+		success: function(data){
+			cont = $(data);
+			$cx.append(cont);
+			$(clsTemp, $cx).slideDown(200, function(){
+				$(this).children('li').appendTo($cx);
+				$(clsTemp, $cx).remove();
+				$anc.remove();
+			});
+		},
+		error: function(){
+			$anc.show();
+		}
+	});
+}
 </script>
 
 </head><body>
@@ -73,292 +114,336 @@ $(document).ready(function()
 
 <!-- ============== CONTENT ============== -->
 <div class="content clearfix">
-	<div class="section subs">
-    	<div class="head"><h2>Мои подписки</h2><span class="icon-head">&nbsp;</span></div>
-        <div class="body">
-        	<div class="sub-title">Новые рецензии и оценки</div>
-        	<div class="critics">
-            	<div class="c-name user"><a href="#">Иван Иванов</a></div>
-                <ul class="list extend">
-                	<li>
-                		<div class="mg-name"><span class="ic movie"></span><a href="#">Кадры&nbsp;<span class="user-grade r-bad">5/10</span></a></div>
-                    	<div class="clr"></div>
-                    </li>
-                    <li>
-                        <div class="mg-name">
-                        	<span class="ic game"></span>
-                            <a href="#">Пираты Карибского моря: Проклятие Черной жемчужины&nbsp;<span class="user-grade r-good">9/10</span></a>
-                        </div>
-                        <div class="clr"></div>
-                    </li>
-                    <li>
-                        <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening&nbsp;<span class="user-grade r-none">1/10</span></a></div>
-                        <div class="clr"></div>
-                    </li>
-                </ul>
+	<div class="a_content"></div>
+	<div class="content_sections">
+    	<div class="c_s left">
+        	<div class="section subs">
+                <div class="head"><h2>Мои подписки</h2><span class="icon-head">&nbsp;</span></div>
+                <div class="body">
+                    <div class="sub-title">Новые рецензии и оценки</div>
+                    <div class="critic_box">
+                        <div class="c-name user"><a href="#">Иван Иванов</a></div>
+                        <ul class="list extend">
+                            <li>
+                                <div class="mg-name"><span class="ic movie"></span><a href="#">Кадры&nbsp;<span class="user-grade r-bad"><span>5/10</span></span></a></div>
+                                <div class="clr"></div>
+                            </li>
+                            <li>
+                                <div class="mg-name">
+                                    <span class="ic game"></span>
+                                    <a href="#">Пираты Карибского моря: Проклятие Черной жемчужины&nbsp;<span class="user-grade r-good"><span>9/10</span></span></a>
+                                </div>
+                                <div class="clr"></div>
+                            </li>
+                            <li>
+                                <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening&nbsp;<span class="user-grade r-none"><span>1/10</span></span></a></div>
+                                <div class="clr"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="critic_box">
+                        <div class="c-name critic"><a href="#">Ведомости</a></div>
+                        <ul class="list extend">
+                            <li>
+                                <div class="mg-name"><span class="ic movie"></span><a href="#">Приключения мистера Пибоди и Шермана&nbsp;<span class="site-grade r-bad"><span>2/10</span></span></a>
+                                <span> и еще <a href="javascript:void(0);" class="anchor add_more" onClick="addMore.call(this);">24 рецензии</a></span></div>
+                                <div class="clr"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="critic_box">
+                        <div class="c-name critic"><a href="#">Алекс Экслер</a></div>
+                        <ul class="list extend">
+                            <li>
+                                <div class="mg-name"><span class="ic game"></span><a href="#">GRID 2&nbsp;<span class="site-grade r-good"><span>10/10</span></span></a></div>
+                                <div class="clr"></div>
+                            </li>
+                            <li>
+                                <div class="mg-name"><span class="ic movie"></span><a href="#">Завещание&nbsp;<span class="site-grade r-awful"><span>Так себе</span></span></a></div>
+                                <div class="clr"></div>
+                            </li>
+                            <li>
+                                <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening&nbsp;<span class="user-grade r-average"><span>6/10</span></span></a></div>
+                                <div class="clr"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="sub-title">19 июня и ранее</div>
+                    <div class="critic_box">
+                        <div class="c-name user"><a href="#">Иван Иванов</a></div>
+                        <ul class="list extend">
+                            <li>
+                                <div class="mg-name"><span class="ic movie"></span><a href="#">Кадры&nbsp;<span class="user-grade r-bad"><span>5/10</span></span></a></div>
+                                <div class="clr"></div>
+                            </li>
+                            <li>
+                                <div class="mg-name">
+                                    <span class="ic game"></span>
+                                    <a href="#">Пираты Карибского моря: Проклятие Черной жемчужины&nbsp;<span class="user-grade r-good"><span>9/10</span></span></a>
+                                </div>
+                                <div class="clr"></div>
+                            </li>
+                            <li>
+                                <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening&nbsp;<span class="user-grade r-none"><span>1/10</span></span></a></div>
+                                <div class="clr"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="foot">
+                    <div class="help">Свободно 96</div>
+                    <a href="#" class="anchor more">Больше обновлений</a>
+                    <div class="but-s">
+                        <a href="#" class="rss" title="RSS"></a>
+                        <a href="#" class="set" title="Управление подписками"></a>
+                    </div>
+                </div>
             </div>
-            <div class="critics">
-            	<div class="c-name critic"><a href="#">Ведомости</a></div>
-                <ul class="list extend">
-                	<li>
-                		<div class="mg-name"><span class="ic movie"></span><a href="#">Приключения мистера Пибоди и Шермана&nbsp;<span class="site-grade r-bad">2/10</span></a>
-                        <span> и еще <a href="javascript:void(0);" class="anchor">24 рецензии</a></span></div>
-                    	<div class="clr"></div>
-                	</li>
-                </ul>
+            <div class="section comm">
+                <div class="head"><h2>Мои комментарии</h2><span class="icon-head">&nbsp;</span></div>
+                <div class="body">
+                    <ul class="list">
+                        <li>
+                            <div class="mg-name"><span class="ic blog"></span><a href="#">Стартрек: Возмездие «Кинокадра»</a></div>
+                            <div class="icons">
+                                <div class="user-comm new"><a href="#">92</a></div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic review"></span><a href="#">Андрей Подшибякин — Doom 3</a></div>
+                            <div class="icons">
+                                <div class="user-comm new"><a href="#">200</a></div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic critic"></span><a href="#">Ведомости</a></div>
+                            <div class="icons">
+                                <div class="user-comm"><a href="#">5</a></div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic critic"></span><a href="#">Лидия Маслова</a></div>
+                            <div class="icons">
+                                <div class="user-comm"><a href="#">143</a></div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic movie"></span><a href="#">Приключения мистера Пибоди и злоебучего Шермана</a></div>
+                            <div class="icons">
+                                <div class="user-comm"><a href="#">1</a></div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic game"></span><a href="#">Prime World: Defenders</a></div>
+                            <div class="icons">
+                                <div class="user-comm"><a href="#">13</a></div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic wisdom"></span><a href="#">Алекс Экслер — Властелин колец: Братство Кольца</a></div>
+                            <div class="icons">
+                                <div class="user-comm"><a href="#">51</a></div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic critic"></span><a href="#">Лидия Маслова</a></div>
+                            <div class="icons">
+                                <div class="user-comm"><a href="#">12</a></div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="foot">
+                    <div class="help">15/1437</div>
+                    <a href="#" class="anchor more">Больше комментариев</a>
+                </div>
             </div>
-            <div class="critics">
-            	<div class="c-name critic"><a href="#">Алекс Экслер</a></div>
-                <ul class="list extend">
-                	<li>
-                        <div class="mg-name"><span class="ic game"></span><a href="#">GRID 2&nbsp;<span class="site-grade r-good">10/10</span></a></div>
-                        <div class="clr"></div>
-                    </li>
-                    <li>
-                        <div class="mg-name"><span class="ic movie"></span><a href="#">Завещание&nbsp;<span class="site-grade r-awful">Так себе</span></a></div>
-                        <div class="clr"></div>
-                    </li>
-                    <li>
-                        <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening&nbsp;<span class="user-grade r-average">6/10</span></a></div>
-                        <div class="clr"></div>
-                    </li>
-                </ul>
+    	</div>
+        <div class="c_s right">
+        	<div class="section favs">
+                <div class="head"><h2>Моё избранное</h2><span class="icon-head">&nbsp;</span></div>
+                <div class="tabs">
+                	<a href="javascript:void(0);" class="all-tab act" onClick="sectTab.call(this);">Всё</a>
+                    <a href="javascript:void(0);" class="mov-tab" onClick="sectTab.call(this);">Фильмы</a>
+                    <a href="javascript:void(0);" class="gam-tab" onClick="sectTab.call(this);">Игры</a>
+                </div>
+                <div class="sort">
+                	Сортировать по добавлению, <a href="javascript:void(0);" class="anchor" onClick="sectTab.call(this);">по названию</a>, <a href="javascript:void(0);" class="anchor" onClick="sectTab.call(this);">по рейтингу</a>
+               	</div>
+                <div class="body">
+                    <ul class="list">
+                        <li>
+                            <div class="mg-name"><span class="ic movie"></span><a href="#">Призраки в Коннектикуте - 2: Тени злоебучего прошлого</a></div>
+                            <div class="icons">
+                                <div class="site-grade r-average">75</div>
+                                <div class="mg-del" title="Удалить"></div>
+                                <div class="user-grade r-good">10/10</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic game"></span><a href="#">Remember Me</a></div>
+                            <div class="icons">
+                                <div class="site-grade r-good">100</div>
+                                <div class="mg-del" title="Удалить"></div>
+                                <div class="user-grade r-average">8/10</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
+                            <div class="icons">
+                                <div class="site-grade r-bad">32</div>
+                                <div class="mg-del" title="Удалить"></div>
+                                <div class="user-grade r-good">9/10</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic movie"></span><a href="#">10 вещей, которые я ненавижу в жизни</a></div>
+                            <div class="icons">
+                                <div class="site-grade r-none">-</div>
+                                <div class="mg-del" title="Удалить"></div>
+                                <div class="user-grade r-average">8/10</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic movie"></span><a href="#">Приключения мистера Пибоди и Шермана</a></div>
+                            <div class="icons">
+                                <div class="site-grade r-good">92</div>
+                                <div class="mg-del" title="Удалить"></div>
+                                <div class="user-grade r-bad">6/10</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic game"></span><a href="#">GRID 2</a></div>
+                            <div class="icons">
+                                <div class="site-grade r-awful">5</div>
+                                <div class="mg-del" title="Удалить"></div>
+                                <div class="user-grade r-average">8/10</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic movie"></span><a href="#">Завещание</a></div>
+                            <div class="icons">
+                                <div class="site-grade r-average">71</div>
+                                <div class="mg-del" title="Удалить"></div>
+                                <div class="user-grade r-average">8/10</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
+                            <div class="icons">
+                                <div class="site-grade r-good">95</div>
+                                <div class="mg-del" title="Удалить"></div>
+                                <div class="user-grade r-average">7/10</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="foot">
+                    <div class="help">16/52</div>
+                    <a href="#" class="anchor more">Больше избранного</a>
+                </div>
             </div>
-            <div class="sub-title">19 июня и ранее</div>
-        </div>
-        <div class="foot">
-        	<div class="help">Свободно 96</div>
-        	<a href="#" class="anchor more">Больше обновлений</a>
-            <div class="but-s">
-            	<a href="#" class="rss" title="RSS"></a>
-                <a href="#" class="set" title="Управление подписками"></a>
+            <div class="section grades">
+                <div class="head"><h2>Мои оценки</h2><span class="icon-head">&nbsp;</span></div>
+                <div class="tabs">
+                	<a href="javascript:void(0);" class="all-tab act" onClick="sectTab.call(this);">Всё</a>
+                    <a href="javascript:void(0);" class="mov-tab" onClick="sectTab.call(this);">Фильмы</a>
+                    <a href="javascript:void(0);" class="gam-tab" onClick="sectTab.call(this);">Игры</a>
+                </div>
+                <div class="sort">
+                	Сортировать по проставлению, <a href="javascript:void(0);" class="anchor" onClick="sectTab.call(this);">по названию</a>, <a href="javascript:void(0);" class="anchor" onClick="sectTab.call(this);">по оценке</a>
+               	</div>
+                <div class="body">
+                    <ul class="list">
+                        <li>
+                            <div class="mg-name"><span class="ic movie"></span><a href="#">Призраки в Коннектикуте - 2: Тени злоебучего прошлого</a></div>
+                            <div class="icons">
+                                <div class="user-grade r-good">10/10</div>
+                                <div class="site-grade r-average">75</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic game"></span><a href="#">Remember Me</a></div>
+                            <div class="icons">
+                                <div class="user-grade r-average">8/10</div>
+                                <div class="site-grade r-good">100</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
+                            <div class="icons">
+                                <div class="user-grade r-good">9/10</div>
+                                <div class="site-grade r-bad">32</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic movie"></span><a href="#">10 вещей, которые я ненавижу в жизни</a></div>
+                            <div class="icons">
+                                <div class="user-grade r-average">8/10</div>
+                                <div class="site-grade r-none">-</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic movie"></span><a href="#">Приключения мистера Пибоди и Шермана</a></div>
+                            <div class="icons">
+                                <div class="user-grade r-bad">6/10</div>
+                                <div class="site-grade r-good">92</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic game"></span><a href="#">GRID 2</a></div>
+                            <div class="icons">
+                                <div class="user-grade r-average">8/10</div>
+                                <div class="site-grade r-awful">5</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic movie"></span><a href="#">Завещание</a></div>
+                            <div class="icons">
+                                <div class="user-grade r-average">8/10</div>
+                                <div class="site-grade r-average">71</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                        <li>
+                            <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
+                            <div class="icons">
+                                <div class="user-grade r-average">7/10</div>
+                                <div class="site-grade r-good">95</div>
+                            </div>
+                            <div class="clr"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="foot">
+                    <div class="help">16/453</div>
+                    <a href="#" class="anchor more">Больше оценок</a>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="section favs">
-    	<div class="head"><h2>Моё избранное</h2><span class="icon-head">&nbsp;</span></div>
-        <div class="body">
-        	<ul class="list">
-            	<li>
-                	<div class="mg-name"><span class="ic movie"></span><a href="#">Призраки в Коннектикуте - 2: Тени злоебучего прошлого</a></div>
-                    <div class="icons">
-                    	<div class="site-grade r-average">75</div>
-                    	<div class="mg-del"></div>
-                        <div class="user-grade r-good">10/10</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic game"></span><a href="#">Remember Me</a></div>
-                    <div class="icons">
-                    	<div class="site-grade r-good">100</div>
-                    	<div class="mg-del"></div>
-                        <div class="user-grade r-average">8/10</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
-                    <div class="icons">
-                    	<div class="site-grade r-bad">32</div>
-                    	<div class="mg-del"></div>
-                        <div class="user-grade r-good">9/10</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic movie"></span><a href="#">10 вещей, которые я ненавижу в жизни</a></div>
-                    <div class="icons">
-                    	<div class="site-grade r-none">-</div>
-                    	<div class="mg-del"></div>
-                        <div class="user-grade r-average">8/10</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic movie"></span><a href="#">Приключения мистера Пибоди и Шермана</a></div>
-                    <div class="icons">
-                    	<div class="site-grade r-good">92</div>
-                    	<div class="mg-del"></div>
-                        <div class="user-grade r-bad">6/10</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic game"></span><a href="#">GRID 2</a></div>
-                    <div class="icons">
-                    	<div class="site-grade r-awful">5</div>
-                    	<div class="mg-del"></div>
-                        <div class="user-grade r-average">8/10</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic movie"></span><a href="#">Завещание</a></div>
-                    <div class="icons">
-                    	<div class="site-grade r-average">71</div>
-                    	<div class="mg-del"></div>
-                        <div class="user-grade r-average">8/10</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
-                    <div class="icons">
-                    	<div class="site-grade r-good">95</div>
-                    	<div class="mg-del"></div>
-                        <div class="user-grade r-average">7/10</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-            </ul>
-        </div>
-        <div class="foot">
-        	<div class="help">16/52</div>
-        	<a href="#" class="anchor more">Больше избранного</a>
-        </div>
-    </div>
-    <div class="section comm">
-    	<div class="head"><h2>Мои комментарии</h2><span class="icon-head">&nbsp;</span></div>
-        <div class="body">
-            <ul class="list">
-            	<li>
-                	<div class="mg-name"><span class="ic blog"></span><a href="#">Стартрек: Возмездие «Кинокадра»</a></div>
-                    <div class="icons">
-                    	<div class="user-comm new"><a href="#">92</a></div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic review"></span><a href="#">Андрей Подшибякин — Doom 3</a></div>
-                    <div class="icons">
-                        <div class="user-comm new"><a href="#">200</a></div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic critic"></span><a href="#">Ведомости</a></div>
-                    <div class="icons">
-                        <div class="user-comm"><a href="#">5</a></div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic critic"></span><a href="#">Лидия Маслова</a></div>
-                    <div class="icons">
-                        <div class="user-comm"><a href="#">143</a></div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic movie"></span><a href="#">Приключения мистера Пибоди и злоебучего Шермана</a></div>
-                    <div class="icons">
-                        <div class="user-comm"><a href="#">1</a></div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic game"></span><a href="#">Prime World: Defenders</a></div>
-                    <div class="icons">
-                        <div class="user-comm"><a href="#">13</a></div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic wisdom"></span><a href="#">Алекс Экслер — Властелин колец: Братство Кольца</a></div>
-                    <div class="icons">
-                        <div class="user-comm"><a href="#">51</a></div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic critic"></span><a href="#">Лидия Маслова</a></div>
-                    <div class="icons">
-                        <div class="user-comm"><a href="#">12</a></div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-            </ul>
-        </div>
-        <div class="foot">
-        	<div class="help">15/1437</div>
-        	<a href="#" class="anchor more">Больше комментариев</a>
-        </div>
-    </div>
-    <div class="section grades">
-    	<div class="head"><h2>Мои оценки</h2><span class="icon-head">&nbsp;</span></div>
-        <div class="body">
-        	<ul class="list">
-            	<li>
-                	<div class="mg-name"><span class="ic movie"></span><a href="#">Призраки в Коннектикуте - 2: Тени злоебучего прошлого</a></div>
-                    <div class="icons">
-                        <div class="user-grade r-good">10/10</div>
-                        <div class="site-grade r-average">75</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic game"></span><a href="#">Remember Me</a></div>
-                    <div class="icons">
-                        <div class="user-grade r-average">8/10</div>
-                        <div class="site-grade r-good">100</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
-                    <div class="icons">
-                        <div class="user-grade r-good">9/10</div>
-                        <div class="site-grade r-bad">32</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic movie"></span><a href="#">10 вещей, которые я ненавижу в жизни</a></div>
-                    <div class="icons">
-                        <div class="user-grade r-average">8/10</div>
-                        <div class="site-grade r-none">-</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic movie"></span><a href="#">Приключения мистера Пибоди и Шермана</a></div>
-                    <div class="icons">
-                        <div class="user-grade r-bad">6/10</div>
-                        <div class="site-grade r-good">92</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic game"></span><a href="#">GRID 2</a></div>
-                    <div class="icons">
-                        <div class="user-grade r-average">8/10</div>
-                        <div class="site-grade r-awful">5</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic movie"></span><a href="#">Завещание</a></div>
-                    <div class="icons">
-                        <div class="user-grade r-average">8/10</div>
-                        <div class="site-grade r-average">71</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-                <li>
-                	<div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
-                    <div class="icons">
-                        <div class="user-grade r-average">7/10</div>
-                        <div class="site-grade r-good">95</div>
-                    </div>
-                    <div class="clr"></div>
-                </li>
-            </ul>
-        </div>
-        <div class="foot">
-        	<div class="help">16/453</div>
-        	<a href="#" class="anchor more">Больше оценок</a>
-        </div>
+        <div class="clr"></div>
     </div>
 </div>
 <!-- ============== // CONTENT ============== -->
