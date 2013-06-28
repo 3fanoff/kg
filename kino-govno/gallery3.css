@@ -4,10 +4,10 @@ html, body {padding: 0; margin: 0; color: #333;}
 .resize_warn {width: 778px; margin: 10px auto; padding: 10px; text-align: left; background-color: #fff4df; border: 1px solid #fd8500; font: normal 11px arial; color: #825e3e;}
 
 /* New header */
-.new_header {background: #6cb3ee url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L25ld19oZWFkZXJfYmcuZ2lm) repeat-x;}
+.new_header {background: #6cb3ee url(http://www.kino-govno.com/i/gallery/new_header_bg.gif) repeat-x;}
 .new_header_content td {font: bold 16px arial; color: #fff; padding: 5px; padding-right: 5px; padding-top: 15px; padding-bottom: 15px; text-align: left; vertical-align: top;}
-.new_header_rarr {width: 40px; background: url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L25ld19yYXJyLmdpZg%3D%3D) no-repeat 50% 50%;}
-.new_header_larr {width: 30px; background: url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L25ld19sYXJyLmdpZg%3D%3D) no-repeat 50% 50%;}
+.new_header_rarr {width: 40px; background: url(http://www.kino-govno.com/i/gallery/new_rarr.gif) no-repeat 50% 50%;}
+.new_header_larr {width: 30px; background: url(http://www.kino-govno.com/i/gallery/new_larr.gif) no-repeat 50% 50%;}
 .new_header_small {font: normal 12px arial; color: #fff;}
 .new_header a:link {color: #ffe672;}
 .new_header a:visited {color: #ffe672;}
@@ -20,27 +20,27 @@ html, body {padding: 0; margin: 0; color: #333;}
 #hd {width: 780px; margin: 0 auto; font: bold 16px arial; color: #fff;}
 #hd a, #hd a:hover, #hd a:active, #hd a:visited {text-decoration: underline; color: #fc3;}
 .crumbs {width:615px; float: left; padding: 15px 0;}
-.crumbs_path {width: 70px; float: left; text-align: center; padding-right: 40px; background: url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L3JhcnIuZ2lm) no-repeat 100% 50%;}
+.crumbs_path {width: 70px; float: left; text-align: center; padding-right: 40px; background: url(../i/gallery/rarr.gif) no-repeat 100% 50%;}
 .crumbs_title {width: 355px; padding-right: 30px; float: left; text-align: left;}
 .crumbs_title span {font: normal 12px arial; color: #e5e5e5;}
 .bonus {width: 125px; float: left;}
-.btn {width: 140px; float: right; padding-top: 15px; background: #c33 url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L2hkX2JfYmcxLmdpZg%3D%3D) repeat-x; text-align: center;}
-.btn_cnt {padding: 0 10px 5px 10px; font-size: 12px; background: url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L2hkX2JfYmcyLmdpZg%3D%3D) no-repeat bottom;}
+.btn {width: 140px; float: right; padding-top: 15px; background: #c33 url(http://www.kino-govno.com/i/gallery/hd_b_bg1.gif) repeat-x; text-align: center;}
+.btn_cnt {padding: 0 10px 5px 10px; font-size: 12px; background: url(http://www.kino-govno.com/i/gallery/hd_b_bg2.gif) no-repeat bottom;}
 
 /* Если и кадры, и постеры */
-.btnleft {width: 130px; float: left; padding-top: 15px; background: #c33 url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L2hkX2JfYmczLmdpZg%3D%3D) repeat-x; text-align: center;}
-.btnright {width: 130px; float: right; padding-top: 15px; background: #c33 url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L2hkX2JfYmczLmdpZg%3D%3D) repeat-x; text-align: center;}
-.btn_cnt130 {padding: 0 10px 5px 10px; font-size: 12px; background: url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L2hkX2JfYmc0LmdpZg%3D%3D) no-repeat bottom;}
+.btnleft {width: 130px; float: left; padding-top: 15px; background: #c33 url(http://www.kino-govno.com/i/gallery/hd_b_bg3.gif) repeat-x; text-align: center;}
+.btnright {width: 130px; float: right; padding-top: 15px; background: #c33 url(http://www.kino-govno.com/i/gallery/hd_b_bg3.gif) repeat-x; text-align: center;}
+.btn_cnt130 {padding: 0 10px 5px 10px; font-size: 12px; background: url(http://www.kino-govno.com/i/gallery/hd_b_bg4.gif) no-repeat bottom;}
 
 /* Navigation - Main */
-.nav {height: 30px; margin: 15px 30px; font: bold 14px arial;}
+.nav {width: 910px; height: 30px; margin: 15px auto; font: bold 14px arial;}
 .navleft {width: 250px; float: left; text-align: left; padding: 7px 15px;}
 .navleft img {width: 21px; height: 11px; border: 0;}
 .navright {width: 430px; float: right; text-align: right; padding: 7px 15px;}
 .navright span {padding: 0 5px; width: 1.2em;}
-.navpics {background: url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L25hdnBpY3MuZ2lm) no-repeat; color: #7e9bbe; background-color: #FFFFFF;}
-.navposters {background:#E6FBDB; color: #75b366;}
-.navwallz {background: url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L25hdndhbGx6LmdpZg%3D%3D) no-repeat; color: #b58351;}
+.navpics {background: url(http://www.kino-govno.com/i/gallery/navpics.gif) no-repeat; color: #7e9bbe; background-color: #FFFFFF;}
+.navposters {background: url(http://www.kino-govno.com/i/gallery/navposters.gif) no-repeat; color: #75b366;}
+.navwallz {background: url(http://www.kino-govno.com/i/gallery/navwallz.gif) no-repeat; color: #b58351;}
 .navpics a, .navpics a:hover, .navpics a:visited {color: #1781ce;}
 .navposters a, .navposters a:hover, .navposters a:visited {color: #42992d;}
 .navwallz a, .navwallz a:hover, .navwallz a:visited {color: #986c41;}
@@ -57,14 +57,14 @@ html, body {padding: 0; margin: 0; color: #333;}
 .navconleft img, .navconright img {width: 16px; height: 8px; border: 0;}
 
 /* Gallery */
-.row {width: 910px; clear: both; margin: 20px auto; _margin: 20px auto; background: #efefef url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L3Jvd191cC5naWY%3D) no-repeat;}
+.row {width: 910px; clear: both; margin: 20px auto; _margin: 20px auto; background: #efefef url(http://www.kino-govno.com/i/gallery/row_up.gif) no-repeat;}
 .single {margin: 100px auto;}
 .row img {margin: 7px 10px 5px 10px; _margin-top: 3px; border: 1px solid #ccc;}
 .cell {width: 303px; float: left; padding-top: 5px; font: normal 11px arial;}
 .cell div {text-align: center;}
 .cellhd {width: 303px; padding-top: 15px; float: left; color: #acacac;}
 .cellsub {width: 303px; color: #acacac;}
-.cellbottom {font-size: 1px; height: 11px; background: url(http://proxy.serverly.eu/index.php?q=aHR0cDovL3d3dy5raW5vLWdvdm5vLmNvbS9jc3MvLi4vaS9nYWxsZXJ5L3Jvd19ib3R0b20uZ2lm) no-repeat;}
+.cellbottom {font-size: 1px; height: 11px; background: url(http://www.kino-govno.com/i/gallery/row_bottom.gif) no-repeat;}
 .cell span {padding: 0 3px 1px 3px; font: bold 11px arial; color: #fff;}
 div.pics a, div.pics a:hover {color: #1781ce; text-decoration: none;}
 div.posters a, div.posters a:hover {color: #42992d; text-decoration: none;}
@@ -120,14 +120,43 @@ span.new {background-color: #ff9900;}
 }
 .fancybox-outer .comments:hover {background:#039;}
 /* 21.06.2013 */
-.img_edit {position:relative; margin:auto; background:#000;}
+.fancybox-outer .content {position:relative; z-index:200;}
+.img_edit {position:relative; margin:auto; background:#000; z-index:100;}
 .img_edit img {position:relative; z-index:10;}
 .note-box {
 	position:absolute;
-	display:none;
+	/*display:none;*/
 	border:2px solid #FFF;
-	z-index:100;
+	z-index:1000;
 	margin:-2px 0 0 -2px;
+	
+	opacity:0;
+	-moz-opacity:0;
+	-webkit-opacity:0;
+	filter:alpha(opacity=0);
+	visibility:hidden;
+	transition:opacity 0.5s, visibility 0.5s;
+	-moz-transition:opacity 0.5s, visibility 0.5s;
+	-o-transition:opacity 0.5s, visibility 0.5s;
+	-webkit-transition:opacity 0.5s, visibility 0.5s;
+}
+.img_edit:hover .note-box {
+	opacity:1;
+	-moz-opacity:1;
+	-webkit-opacity:1;
+	visibility:visible;
+}
+.img_edit .note-box.visible,
+.img_edit:hover .note-box.visible {
+	opacity:1;
+	-moz-opacity:1;
+	-webkit-opacity:1;
+	filter:alpha(opacity=100);
+	visibility:visible;
+	transition:none;
+	-moz-transition:none;
+	-o-transition:none;
+	-webkit-transition:none;
 }
 .note-box.new {
 	border:0 solid;
@@ -136,8 +165,8 @@ span.new {background-color: #ff9900;}
 	height:1px;
 	margin:0;
 }
-.note-box:hover {z-index:1000;}
-.note-box.ui-draggable {z-index:1200;}
+.note-box:hover {z-index:1500;}
+.note-box.ui-draggable {z-index:2000;}
 .note-box .tool {
 	background:#FC9;
 	top:100%;
@@ -195,7 +224,6 @@ span.new {background-color: #ff9900;}
 	width:100%;
 	height:100%;
 }
-.note-box.new {}
 .note-box .note {
 	background:#FC9;
 	top:100%;
@@ -249,6 +277,6 @@ span.new {background-color: #ff9900;}
 	position:absolute;
 	bottom:0;
 	left:0;
-	z-index:100;
+	z-index:1100;
 }
 .fancybox-inner .button.del {background:#903; display:none;}
