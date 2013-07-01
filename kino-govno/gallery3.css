@@ -1,5 +1,6 @@
 
 html, body {padding: 0; margin: 0; color: #333;}
+
 .clearer {clear: both; display: block; margin: 0; padding: 0; height: 0; line-height: 1px; font-size: 1px;}
 .resize_warn {width: 778px; margin: 10px auto; padding: 10px; text-align: left; background-color: #fff4df; border: 1px solid #fd8500; font: normal 11px arial; color: #825e3e;}
 
@@ -103,7 +104,7 @@ span.new {background-color: #ff9900;}
 	height:100%;
 }
 .fancybox-outer .comments {
-	background:#06F;
+	background-color:#06F;
 	color:#FFF;
 	cursor:pointer;
 	font-size:15px;
@@ -118,22 +119,20 @@ span.new {background-color: #ff9900;}
 	z-index:8041;
 	width:20px;
 }
-.fancybox-outer .comments:hover {background:#039;}
+.fancybox-outer .comments:hover {background-color:#039;}
 /* 21.06.2013 */
-.fancybox-outer .content {position:relative; z-index:200;}
-.img_edit {position:relative; margin:auto; background:#000; z-index:100;}
-.img_edit img {position:relative; z-index:10;}
+.fancybox-outer .content {}
+.img_edit {position:relative; margin:0; z-index:100;}
+.img_edit img {position:relative;}
 .note-box {
 	position:absolute;
-	/*display:none;*/
+	display:block;
 	border:2px solid #FFF;
 	z-index:1000;
 	margin:-2px 0 0 -2px;
-	
 	opacity:0;
 	-moz-opacity:0;
 	-webkit-opacity:0;
-	filter:alpha(opacity=0);
 	visibility:hidden;
 	transition:opacity 0.5s, visibility 0.5s;
 	-moz-transition:opacity 0.5s, visibility 0.5s;
@@ -151,7 +150,6 @@ span.new {background-color: #ff9900;}
 	opacity:1;
 	-moz-opacity:1;
 	-webkit-opacity:1;
-	filter:alpha(opacity=100);
 	visibility:visible;
 	transition:none;
 	-moz-transition:none;
@@ -168,10 +166,11 @@ span.new {background-color: #ff9900;}
 .note-box:hover {z-index:1500;}
 .note-box.ui-draggable {z-index:2000;}
 .note-box .tool {
-	background:#FC9;
+	background-color:#FC9;
 	top:100%;
 	position:absolute;
 	margin-top:4px;
+	z-index:100;
 }
 .note-box .tool textarea {
 	display: block;
@@ -181,7 +180,7 @@ span.new {background-color: #ff9900;}
 	height:30px;
 }
 .note-box .tool span {
-	background:#C60;
+	background-color:#C60;
 	display:inline-block;
 	height:16px;
 	padding:0 5px;
@@ -192,7 +191,7 @@ span.new {background-color: #ff9900;}
 	vertical-align:top;
 }
 .note-box .tool b {
-	background:#F00;
+	background-color:#F00;
 	color:#FFF;
 	cursor:pointer;
 	display:inline-block;
@@ -206,7 +205,7 @@ span.new {background-color: #ff9900;}
 	position:absolute;
 	width:12px;
 	height:12px;
-	background:#000;
+	background-color:#000;
 	right:-2px;
 	display:block;
 	bottom:-2px;
@@ -216,7 +215,7 @@ span.new {background-color: #ff9900;}
 .note-box.mn {border-color:#e67373;}
 .note-box.mn .box {background:#e67373;}
 .note-box .box {
-	background:#FFF;
+	background-color:#FFF;
 	opacity:0.3;
 	-moz-opacity:0.3;
 	-webkit-opacity:0.3;
@@ -225,7 +224,7 @@ span.new {background-color: #ff9900;}
 	height:100%;
 }
 .note-box .note {
-	background:#FC9;
+	background-color:#FC9;
 	top:100%;
 	position:absolute;
 	font:11px Arial, Helvetica;
@@ -250,14 +249,14 @@ span.new {background-color: #ff9900;}
 	top:0;
 }
 .note-box .carma {
-	background:#FFF;
+	background-color:#FFF;
 	border:2px solid #FFF;
 	position:absolute;
 	top:-2px;
 	right:-2px;
 }
-.note-box .carma a.minus {background:#F00; left:0;}
-.note-box .carma a.plus {background:#093; right:0;}
+.note-box .carma a.minus {background-color:#F00; left:0;}
+.note-box .carma a.plus {background-color:#093; right:0;}
 .note-box .carma span {
 	display:block;
 	margin:0 14px;
@@ -268,7 +267,7 @@ span.new {background-color: #ff9900;}
 .note-box.mn .carma {border-color:#e67373;}
 .note-box.pl .carma {border-color:#9def95;}
 .fancybox-inner .button {
-	background:#06C;
+	background-color:#06C;
 	color:#FFF;
 	cursor:pointer;
 	font:12px/20px Tahoma, Geneva;
@@ -279,4 +278,4 @@ span.new {background-color: #ff9900;}
 	left:0;
 	z-index:1100;
 }
-.fancybox-inner .button.del {background:#903; display:none;}
+.fancybox-inner .button.del {background-color:#903; display:none;}

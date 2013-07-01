@@ -1,78 +1,87 @@
 $(function(){
 		//FANCIES
 		lock = 0;//lock ajax load
-		$('.gallery_box a[rel="gal"]').fancybox({
-			nextEffect: 'fade',
-			prevEffect: 'fade',
-			padding: 0,
-			maxWidth: 1200,
-			helpers: {
-				thumbs: {width:	35, height: 35, position: 'top'}
-			},
-			afterLoad: function(){
-				this.outer.prepend('<div class="comments" onclick="$.fancybox.close();lock=1">+</div>');
-			},
-			afterClose: function(){
-				wFancy = this.outer.parents('.fancybox-wrap').width();
-				if(lock){
-					$.fancybox.reposition();
-					this.element.parents('li').find('a.comm').trigger('click');
-					lock = 0;
-				}
-			}
-		});
-		
-		$('.gallery_box a[rel="ajax"]').fancybox({
-			nextEffect: 'none',
-			prevEffect: 'none',
-			autoSize:	false,
-			height: 'auto',
-			maxWidth: 1200,
-			padding: 0,
-			fitToView: false,
-			scrolling: 'no',
-			type: 'ajax',
-			wrapCSS: 'edit_mode',
-			arrows: true,
-			ajax: { dataType: 'html' },
-			beforeLoad: function(){
-				if(!window.wFancy) wFancy = '100%';
-				this.width = wFancy;
-			},
-			beforeShow: function(){
-				img = this.element.data().pic;
-				//this.inner.find('img').attr('src', img);//подставляем картинку
-				out = hov = 1;
-				res = 1;
-				$.fancybox.update();
-			},
-			afterLoad: function(){
-				this.outer.prepend('<div class="comments back" onclick="$.fancybox.close();lock=1">&larr;</div>');
-			},
-			afterShow: function(){
-				$.getJSON('noteboxes.json', met.render);//получаем данные о подписях
-			},
-			afterClose: function(){
-				if(lock){
-					//$.fancybox.reposition();
-					this.element.parents('li').find('a.pic').trigger('click');
-					lock = 0;
-				}
-			},
-			onUpdate: function(){
-				met.init();
-			},
-			helpers: {
-				thumbs: {
-					width:	35, height: 35, position: 'top',
-					source: function(el){
-						return el.element.parents('li').find('img').attr('src');
-					}
-				}
-			}
-		});
+		$('.gallery_box a[rel="gal"]').fancybox(fancy_gall);
+		$('.gallery_box a[rel="ajax"]').fancybox(fancy_ajax);
 		met.edit();
 });
+
+var fancy_gall = {
+	nextEffect: 'fade',
+	prevEffect: 'fade',
+	padding: 0,
+	margin: [0, 40, 20, 40],
+	maxWidth: 1200,
+	helpers: {
+		overlay: { locked: false },
+		thumbs: {width:	35, height: 35, position: 'top'}
+	},
+	afterLoad: function(){
+		this.outer.prepend('<div class="comments" onclick="$.fancybox.close();lock=1">+</div>');
+	},
+	afterClose: function(){
+		wFancy = this.outer.parents('.fancybox-wrap').width();
+		//hFancy = this.inner.height();
+		if(lock){
+			$.fancybox.reposition();
+			this.element.parents('li').find('a.comm').trigger('click');
+			lock = 0;
+		}
+	}
+}
+var fancy_ajax = {
+	nextEffect: 'none',
+	prevEffect: 'none',
+	autoSize:	false,
+	height: 'auto',
+	maxWidth: 1200,
+	padding: 0,
+	margin: [0, 40, 0, 40],
+	fitToView: false,
+	scrolling: 'no',
+	type: 'ajax',
+	wrapCSS: 'edit_mode',
+	arrows: true,
+	ajax: { dataType: 'html' },
+	beforeLoad: function(){
+		if(!window.wFancy) wFancy = '100%';
+		this.width = wFancy;
+	},
+	beforeShow: function(){
+		img = this.element.data().pic;
+		//this.inner.find('img').attr('src', img);//подставляем картинку
+		//this.inner.find('.img').height(hFancy);
+		out = hov = 1;
+		res = 1;
+		$.fancybox.update();
+	},
+	afterLoad: function(){
+		this.outer.prepend('<div class="comments back" onclick="$.fancybox.close();lock=1">&larr;</div>');
+		$.getJSON('noteboxes.json', met.render);//получаем данные о подписях
+	},
+	afterClose: function(){
+		if(lock){
+			$.fancybox.reposition();
+			this.element.parents('li').find('a.pic').trigger('click');
+			lock = 0;
+		}
+	},
+	onUpdate: function(){
+		met.init();
+	},
+	helpers: {
+		overlay: {
+			closeClick : false,
+			locked: false
+		},
+		thumbs: {
+			width:	35, height: 35, position: 'top',
+			source: function(el){
+				return el.element.parents('li').find('img').attr('src');
+			}
+		}
+	}
+}
 var met = {
 	init: function(){// размеры области редактирования
 		$zone = $( _zone ),
@@ -111,28 +120,28 @@ var met = {
 		clicked = 0;
 		out = 1;
 		$('.button.add').show().next().hide();//показываем кнопку и скрываем кнопку отмены
-		$('.note-box .carma').show().carma();//показываем и запускаем карму
+		$('.note-box .carma').show();//показываем карму
 	},
 	render: function(_data){
 		met.init();//инициализируем размеры
 		//рендерим подписи
 		for (var i = 0; i < _data.length; i++) {
-			var p = _data[i],
+				p = _data[i],
 				nW = Math.round(imgW/p.width),
 				nH = Math.round(imgH/p.height),
 				nX = Math.round(imgW/p.x),
 				nY = Math.round(imgH/p.y);
 			$zone.append('<div class="' + _note + '" id="note' + i + '">\
-							<div class="box"/>\
+							<div class="box" />\
 							<div class="note"><span>' + p.text + '</span></div>\
 							<div class="carma">\
 								<a href="javascript:void(0);" class="minus">&minus;</a>\
 								<a href="javascript:void(0);" class="plus">+</a>\
-								<span/>\
+								<span />\
 								<input type="hidden" value="0" name="carma' + i + '" />\
 							</div>\
 						</div>');
-			$('#note' + i, $zone).css({width: nW, height: nH, left: nX, top: nY });//, display: 'block'
+			$('#note' + i, $zone).css({width: nW, height: nH, left: nX, top: nY});//, display: 'block'
 		}
 		$('.carma', $zone).carma();//запускаем карму
 		//hov = 0;
@@ -151,7 +160,7 @@ var met = {
 			clicked = 1;
 			out = resize = tool = 0;
 			
-			$zone.append('<div class="' + _note + ' new"><div class="box" /></div>');
+			$zone.append('<div class="' + _note + ' new visible"><div class="box" /></div>');
 			//включаем добавление комментария
 			$d.on('mousemove.edit', _zone, function(e){
 				$nbox = $('.' + _note + '.new');
@@ -169,7 +178,6 @@ var met = {
 					create: function() {
 						note_w = note_h = 50;
 						met.sides(imgW, imgH);
-						//console.log($(this).parent().data().ratio.ratio_w);
 					},
 					start: function(){
 						resize = 1;
@@ -178,8 +186,8 @@ var met = {
 						$el = ui.element;
 						if (ui.size.width < 50) $el.width(50) ;
 						if (ui.size.height < 50) $el.height(50);
-						note_w = $el.width();//ui.size.width;
-						note_h = $el.height();//ui.size.height;
+						note_w = $el.width();
+						note_h = $el.height();
 						met.sides(imgW, imgH);
 					}
 				});//устанавливаем resizable
@@ -251,9 +259,10 @@ var met = {
 					$this.parent().after('<div class="carma">\
 											<a href="javascript:void(0);" class="minus">&minus;</a>\
 											<a href="javascript:void(0);" class="plus">+</a>\
-											<span></span>\
-											<input type="hidden" value="0" name="carma2" />\
+											<span />\
+											<input type="hidden" value="0" name="carma_new" />\
 										</div>');
+					$this.parent().next().carma();//запускаем карму
 					$this.parent().remove();//удаляем textarea
 					met.blocks();//проводим манипуляции с блоками
 					met.outImg();
@@ -309,11 +318,13 @@ var met = {
 				acts.change(-1, input);
 				acts.prints(input);
 				acts.color($(this).parent());
+				console.log('-');
 			});
 			$is.on('click', '.plus', function(){
 				acts.change(1, input);
 				acts.prints(input);
 				acts.color($(this).parent());
+				console.log('+');
 			});
 		});
 	}
