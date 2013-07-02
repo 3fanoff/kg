@@ -19,9 +19,22 @@
 <script type="text/javascript" src="js/css_browser_selector.js"></script-->
 <script type="text/javascript">
 // Qtip
-$(document).ready(function()
-	{$('[title]').qtip({position: {my: 'bottom center', at: 'top center', adjust: {x: 12, y: -6}}});}
-);
+$(document).ready(function(){
+	$('[title]').qtip({
+		position: {
+			my: 'bottom center',
+			at: 'top center', 
+			adjust: {x: 12, y: -6}
+		}
+	});
+	
+	$('.lovehate_block .mode a').click(function(e){
+		e.preventDefault();
+		cls = $(this).parent().attr('class').substr(6);
+		$('.lovehate_block').removeClass('_hate').removeClass('_love');
+		$('.lovehate_block').addClass(cls);
+	});
+});
 
 /**** 26.06.2013 ***/
 $(function(){});
@@ -114,6 +127,90 @@ function addMore(){
 
 <!-- ============== CONTENT ============== -->
 <div class="content clearfix">
+	<div class="profile_block">
+    	<div class="user_name"><h1>Константин Константинопольский</h1><div class="service _fb"></div></div>
+        <div class="clr"></div>
+    	<div class="box-180">
+        	<div class="user_photo" style="background-image:url(temp/photo4.jpg);"><div class="change">Изменить<span class="_icon"></span></div></div>
+        </div>
+        <div class="box-480">
+            <div class="user_status _empty">
+                <span>...ничего о себе не рассказывает</span>
+                <div class="change" title="Изменить"></div>
+                <div class="pointer"></div>
+            </div>
+            <div class="profile_verify">Подтвержденный критик <a href="#">Константин Константинопольский</a></div>
+        </div>
+    	<div class="but_box">
+        	<a class="profile_button" href="#">Настройки</a>
+            <a class="profile_button" href="#">Сообщения<span class="_icon" title="Новые сообщения"></span></a>
+        </div>
+        <div class="clr"></div>
+        <div class="lovehate_block _hate">
+    		<div class="head">
+            	<div class="mode">
+                	<div class="title _love"><a href="#">Я люблю</a></div>
+                    <div class="title _hate"><a href="#">Я не люблю</a></div>
+                </div>
+            </div>
+        	<div class="body _love_show">
+        		<div class="box-230">
+                	<div class="title _movie">Фильмы</div>
+                    <ul class="list">
+                    	<li><a href="#">Призраки в Коннектикуте - 2: Тени злоебучего прошлого</a></li>
+                        <li><a href="#">Кадры</a></li>
+                        <li><a href="#">Стартрек: Возмездие</a></li>
+                        <li class="dop">жанр: <a href="#">боевик</a>, <a href="#">драма</a></li>
+                    </ul>
+                </div>
+            	<div class="box-230">
+                	<div class="title _games">Игры</div>
+                    <ul class="list">
+                    	<li><a href="#">Fire Emblem: Awakening</a></li>
+                        <li><a href="#">Remember Me</a></li>
+                        <li class="dop">жанр: <a href="#">стратегия</a></li>
+                        <li class="dop">платформы: <a href="#">Xbox 360</a>, <a href="#">PS Vita</a></li>
+                    </ul>
+                </div>
+            	<div class="box-230">
+                	<div class="title _critics">Критики и издания</div>
+                    <ul class="list">
+                    	<li><a href="#">Лучшие Компьютерные Игры</a></li>
+                        <li><a href="#">Ведомости</a></li>
+                        <li><a href="#">Алекс Экслер</a></li>
+                    </ul>
+                </div>
+        	</div>
+            <div class="body _hate_show">
+        		<div class="box-230">
+                	<div class="title _movie">Фильмы</div>
+                    <ul class="list">
+                    	<li><a href="#">Приключения мистера Пибоди и Шермана</a></li>
+                        <li><a href="#">Властелин колец: Братство Кольца</a></li>
+                        <li><a href="#">Завещание</a></li>
+                    </ul>
+                </div>
+            	<div class="box-230">
+                	<div class="title _games">Игры</div>
+                    <ul class="list">
+                    	<li><a href="#">GRID 2</a></li>
+                        <li><a href="#">Animal Crossing: New Leaf</a></li>
+                        <li class="dop">платформы: <a href="#">PS 3</a></li>
+                    </ul>
+                </div>
+            	<div class="box-230">
+                	<div class="title _critics">Критики и издания</div>
+                    <ul class="list">
+                    	<li><a href="#">Лидия Маслова</a></li>
+                        <li><a href="#">Роман Волобуев</a></li>
+                        <li><a href="#">Андрей Подшибякин</a></li>
+                        <li><a href="#">Кинокадр</a></li>
+                    </ul>
+                </div>
+        	</div>
+    	</div>
+    </div>
+	<div class="clr"></div>
 	<div class="a_content"></div>
 	<div class="content_sections">
     	<div class="c_s left">

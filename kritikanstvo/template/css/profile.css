@@ -1,4 +1,4 @@
-
+/* User Sections */
 .section li .ic,
 .section li .icons .user-grade,
 .section li .icons .mg-del,
@@ -93,9 +93,9 @@
 	   -moz-opacity:0.5;
 	-webkit-opacity:0.5;
 	filter:alpha(opacity=50);
-			transition:all 0.4s;
-	   -moz-transition:all 0.4s;
-	-webkit-transition:all 0.4s;
+			transition:opacity 0.4s;
+	   -moz-transition:opacity 0.4s;
+	-webkit-transition:opacity 0.4s;
 }
 .section .but-s a:hover {
 			opacity:1;
@@ -295,3 +295,258 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	font:11px Arial;
 	padding:6px 0 0 5px;
 }
+/* User Profile */
+/* 01.07.2013 */
+.profile_block {
+	padding:10px 10px 0 50px;
+}
+.profile_block .box-180 {
+	width:180px;
+	float:left;
+}
+.profile_block .box-480 {
+	width:460px;
+	float:left;
+}
+.profile_block .but_box {
+	float:right;
+}
+.profile_block .but_box .profile_button {
+	float:right;
+	margin-left:20px;
+}
+.profile_block .user_name h1 {
+	color:#333;
+	font:200 26px/26px Arial, Helvetica;
+	float:left;
+	padding-left:180px;
+}
+.profile_block .user_name .service {
+	background-color:#06C;
+	height:20px;
+	float:left;
+	margin:-4px 0 0 8px;
+	width:20px;
+}
+.profile_block .user_name:after {
+	content:"";
+	clear:both;
+	display:block;
+	height:15px;
+}
+/* photo */
+.user_photo {
+	background-color:#FAF5E9;
+	background-image: url("../i/nouserphoto.png");
+	background-position:0 0;
+	background-repeat:no-repeat;
+	border:1px solid #F6E9D0;
+	height:98px;
+	overflow:hidden;
+	margin-left:50px;
+	position:relative;
+	width:98px;
+}
+.user_photo .change {
+	background:url("../i/photo_spacer.png") 0 0 repeat;
+	bottom:0;
+	color:#FFF;
+	cursor:pointer;
+	font:12px/20px Arial, Helvetica;
+	height:20px;
+	left:0;
+	opacity:0.7;
+	padding-left:4px;
+	position:absolute;
+	visibility:hidden;
+	width:94px;
+}
+.user_photo:hover .change {
+	visibility:visible;
+}
+.user_photo .change:hover {
+	opacity:1;
+}
+.user_photo .change ._icon {
+	background:url("../i/changephoto_icon.png") 0 0 no-repeat;
+	height:12px;
+	float:right;
+	margin:4px;
+	width:16px;
+}
+/* status */
+.user_status {
+	background-color:#FAF5E9;
+	border:1px solid #F6E9D0;
+	border-radius:8px;
+	color:#8a7a5d;
+	font:italic 12px/20px Arial, Helvetica;
+	max-height:104px;
+	min-height:54px;
+	margin:0 0 20px;
+	padding:3px 15px;
+	position:relative;
+	width:398px;
+}
+.user_status._empty {color:#b8aa90;}
+.user_status .change {
+	background:url("../i/pen_icon.png") 0 0 no-repeat;
+	cursor:pointer;
+	height:12px;
+	opacity:0.5;
+	position:absolute;
+	right:4px;
+	top:4px;
+	width:13px;
+}
+.user_status .change:hover {
+	opacity:1;
+}
+.user_status .pointer {
+	background:url("../i/status_pointer.png") 0 0 no-repeat;
+	height:33px;
+	position:absolute;
+	left:-40px;
+	top:19px;
+	width:39px;
+}
+.profile_verify {
+	background:url("../i/verify_icon.png") 0 0 no-repeat;
+	color:#808080;
+	font:12px/12px Arial, Helvetica;
+	padding:0 0 10px 16px;
+}
+/* buttons */
+.profile_button {
+	background-color:#f1f3f3;
+	border:1px solid #CCC;
+	border-radius:4px;
+	color:#3C3C3C !important;
+	display:block;
+	font-family:Arial, Helvetica;
+	font-size:13px;
+	height:28px;
+	line-height:28px;
+	position:relative;
+	text-align:center;
+	text-decoration:none;
+	text-shadow:#EEE 0 1px 0;
+	width:108px;
+}
+.profile_button:hover {
+	background-color:#ebeded;
+	border-color:#bbb;
+}
+.profile_button:active {
+	background-color:#FFEB8F;
+	border-color:#e9d6a7;
+	box-shadow:inset #cbbb71 0 3px 6px;
+}
+.profile_button._big {}
+.profile_button._mid {
+	font-size:12px;
+	height:25px;
+	line-height:25px;
+	width:93px;
+}
+.profile_button._min {
+	font-size:11px;
+	height:23px;
+	line-height:23px;
+	width:78px;
+}
+.profile_button ._icon {
+	background:url("../i/newmessages_icon.png") -1px -1px no-repeat;
+	height:14px;
+	left:-8px;
+	position:absolute;
+	top:-6px;
+	width:20px;
+}
+
+.lovehate_block .head {
+	background:#97E086 url("../i/lovehate_grad.png") 0 -100px repeat-x;
+	border:1px solid #87c376;
+	border-radius:6px;
+	height:28px;
+	margin-top:31px;
+}
+.lovehate_block._love .head {
+	background-position:0 0;
+	border-top-color:#bcf99b;
+	border-bottom-color:#87c376;
+	border-left-color:#9adf8a;
+	border-right-color:#9adf8a;
+}
+.lovehate_block._hate .head {
+	background-position:0 -28px;
+	border-top-color:#ffc8c8;
+	border-bottom-color:#d57272;
+	border-left-color:#f39393;
+	border-right-color:#f39393;
+}
+.lovehate_block .mode {
+	margin:0 0 0 40px;
+	width:100px;
+}
+
+.lovehate_block._love .title._love {background-position:2px 5px;}
+.lovehate_block._love .title._hate {background-position:2px -109px; top:2px;}
+.lovehate_block._hate .title._love {background-position:2px -131px; top:31px;}
+.lovehate_block._hate .title._hate {background-position:2px -87px; top:-29px;}
+
+.lovehate_block .mode a {text-decoration:none;}
+
+.lovehate_block._love .title._love a,
+.lovehate_block._hate .title._hate a {border-bottom:0 solid;color:#000;cursor:default;}
+.lovehate_block._love .title._hate a {border-bottom:1px dotted;color:#e52828;}
+.lovehate_block._hate .title._love a {border-bottom:1px dotted;color:#1f9c12;}
+.lovehate_block._love .title._hate a:hover {color:#b90000;}
+.lovehate_block._hate .title._love a:hover {color:#0a6900;}
+
+
+.lovehate_block .body {
+	display:none;
+	padding:0 10px 20px 170px;
+}
+.lovehate_block .body:after {
+	content:"";
+	display:block;
+	clear:both;
+}
+.lovehate_block._love .body._love_show,
+.lovehate_block._hate .body._hate_show {display:block;}
+
+.lovehate_block .box-230 {
+	/*background:#090;*/
+	float:left;
+	min-height:100px;
+	margin:-29px 10px 0 25px;
+	width:205px;
+}
+.lovehate_block .title {
+	background:url("../i/lovehate_icons.png") -100px 0 no-repeat;
+	font:14px/28px Arial, Helvetica;
+	height:28px;
+	margin-left:-25px;
+	padding:0 0 0 25px;
+	position:relative;
+	color:#000;
+	text-shadow:#f6f6f6 0 1px 0;
+}
+.lovehate_block .title._movie {background-position:0 -18px;}
+.lovehate_block .title._games {background-position:0 -41px;}
+.lovehate_block .title._critics {background-position:0 -64px;}
+
+.lovehate_block .list {
+	padding:6px 0 0;
+}
+.lovehate_block .list li {
+	color:#808080;
+	font-size:12px;
+	line-height:14px;
+	padding:4px 0 3px;
+}
+.lovehate_block .list li.dop { padding:9px 0 3px;}
+.lovehate_block .list li a {color:#3C3C3C; text-decoration:none;}
+.lovehate_block .list li a:hover {color:#008FBF;}
