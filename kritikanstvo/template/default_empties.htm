@@ -177,20 +177,22 @@ function maxBody(lhb){
                 </div>
             	<div class="box-230">
                 	<div class="title _games">Игры</div>
-                    <ul class="list">
+                    <!--<ul class="list">
                     	<li><a href="#">Fire Emblem: Awakening</a></li>
                         <li><a href="#">Remember Me</a></li>
                         <li class="dop">жанр: <a href="#">стратегия</a></li>
                         <li class="dop">платформы: <a href="#">Xbox 360</a>, <a href="#">PS Vita</a></li>
-                    </ul>
+                    </ul>-->
+                    <span class="_empty">&mdash;</span>
                 </div>
             	<div class="box-230">
                 	<div class="title _critics">Критики и издания</div>
-                    <ul class="list">
+                    <!--<ul class="list">
                     	<li><a href="#">Лучшие Компьютерные Игры</a></li>
                         <li><a href="#">Ведомости</a></li>
                         <li><a href="#">Алекс Экслер</a></li>
-                    </ul>
+                    </ul>-->
+                    <a class="profile_button _min" href="#">Добавить</a>
                 </div>
         	</div>
             <div class="body _hate_show">
@@ -226,8 +228,13 @@ function maxBody(lhb){
 	<div class="a_content"></div>
 	<div class="content_sections">
     	<div class="c_s left">
-        	<div class="section subs">
-                <div class="head"><h2>Мои подписки</h2><span class="icon-head">&nbsp;</span></div>
+        	<div class="section subs _empty">
+                <div class="head">
+                	<h2>Подписок пока нет</h2><span class="icon-head">&nbsp;</span>
+                    <p>Вы можете отслеживать активность интересных вам <span class="t-icon _t-critic-a">изданий</span> или <span class="t-icon _t-critic-a">критиков</span>: 
+                    что и как они оценивают в своих новых рецензиях.</p>
+                    <p>Также вы можете наблюдать за оценками других <span class="t-icon _t-user">посетителей</span> «Критиканства» (если они не отключили такую возможность).</p>
+                </div>
                 <div class="body">
                     <div class="sub-title">Новые рецензии и оценки</div>
                     <div class="critic_box">
@@ -300,16 +307,15 @@ function maxBody(lhb){
                     </div>
                 </div>
                 <div class="foot">
-                    <div class="help">Свободно 96</div>
-                    <a href="#" class="anchor more">Больше обновлений</a>
-                    <div class="but-s">
-                        <a href="#" class="rss" title="RSS"></a>
-                        <a href="#" class="set" title="Управление подписками"></a>
-                    </div>
+                    <div class="help">Свободно 100</div>
+                    <a href="#" class="anchor more">Другой кандидат</a>
                 </div>
             </div>
-            <div class="section comm">
-                <div class="head"><h2>Мои комментарии</h2><span class="icon-head">&nbsp;</span></div>
+            <div class="section comm _empty">
+                <div class="head">
+                	<h2>Комментариев пока нет</h2><span class="icon-head">&nbsp;</span>
+                    <p>Возможно, вам есть что добавить к этим обсуждениям:</p>
+                </div>
                 <div class="body">
                     <ul class="list">
                         <li>
@@ -370,23 +376,16 @@ function maxBody(lhb){
                         </li>
                     </ul>
                 </div>
-                <div class="foot">
-                    <div class="help">15/1437</div>
-                    <a href="#" class="anchor more">Больше комментариев</a>
-                </div>
+                <div class="foot"></div>
             </div>
     	</div>
         <div class="c_s right">
-        	<div class="section favs">
-                <div class="head"><h2>Моё избранное</h2><span class="icon-head">&nbsp;</span></div>
-                <div class="tabs">
-                	<a href="javascript:void(0);" class="all-tab act" onClick="sectTab.call(this);">Всё</a>
-                    <a href="javascript:void(0);" class="mov-tab" onClick="sectTab.call(this);">Фильмы</a>
-                    <a href="javascript:void(0);" class="gam-tab" onClick="sectTab.call(this);">Игры</a>
+        	<div class="section favs _empty">
+                <div class="head">
+                	<h2>Избранного пока нет</h2><span class="icon-head">&nbsp;</span>
+                    <p>В избранное можно добавить любой <span class="t-icon _t-movie">фильм</span> или <span class="t-icon _t-game">игру</span>. Например, если они 
+                    вам интересны, — эти:</p>
                 </div>
-                <div class="sort">
-                	Сортировать по добавлению, <a href="javascript:void(0);" class="anchor" onClick="sectTab.call(this);">по названию</a>, <a href="javascript:void(0);" class="anchor" onClick="sectTab.call(this);">по рейтингу</a>
-               	</div>
                 <div class="body">
                     <ul class="list">
                         <li>
@@ -463,22 +462,14 @@ function maxBody(lhb){
                         </li>
                     </ul>
                 </div>
-                <div class="foot">
-                    <div class="help">16/52</div>
-                    <a href="#" class="anchor more">Больше избранного</a>
-                </div>
+                <div class="foot"></div>
             </div>
-            <div class="section grades">
-                <div class="head"><h2>Мои оценки</h2><span class="icon-head">&nbsp;</span></div>
-                <div class="tabs">
-                	<a href="javascript:void(0);" class="all-tab act" onClick="sectTab.call(this);">Всё</a>
-                    <a href="javascript:void(0);" class="mov-tab" onClick="sectTab.call(this);">Фильмы</a>
-                    <a href="javascript:void(0);" class="gam-tab" onClick="sectTab.call(this);">Игры</a>
-                    <a href="javascript:void(0);" class="gam-tab" onClick="sectTab.call(this);">Критики</a>
+            <div class="section grades _empty">
+                <div class="head">
+                	<h2>Оценок пока нет</h2><span class="icon-head">&nbsp;</span>
+                    <p>Можете начать с оценки этих <span class="t-icon _t-movie">фильмов</span>, <span class="t-icon _t-game">игр</span>, 
+                    <span class="t-icon _t-critic">изданий</span> и <span class="t-icon _t-critic">критиков</span>:</p>
                 </div>
-                <div class="sort">
-                	Сортировать по проставлению, <a href="javascript:void(0);" class="anchor" onClick="sectTab.call(this);">по названию</a>, <a href="javascript:void(0);" class="anchor" onClick="sectTab.call(this);">по оценке</a>
-               	</div>
                 <div class="body">
                     <ul class="list">
                         <li>
@@ -548,8 +539,7 @@ function maxBody(lhb){
                     </ul>
                 </div>
                 <div class="foot">
-                    <div class="help">16/453</div>
-                    <a href="#" class="anchor more">Больше оценок</a>
+                    <a href="#" class="anchor more">Оценить еще</a>
                 </div>
             </div>
         </div>
