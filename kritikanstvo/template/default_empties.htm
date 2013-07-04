@@ -15,6 +15,8 @@
 
 <script type="text/javascript" src="js/jquery.1.8.2.min.js"></script>
 <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
+<script type="text/javascript" src="js/jquery.rating.pack.js"></script>
+<script type="text/javascript" src="profile_js.js"></script>
 <!--script type="text/javascript" src="js/jquery.color.js"></script>
 <script type="text/javascript" src="js/css_browser_selector.js"></script-->
 <script type="text/javascript">
@@ -27,66 +29,7 @@ $(document).ready(function(){
 			adjust: {x: 12, y: -6}
 		}
 	});
-	
-	$('.lovehate_block .mode a').click(function(e){
-		e.preventDefault();
-		cls = $(this).parent().attr('class').substr(6);
-		$('.lovehate_block').removeClass('_hate').removeClass('_love');
-		$('.lovehate_block').addClass(cls);
-	});
-	
-	maxBody('.lovehate_block');
-	
 });
-
-/**** 26.06.2013 ***/
-$(function(){});
-function sectTab(){
-	$is = $(this);
-	$(this).addClass('act').siblings().removeClass('act');
-	$.ajax({
-		url: 'temp_box2.html',
-		dataType: 'html',
-		success: function(data){
-			/* временное */
-			_cont = $(data).filter('.temp_box').html();
-			_sort = $(data).filter('.temp_box2') .html();
-			$sect = $is.parents('.section');
-			$('.body', $sect).html('<ul class="list">' + _cont + '</ul>');
-			$('.sort', $sect).html(_sort);
-		}
-	});
-}
-function addMore(){
-	$is = $(this);
-	$cx = $is.parents('ul.list');
-	$anc = $is.parent('span');
-	clsTemp = '.temp_box';
-	$.ajax({
-		url: 'temp_box.html',
-		dataType: 'html',
-		beforeSend: function(){
-			$anc.hide();
-		},
-		success: function(data){
-			cont = $(data);
-			$cx.append(cont);
-			$(clsTemp, $cx).slideDown(200, function(){
-				$(this).children('li').appendTo($cx);
-				$(clsTemp, $cx).remove();
-				$anc.remove();
-			});
-		},
-		error: function(){
-			$anc.show();
-		}
-	});
-}
-function maxBody(lhb){
-	arr = [ $(lhb + ' .body:eq(0)').height(), $(lhb + ' .body:eq(1)').height() ];
-	num = Math.max.apply(Math, arr);
-	$(lhb + ' .body').height(num);
-}
 </script>
 
 </head><body>
@@ -177,21 +120,10 @@ function maxBody(lhb){
                 </div>
             	<div class="box-230">
                 	<div class="title _games">Игры</div>
-                    <!--<ul class="list">
-                    	<li><a href="#">Fire Emblem: Awakening</a></li>
-                        <li><a href="#">Remember Me</a></li>
-                        <li class="dop">жанр: <a href="#">стратегия</a></li>
-                        <li class="dop">платформы: <a href="#">Xbox 360</a>, <a href="#">PS Vita</a></li>
-                    </ul>-->
                     <span class="_empty">&mdash;</span>
                 </div>
             	<div class="box-230">
                 	<div class="title _critics">Критики и издания</div>
-                    <!--<ul class="list">
-                    	<li><a href="#">Лучшие Компьютерные Игры</a></li>
-                        <li><a href="#">Ведомости</a></li>
-                        <li><a href="#">Алекс Экслер</a></li>
-                    </ul>-->
                     <a class="profile_button _min" href="#">Добавить</a>
                 </div>
         	</div>
@@ -228,6 +160,7 @@ function maxBody(lhb){
 	<div class="a_content"></div>
 	<div class="content_sections">
     	<div class="c_s left">
+        	<!-- SUBSCRIPTIONS -->
         	<div class="section subs _empty">
                 <div class="head">
                 	<h2>Подписок пока нет</h2><span class="icon-head">&nbsp;</span>
@@ -236,37 +169,7 @@ function maxBody(lhb){
                     <p>Также вы можете наблюдать за оценками других <span class="t-icon _t-user">посетителей</span> «Критиканства» (если они не отключили такую возможность).</p>
                 </div>
                 <div class="body">
-                    <div class="sub-title">Новые рецензии и оценки</div>
-                    <div class="critic_box">
-                        <div class="c-name user"><a href="#">Иван Иванов</a></div>
-                        <ul class="list extend">
-                            <li>
-                                <div class="mg-name"><span class="ic movie"></span><a href="#">Кадры&nbsp;<span class="user-grade r-bad"><span>5/10</span></span></a></div>
-                                <div class="clr"></div>
-                            </li>
-                            <li>
-                                <div class="mg-name">
-                                    <span class="ic game"></span>
-                                    <a href="#">Пираты Карибского моря: Проклятие Черной жемчужины&nbsp;<span class="user-grade r-good"><span>9/10</span></span></a>
-                                </div>
-                                <div class="clr"></div>
-                            </li>
-                            <li>
-                                <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening&nbsp;<span class="user-grade r-none"><span>1/10</span></span></a></div>
-                                <div class="clr"></div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="critic_box">
-                        <div class="c-name critic"><a href="#">Ведомости</a></div>
-                        <ul class="list extend">
-                            <li>
-                                <div class="mg-name"><span class="ic movie"></span><a href="#">Приключения мистера Пибоди и Шермана&nbsp;<span class="site-grade r-bad"><span>2/10</span></span></a>
-                                <span> и еще <a href="javascript:void(0);" class="anchor add_more" onClick="addMore.call(this);">24 рецензии</a></span></div>
-                                <div class="clr"></div>
-                            </li>
-                        </ul>
-                    </div>
+                    <div class="sub-title">Случайный кандидат для вашей первой подписки</div>
                     <div class="critic_box">
                         <div class="c-name critic"><a href="#">Алекс Экслер</a></div>
                         <ul class="list extend">
@@ -279,38 +182,23 @@ function maxBody(lhb){
                                 <div class="clr"></div>
                             </li>
                             <li>
-                                <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening&nbsp;<span class="user-grade r-average"><span>6/10</span></span></a></div>
+                                <div class="mg-name"><span class="ic movie"></span><a href="#">Во имя короля: история осады подземелья 2: Уве Болл ебанулся&nbsp;<span class="site-grade r-bad"><span>4/10</span></span></a></div>
+                                <div class="clr"></div>
+                            </li>
+                            <li>
+                                <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening&nbsp;<span class="site-grade r-average"><span>6/10</span></span></a></div>
                                 <div class="clr"></div>
                             </li>
                         </ul>
                     </div>
-                    <div class="sub-title">19 июня и ранее</div>
-                    <div class="critic_box">
-                        <div class="c-name user"><a href="#">Иван Иванов</a></div>
-                        <ul class="list extend">
-                            <li>
-                                <div class="mg-name"><span class="ic movie"></span><a href="#">Кадры&nbsp;<span class="user-grade r-bad"><span>5/10</span></span></a></div>
-                                <div class="clr"></div>
-                            </li>
-                            <li>
-                                <div class="mg-name">
-                                    <span class="ic game"></span>
-                                    <a href="#">Пираты Карибского моря: Проклятие Черной жемчужины&nbsp;<span class="user-grade r-good"><span>9/10</span></span></a>
-                                </div>
-                                <div class="clr"></div>
-                            </li>
-                            <li>
-                                <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening&nbsp;<span class="user-grade r-none"><span>1/10</span></span></a></div>
-                                <div class="clr"></div>
-                            </li>
-                        </ul>
-                    </div>
+                    <a class="profile_button _min" href="#">Подписаться</a>
                 </div>
                 <div class="foot">
                     <div class="help">Свободно 100</div>
-                    <a href="#" class="anchor more">Другой кандидат</a>
+                    <a href="#" class="anchor more _more_candidate">Другой кандидат</a>
                 </div>
             </div>
+            <!-- COMMENTS -->
             <div class="section comm _empty">
                 <div class="head">
                 	<h2>Комментариев пока нет</h2><span class="icon-head">&nbsp;</span>
@@ -380,6 +268,7 @@ function maxBody(lhb){
             </div>
     	</div>
         <div class="c_s right">
+        	<!-- FAVOURITES -->
         	<div class="section favs _empty">
                 <div class="head">
                 	<h2>Избранного пока нет</h2><span class="icon-head">&nbsp;</span>
@@ -392,7 +281,7 @@ function maxBody(lhb){
                             <div class="mg-name"><span class="ic movie"></span><a href="#">Призраки в Коннектикуте - 2: Тени злоебучего прошлого</a></div>
                             <div class="icons">
                                 <div class="site-grade r-average">75</div>
-                                <div class="mg-del" title="Удалить"></div>
+                                <div class="mg-icon mg-add" title="Добавить"></div>
                                 <div class="user-grade r-good">10/10</div>
                             </div>
                             <div class="clr"></div>
@@ -401,7 +290,7 @@ function maxBody(lhb){
                             <div class="mg-name"><span class="ic game"></span><a href="#">Remember Me</a></div>
                             <div class="icons">
                                 <div class="site-grade r-good">100</div>
-                                <div class="mg-del" title="Удалить"></div>
+                                <div class="mg-icon mg-add" title="Добавить"></div>
                                 <div class="user-grade r-average">8/10</div>
                             </div>
                             <div class="clr"></div>
@@ -410,7 +299,7 @@ function maxBody(lhb){
                             <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
                             <div class="icons">
                                 <div class="site-grade r-bad">32</div>
-                                <div class="mg-del" title="Удалить"></div>
+                                <div class="mg-icon mg-added" title="Добавлено"></div>
                                 <div class="user-grade r-good">9/10</div>
                             </div>
                             <div class="clr"></div>
@@ -419,7 +308,7 @@ function maxBody(lhb){
                             <div class="mg-name"><span class="ic movie"></span><a href="#">10 вещей, которые я ненавижу в жизни</a></div>
                             <div class="icons">
                                 <div class="site-grade r-none">-</div>
-                                <div class="mg-del" title="Удалить"></div>
+                                <div class="mg-icon mg-add" title="Добавить"></div>
                                 <div class="user-grade r-average">8/10</div>
                             </div>
                             <div class="clr"></div>
@@ -428,7 +317,7 @@ function maxBody(lhb){
                             <div class="mg-name"><span class="ic movie"></span><a href="#">Приключения мистера Пибоди и Шермана</a></div>
                             <div class="icons">
                                 <div class="site-grade r-good">92</div>
-                                <div class="mg-del" title="Удалить"></div>
+                                <div class="mg-icon mg-add" title="Добавить"></div>
                                 <div class="user-grade r-bad">6/10</div>
                             </div>
                             <div class="clr"></div>
@@ -437,7 +326,7 @@ function maxBody(lhb){
                             <div class="mg-name"><span class="ic game"></span><a href="#">GRID 2</a></div>
                             <div class="icons">
                                 <div class="site-grade r-awful">5</div>
-                                <div class="mg-del" title="Удалить"></div>
+                                <div class="mg-icon mg-add" title="Добавить"></div>
                                 <div class="user-grade r-average">8/10</div>
                             </div>
                             <div class="clr"></div>
@@ -446,7 +335,7 @@ function maxBody(lhb){
                             <div class="mg-name"><span class="ic movie"></span><a href="#">Завещание</a></div>
                             <div class="icons">
                                 <div class="site-grade r-average">71</div>
-                                <div class="mg-del" title="Удалить"></div>
+                                <div class="mg-icon mg-add" title="Добавить"></div>
                                 <div class="user-grade r-average">8/10</div>
                             </div>
                             <div class="clr"></div>
@@ -455,7 +344,7 @@ function maxBody(lhb){
                             <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
                             <div class="icons">
                                 <div class="site-grade r-good">95</div>
-                                <div class="mg-del" title="Удалить"></div>
+                                <div class="mg-icon mg-add" title="Добавить"></div>
                                 <div class="user-grade r-average">7/10</div>
                             </div>
                             <div class="clr"></div>
@@ -464,6 +353,7 @@ function maxBody(lhb){
                 </div>
                 <div class="foot"></div>
             </div>
+            <!-- GRADES -->
             <div class="section grades _empty">
                 <div class="head">
                 	<h2>Оценок пока нет</h2><span class="icon-head">&nbsp;</span>
@@ -479,6 +369,18 @@ function maxBody(lhb){
                                 <div class="site-grade r-average">75</div>
                             </div>
                             <div class="clr"></div>
+                            <div>
+                                <input name="star1" type="radio" class="auto-submit-star" value="10" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="20" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="30" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="40" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="50" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="60" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="70" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="80"  />
+                                <input name="star1" type="radio" class="auto-submit-star" value="90" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="100" />
+                            </div>
                         </li>
                         <li>
                             <div class="mg-name"><span class="ic game"></span><a href="#">Remember Me</a></div>
@@ -487,6 +389,18 @@ function maxBody(lhb){
                                 <div class="site-grade r-good">100</div>
                             </div>
                             <div class="clr"></div>
+                            <div>
+                                <input name="star1" type="radio" class="auto-submit-star" value="10" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="20" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="30" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="40" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="50" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="60" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="70" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="80"  />
+                                <input name="star1" type="radio" class="auto-submit-star" value="90" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="100" />
+                            </div>
                         </li>
                         <li>
                             <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
@@ -495,6 +409,18 @@ function maxBody(lhb){
                                 <div class="site-grade r-bad">32</div>
                             </div>
                             <div class="clr"></div>
+                            <div>
+                                <input name="star1" type="radio" class="auto-submit-star" value="10" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="20" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="30" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="40" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="50" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="60" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="70" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="80"  />
+                                <input name="star1" type="radio" class="auto-submit-star" value="90" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="100" />
+                            </div>
                         </li>
                         <li>
                             <div class="mg-name"><span class="ic movie"></span><a href="#">10 вещей, которые я ненавижу в жизни</a></div>
@@ -503,6 +429,18 @@ function maxBody(lhb){
                                 <div class="site-grade r-none">-</div>
                             </div>
                             <div class="clr"></div>
+                            <div>
+                                <input name="star1" type="radio" class="auto-submit-star" value="10" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="20" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="30" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="40" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="50" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="60" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="70" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="80"  />
+                                <input name="star1" type="radio" class="auto-submit-star" value="90" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="100" />
+                            </div>
                         </li>
                         <li>
                             <div class="mg-name"><span class="ic movie"></span><a href="#">Приключения мистера Пибоди и Шермана</a></div>
@@ -511,6 +449,18 @@ function maxBody(lhb){
                                 <div class="site-grade r-good">92</div>
                             </div>
                             <div class="clr"></div>
+                            <div>
+                                <input name="star1" type="radio" class="auto-submit-star" value="10" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="20" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="30" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="40" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="50" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="60" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="70" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="80"  />
+                                <input name="star1" type="radio" class="auto-submit-star" value="90" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="100" />
+                            </div>
                         </li>
                         <li>
                             <div class="mg-name"><span class="ic game"></span><a href="#">GRID 2</a></div>
@@ -519,6 +469,18 @@ function maxBody(lhb){
                                 <div class="site-grade r-awful">5</div>
                             </div>
                             <div class="clr"></div>
+                            <div>
+                                <input name="star1" type="radio" class="auto-submit-star" value="10" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="20" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="30" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="40" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="50" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="60" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="70" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="80"  />
+                                <input name="star1" type="radio" class="auto-submit-star" value="90" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="100" />
+                            </div>
                         </li>
                         <li>
                             <div class="mg-name"><span class="ic movie"></span><a href="#">Завещание</a></div>
@@ -527,14 +489,18 @@ function maxBody(lhb){
                                 <div class="site-grade r-average">71</div>
                             </div>
                             <div class="clr"></div>
-                        </li>
-                        <li>
-                            <div class="mg-name"><span class="ic game"></span><a href="#">Fire Emblem: Awakening</a></div>
-                            <div class="icons">
-                                <div class="user-grade r-average">7/10</div>
-                                <div class="site-grade r-good">95</div>
+                            <div>
+                                <input name="star1" type="radio" class="auto-submit-star" value="10" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="20" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="30" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="40" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="50" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="60" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="70" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="80"  />
+                                <input name="star1" type="radio" class="auto-submit-star" value="90" />
+                                <input name="star1" type="radio" class="auto-submit-star" value="100" />
                             </div>
-                            <div class="clr"></div>
                         </li>
                     </ul>
                 </div>
