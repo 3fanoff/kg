@@ -20,10 +20,32 @@
 <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
 <script type="text/javascript" src="js/css_browser_selector.js"></script>
 <script type="text/javascript" src="js/jquery.rating.pack.js"></script>
+<script type="text/javascript" src="js/slider.js"></script>
 <script type="text/javascript">
-$(document).ready(function()
-	{$('[title]').qtip({position: {my: 'bottom center', at: 'top center', adjust: {x: 12, y: -6}}});}
-);
+$(document).ready(function(){
+	$('[title]').qtip({position: {my: 'bottom center', at: 'top center', adjust: {x: 12, y: -6}}});
+	/* 08.07.2013*/
+	$('.mb_share a').click(function(){
+		$('.mb_share_popup').toggle();
+		return false;
+	});
+	$('.mb_download a').click(function(){
+		$('.mb_download_popup').toggle();
+		return false;
+	});
+	$('#mb_content_videos').sliderFan({
+		interval:	6000,
+		slideCls:	'mb_media',
+		infoboxCls:	'mb_media_info',
+		actCls: 	'mb_active',
+		navCall: function(){
+			i = $(pic + '_numb', this).text();
+			$is.hasClass('_wide') ? wide = ' _wide' : wide = '';
+			$('#' + nav_id).append('<li class="mb_poster' + wide + '"><a  href="#pic-' + num + '"><span>' + i + '</span></a></li>');
+			$('a[href="#pic-' + num + '"]').css('background-image', 'url(' + src + ')');
+		}
+	});
+});
 
 $(document).ready(function()
 	{$('#scrolltop').click(function(){$('html, body').animate({scrollTop:0}, 'slow'); return false;});}
@@ -33,6 +55,9 @@ $(window).scroll(function()
 	{if ($(this).scrollTop() > 800) {$('#scrolltop:hidden').stop(true, true).fadeIn();}
 	else {$('#scrolltop').stop(true, true).fadeOut();}}
 );
+
+
+
 </script>
 
 
@@ -179,18 +204,91 @@ $(window).scroll(function()
 
 	<div id="mb_content_videos">
 		<div class="mb_full">
-			<div class="mb_media_info" style=""><b>99.</b> Международный трейлер <i>Опциональная подпись к этому видеоролику</i></div>
-			<div class="mb_media_wrap"><div class="mb_media">
-				<img src="temp/bigpic.jpg" alt="">
-			</div></div>
+			<div class="mb_media_info"><b></b> <span></span> <i></i></div>
+			<div class="mb_media_wrap">
+            	<div class="mb_media">
+                	<img src="temp/sliderpics/avengers_34.jpg" alt=" " />
+                    <span class="mb_media_numb">99</span>
+                    <span class="mb_media_name">Международный трейлер</span>
+                    <span class="mb_media_desc">Опциональная подпись к этому видеоролику Опциональная подпись</span>
+				</div>
+                <div class="mb_media _wide">
+                	<img src="temp/sliderpics/avengers_35.jpg" alt=" " />
+                    <span class="mb_media_numb">98</span>
+                    <span class="mb_media_name">Мстители (The Avengers), кадр № 35</span>
+                    <span class="mb_media_desc">Подпись к этому</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_36.jpg" alt=" " />
+                    <span class="mb_media_numb">97</span>
+                    <span class="mb_media_name">кадр № 36</span>
+                    <span class="mb_media_desc"></span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_37.jpg" alt=" " />
+                    <span class="mb_media_numb">96</span>
+                    <span class="mb_media_name">Мстители трейлер 8</span>
+                    <span class="mb_media_desc">The Avengers</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_63.jpg" alt=" " />
+                    <span class="mb_media_numb">95</span>
+                    <span class="mb_media_name">Мстители (The Avengers), кадр № 63</span>
+                    <span class="mb_media_desc"></span>
+				</div>
+                <div class="mb_media _wide">
+                	<img src="temp/sliderpics/avengers_65.jpg" alt=" " />
+                    <span class="mb_media_numb">94</span>
+                    <span class="mb_media_name">Трейлер №7</span>
+                    <span class="mb_media_desc"></span>
+				</div>
+                <div class="mb_media _wide">
+                	<img src="temp/sliderpics/avengers_66.jpg" alt=" " />
+                    <span class="mb_media_numb">93</span>
+                    <span class="mb_media_name">The Avengers, кадр №66</span>
+                    <span class="mb_media_desc">Кадр высокого разрешения</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_67.jpg" alt=" " />
+                    <span class="mb_media_numb">92</span>
+                    <span class="mb_media_name">The Avengers кадр 67</span>
+                    <span class="mb_media_desc">Mstiteli/Avengers</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_68.jpg" alt=" " />
+                    <span class="mb_media_numb">91</span>
+                    <span class="mb_media_name">Мстители кадр № 68</span>
+                    <span class="mb_media_desc">Мстители кадр № 68</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_20.jpg" alt=" " />
+                    <span class="mb_media_numb">90</span>
+                    <span class="mb_media_name">Мстители кадр № 68</span>
+                    <span class="mb_media_desc">Мстители кадр № 68</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_69.jpg" alt=" " />
+                    <span class="mb_media_numb">89</span>
+                    <span class="mb_media_name">Мстители (The Avengers), кадр № 69</span>
+                    <span class="mb_media_desc">Небольшой постер</span>
+				</div>
+            </div>
 
 			<div class="mb_buttons clearfix">
 				<div class="mb_social clearfix">
 					<div class="mb_comments"><a href="#" title="Комментировать видео"><span>+</span></a></div>
-					<div class="mb_share"><a href="#" title="Поделиться видео"><span>&nbsp;</span></a></div>
-					<!--div class="mb_share_popup"><div class="mb_share_popup_header"></div><div class="mb_share_popup_body"><a href="#" class="share_vk" title="ВКонтакте">&nbsp;</a><a href="#" class="share_fb" title="Facebook">&nbsp;</a><a href="#" class="share_twitter" title="Twitter">&nbsp;</a><a href="#" class="share_lj" title="LiveJournal">&nbsp;</a></div></div-->
+					<div class="mb_share"><a href="javascript:void(0);" title="Поделиться видео"><span>&nbsp;</span></a></div>
+					<div class="mb_share_popup">
+                    	<div class="mb_share_popup_header"></div>
+                        <div class="mb_share_popup_body">
+                        	<a href="#" class="share_vk" title="ВКонтакте">&nbsp;</a>
+                            <a href="#" class="share_fb" title="Facebook">&nbsp;</a>
+                            <a href="#" class="share_twitter" title="Twitter">&nbsp;</a>
+                            <a href="#" class="share_lj" title="LiveJournal">&nbsp;</a>
+                 		</div>
+                	</div>
 				</div>
-					<div class="mb_rating">
+				<div class="mb_rating">
 					<p>Оцените видео:</p>
 					<div><input name="star2" type="radio" class="star" title="1"><input name="star2" type="radio" class="star" title="2"><input name="star2" type="radio" class="star" title="3"><input name="star2" type="radio" class="star" title="4"><input name="star2" type="radio" class="star" title="5"><input name="star2" type="radio" class="star" title="6"><input name="star2" type="radio" class="star" title="7"><input name="star2" type="radio" class="star" title="8"><input name="star2" type="radio" class="star" title="9"><input name="star2" type="radio" class="star" title="10"></div>
 				</div>
@@ -199,37 +297,23 @@ $(window).scroll(function()
 				</div>
 				<div class="mb_content_action">
 					<div class="mb_download"><a href="#" title="Скачать"><span>&nbsp;</span></a></div>
-					<!--div class="mb_zoom"><a href="#" title="Увеличить в новом окне"><span>&nbsp;</span></a></div-->
-					<!--div class="mb_download_popup"><div class="mb_download_popup_header"></div><div class="mb_download_popup_body">
-						<ul>
-						<li><a href="#">HD 720p, 216 МБ (MP4)</a></li>
-						<li><a href="#">Высокое качество, 135 МБ (MP4)</a></li>
-						<li><a href="#">Высокое качество, 21 МБ (FLV)</a></li>
-						<li><a href="#">Среднее качество, 5 МБ (MP4)</a></li>
-						</ul>
-					</div></div-->
+					<div class="mb_zoom"><a href="#" title="Увеличить в новом окне"><span>&nbsp;</span></a></div>
+                    <!-- download popup -->
+					<div class="mb_download_popup">
+                    	<div class="mb_download_popup_header"></div>
+                        <div class="mb_download_popup_body">
+                            <ul>
+                                <li><a href="#">HD 720p, 216 МБ (MP4)</a></li>
+                                <li><a href="#">Высокое качество, 135 МБ (MP4)</a></li>
+                                <li><a href="#">Высокое качество, 21 МБ (FLV)</a></li>
+                                <li><a href="#">Среднее качество, 5 МБ (MP4)</a></li>
+                            </ul>
+						</div>
+                	</div>
+                    <!-- /download popup -->
 				</div>
 			</div>
-	
 		</div>
-	
-		<div class="mb_thumbs clearfix"> 
-			<div class="mb_poster mb_active" style="background-image: url('temp/poster_01.jpg');"><div>99</div></div>
-			<div class="mb_poster" onclick="alert('OK');" style="background-image: url('temp/slider_image_03.jpg');"><div>98</div></div>
-			<div class="mb_poster_wide" onclick="alert('OK');" style="background-image: url('temp/bigpic.jpg');"><div>97</div></div>
-			<div class="mb_poster" onclick="alert('OK');" style="background-image: url('temp/news_img_left_right.jpg');"><div>96</div></div>
-			<div class="mb_poster" onclick="alert('OK');" style="background-image: url('temp/slider_image_01.jpg');"><div>95</div></div>
-			<div class="mb_poster" onclick="alert('OK');" style="background-image: url('temp/news_img_left_right.jpg');"><div>94</div></div>
-			<div class="mb_poster" onclick="alert('OK');" style="background-image: url('temp/block_cover_01.jpg');"><div>93</div></div>
-			<div class="mb_poster" onclick="alert('OK');" style="background-image: url('temp/news_img_center.jpg');"><div>92</div></div>
-			<div class="mb_poster" onclick="alert('OK');" style="background-image: url('temp/poster_01.jpg');"><div>91</div></div>
-			<div class="mb_poster_wide" onclick="alert('OK');" style="background-image: url('temp/slider_image_05.jpg');"><div>90</div></div>
-			<div class="mb_poster_wide" onclick="alert('OK');" style="background-image: url('temp/slider_image_04.jpg');"><div>88</div></div>
-			<div class="mb_poster" onclick="alert('OK');" style="background-image: url('temp/news_img_left_right.jpg');"><div>87</div></div>
-			<div class="mb_poster" onclick="alert('OK');" style="background-image: url('temp/poster_01.jpg');"><div>86</div></div>
-			<div class="mb_poster" onclick="alert('OK');" style="background-image: url('temp/slider_image_02.jpg');"><div>85</div></div>
-		</div>
-
 	</div>
 	<!-- ============ // MEDIABLOCK ============ -->
 
