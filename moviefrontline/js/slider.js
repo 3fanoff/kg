@@ -17,134 +17,134 @@ sliderFan ver 2.0.
 var slider = {
 	init : function(options){
 		defaults = {
-			num: 0,
-			slide: 0,
-			autoplay: 1,
-			navcenter: 0,
+			num: 1,
+			start: 1,
+			autoplay: true,
+			navcenter: false,
 			interval: 4000,
 			pause: 8000,
 			slideCls: 'pic',
 			infoboxCls: 'pic_info',
 			actCls: 'active',
 			navId: 'navigation',
-			nav: 1,
+			navCls: 'navigation',
+			naviCls: 'item',
+			nav: true,
 			navCall: false,
+			sliderCall: false,
 			infoCall: false
 		}
 		o = $.extend(defaults, options, {});
 		
-		num = o.num,
-		slide = o.slide,
-		play = o.autoplay,
-		navcenter = o.navcenter,
-		slidetime = o.interval,
-		slidepause = o.pause,
-		pic = '.' + o.slideCls,
+		pic_cls = '.' + o.slideCls,
 		act_cls = o.actCls,
 		text_box = '.' + o.infoboxCls,
-		nav_id = o.navId,
-		nav = o.nav;
+		//nav_id = o.navId,
+		nav_cls = o.navCls,
+		item_cls = o.naviCls;
+		
+		return this.each(function(i){
+			num = o.num,
+			slide = o.start - 1,
+			elem = $(this),
+			elem_pic = $(pic_cls, this),
+			len = elem_pic.length - 1;
 			
-		return this.each(function(){
-			elem = $(this);
-			elem_pic = $(pic, this);
 			//generate navigation
-			if (nav){
-				elem.append('<ul class="mb_thumbs clearfix" id="' + nav_id + '"></ul>');
-				elem_pic.each(function(){
-					$is = $(this),
-					src = $('img', this).attr('src');
-					$is.attr('id','pic-' + num);
-					
-					if(!o.navCall){
-						$('#' + nav_id).append('<li><a href="#pic-' + num + '">' + num + '</a></li>');
-					} else {
-						o.navCall.call(this);
-					}
-					
-					num++
-				});
-				$('#' + nav_id + ' li a').click(function(){
+			if (o.nav){
+				nav_id = o.navId + '-' + (i+1);
+				elem.append('<ul class="' + nav_cls + '" id="' + nav_id + '" />');
+				$('#' + nav_id).on('click', '.' + item_cls + ' a', function(){
 					slide = $(this).parent().index();
-					slider.action(this);
+					slider.action();
 					slider.pause();
 					slide++;
 					return false;
 				});
 			}
+			for (n=0; n <= len; n++){
+				$is = $(elem_pic[n]),
+				src = $('img', $is).attr('src');
+				//$is.attr('id','pic-' + num);
+				$is.addClass('pic-' + num);
+				if (o.nav) {
+					if (!o.navCall){
+						$('#' + nav_id).append('<li class="' + item_cls + '"><a href="#pic-' + num + '">' + num + '</a></li>');
+					} else {
+						o.navCall.call(this);
+					}
+				}
+				num++
+			}
 			//start slider
 			slider.start();
-			slider.intro(':first');
-			
-			//align-center navigation
-			if (navcenter && nav){
-				slider.navwidth();
-			}
+			//additional callback
+			if (o.sliderCall) o.sliderCall();
 			//autoplay start
-			if (play){
+			if (o.autoplay){
 				playInterval = setInterval(function() {
 					slider.autoplay();
-				}, slidetime);
+				}, o.interval);
 				elem.data('interval', playInterval);
 			}
 		});
 	},
 	start : function(){
-		$('#' + nav_id + ' li:eq(0)').addClass(act_cls);
-		elem_pic = $(pic + ':eq(0)', elem).show();
+		//console.log(elem);
+		slide = (slide < 0) ? 0 : slide;
+		slide = (slide > len) ? len : slide;
+		
+		$(pic_cls + ':eq(' + slide + ')', elem).show();
+		slider.intro();
+		if (o.nav){
+			$('#' + nav_id + ' .' + item_cls + ':eq(' + slide + ')').addClass(act_cls);
+		}
 	},
-	action : function(obj){
-		pic_id = $(obj).attr('href');	
-		$(obj).parent().addClass(act_cls).siblings().removeClass(act_cls);
-		$(pic_id, elem).fadeIn(600, slider.intro(pic_id)).siblings(pic + ':visible').fadeOut(600);
+	action : function(){
+		$(pic_cls + ':eq(' + slide + ')', elem).fadeIn(600, slider.intro()).siblings(pic_cls + ':visible').fadeOut(600);
+		if (o.nav){
+			$('.' + item_cls + ':eq(' + slide + ')', '#' + nav_id).addClass(act_cls).siblings().removeClass(act_cls);
+		}
 	},
-	intro : function(atr){
-		$box = $(pic + atr, elem),
-		numb = $(pic + '_numb', $box).text(),
-		name = $(pic + '_name', $box).text(),
-		desc = $(pic + '_desc', $box).text();
-		$(text_box + ' b').text(numb + '.');
-		$(text_box + ' span').text(name);
-		$(text_box + ' i').text(desc);
+	intro : function(){
+		$box = $(pic_cls + ':eq(' + slide + ')', elem),
+		numb = $(pic_cls + '_numb', $box).text(),
+		name = $(pic_cls + '_name', $box).text(),
+		desc = $(pic_cls + '_desc', $box).text();
+		$(text_box + ' b', elem).text(numb + '.');
+		$(text_box + ' span', elem).text(name);
+		$(text_box + ' i', elem).text(desc);
 		
 		if(o.infoCall) o.infoCall();
 	},
-	navwidth : function(){
-		li_w = $('#' + nav_id + ' li').outerWidth(true),
-		li_num = num;
-		$('#' + nav_id).css({'width':li_num*li_w, 'margin-left':(-li_num*li_w)/2});
-	},
 	pause : function(){
-		if (play){
+		if (o.autoplay){
 			clearTimeout(elem.data('pause'));
 			clearInterval(elem.data('interval'));
 			pauseTimeout = setTimeout(function() {
 				clearTimeout(elem.data('pause'));
 				playInterval = setInterval(function() {
 					slider.autoplay();
-				}, slidetime);
-				elem.data('interval',playInterval);
-			},slidepause);
-			//console.log('sec');
-			elem.data('pause',pauseTimeout);
+				}, o.interval);
+				elem.data('interval', playInterval);
+			}, o.pause);
+			elem.data('pause', pauseTimeout);
 		}
 	},
 	autoplay : function(){
-		pos = num - 1;
-		//console.log(slide,pos);
-		if (slide < pos){
-			slider.action($('#' + nav_id + ' li:eq('+slide+') a'));
-			slide++
-		} else {
-			slide = pos;
-			slider.action($('#' + nav_id + ' li:eq('+slide+') a'));
-			slide = 0;
-		}
+			if (slide < len){
+				slider.action();
+				slide++
+			} else {
+				slide = len;
+				slider.action();
+				slide = 0;
+			}
 	}
 };
-$.fn.sliderFan = function( method ) {
-		if (slider[ method ]) return slider[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
-		else if (typeof method === 'object' || ! method) return slider.init.apply(this, arguments);
-		else $.error('Method ' +  method + ' does not exist on $.sliderFan'); 
+$.fn.sliderFan = function( _method ) {
+		if (slider[ _method ]) return slider[ _method ].apply(this, Array.prototype.slice.call(arguments, 1));
+		else if (typeof _method === 'object' || ! _method) return slider.init.apply(this, arguments);
+		else $.error('Method ' +  _method + ' does not exist on $.sliderFan');
 };
 })( jQuery );

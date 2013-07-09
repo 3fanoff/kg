@@ -33,15 +33,17 @@ $(document).ready(function(){
 		$('.mb_download_popup').toggle();
 		return false;
 	});
-	$('#mb_content_videos').sliderFan({
+	$('.mb_slider').sliderFan({
 		interval:	6000,
+		start: 		2,
 		slideCls:	'mb_media',
 		infoboxCls:	'mb_media_info',
 		actCls: 	'mb_active',
+		navCls:		'mb_thumbs clearfix',
 		navCall: function(){
-			i = $(pic + '_numb', this).text();
+			i = $(pic_cls + '_numb', $is).text();
 			$is.hasClass('_wide') ? wide = ' _wide' : wide = '';
-			$('#' + nav_id).append('<li class="mb_poster' + wide + '"><a  href="#pic-' + num + '"><span>' + i + '</span></a></li>');
+			$('#' + nav_id).append('<li class="' + item_cls + ' mb_poster' + wide + '"><a href="#pic-' + num + '"><span>' + i + '</span></a></li>');
 			$('a[href="#pic-' + num + '"]').css('background-image', 'url(' + src + ')');
 		}
 	});
@@ -202,7 +204,7 @@ $(window).scroll(function()
 	</div>
 	<div class="mb_corner"></div>
 
-	<div id="mb_content_videos">
+	<div id="mb_content_videos" class="mb_slider">
 		<div class="mb_full">
 			<div class="mb_media_info"><b></b> <span></span> <i></i></div>
 			<div class="mb_media_wrap">
@@ -215,13 +217,13 @@ $(window).scroll(function()
                 <div class="mb_media _wide">
                 	<img src="temp/sliderpics/avengers_35.jpg" alt=" " />
                     <span class="mb_media_numb">98</span>
-                    <span class="mb_media_name">Мстители (The Avengers), кадр № 35</span>
+                    <span class="mb_media_name">Мстители (The Avengers), Трейлер № 35</span>
                     <span class="mb_media_desc">Подпись к этому</span>
 				</div>
                 <div class="mb_media">
                 	<img src="temp/sliderpics/avengers_36.jpg" alt=" " />
                     <span class="mb_media_numb">97</span>
-                    <span class="mb_media_name">кадр № 36</span>
+                    <span class="mb_media_name">Музыкальный ролик</span>
                     <span class="mb_media_desc"></span>
 				</div>
                 <div class="mb_media">
@@ -233,47 +235,46 @@ $(window).scroll(function()
                 <div class="mb_media">
                 	<img src="temp/sliderpics/avengers_63.jpg" alt=" " />
                     <span class="mb_media_numb">95</span>
-                    <span class="mb_media_name">Мстители (The Avengers), кадр № 63</span>
+                    <span class="mb_media_name">Мстители. Репортаж со съемок</span>
                     <span class="mb_media_desc"></span>
 				</div>
                 <div class="mb_media _wide">
                 	<img src="temp/sliderpics/avengers_65.jpg" alt=" " />
                     <span class="mb_media_numb">94</span>
                     <span class="mb_media_name">Трейлер №7</span>
-                    <span class="mb_media_desc"></span>
+                    <span class="mb_media_desc">На русском языке</span>
 				</div>
                 <div class="mb_media _wide">
                 	<img src="temp/sliderpics/avengers_66.jpg" alt=" " />
                     <span class="mb_media_numb">93</span>
-                    <span class="mb_media_name">The Avengers, кадр №66</span>
+                    <span class="mb_media_name">Китайский трейлер</span>
                     <span class="mb_media_desc">Кадр высокого разрешения</span>
 				</div>
                 <div class="mb_media">
                 	<img src="temp/sliderpics/avengers_67.jpg" alt=" " />
                     <span class="mb_media_numb">92</span>
-                    <span class="mb_media_name">The Avengers кадр 67</span>
+                    <span class="mb_media_name">The Avengers Трейлер</span>
                     <span class="mb_media_desc">Mstiteli/Avengers</span>
 				</div>
                 <div class="mb_media">
                 	<img src="temp/sliderpics/avengers_68.jpg" alt=" " />
                     <span class="mb_media_numb">91</span>
-                    <span class="mb_media_name">Мстители кадр № 68</span>
+                    <span class="mb_media_name">Репортаж о съемках фильма</span>
                     <span class="mb_media_desc">Мстители кадр № 68</span>
 				</div>
                 <div class="mb_media">
                 	<img src="temp/sliderpics/avengers_20.jpg" alt=" " />
                     <span class="mb_media_numb">90</span>
-                    <span class="mb_media_name">Мстители кадр № 68</span>
+                    <span class="mb_media_name">Трейлер с суперкубка</span>
                     <span class="mb_media_desc">Мстители кадр № 68</span>
 				</div>
                 <div class="mb_media">
                 	<img src="temp/sliderpics/avengers_69.jpg" alt=" " />
                     <span class="mb_media_numb">89</span>
-                    <span class="mb_media_name">Мстители (The Avengers), кадр № 69</span>
+                    <span class="mb_media_name">Мстители (The Avengers), трейлер № 1</span>
                     <span class="mb_media_desc">Небольшой постер</span>
 				</div>
             </div>
-
 			<div class="mb_buttons clearfix">
 				<div class="mb_social clearfix">
 					<div class="mb_comments"><a href="#" title="Комментировать видео"><span>+</span></a></div>
@@ -294,6 +295,142 @@ $(window).scroll(function()
 				</div>
 				<div class="mb_rating_result">
 					<p>Рейтинг:</p><span class="mb_rating_rate block_rating_result_good">85%</span><span class="mb_rating_votes">1249 голосов</span>
+				</div>
+				<div class="mb_content_action">
+					<div class="mb_download"><a href="#" title="Скачать"><span>&nbsp;</span></a></div>
+					<div class="mb_zoom"><a href="#" title="Увеличить в новом окне"><span>&nbsp;</span></a></div>
+                    <!-- download popup -->
+					<div class="mb_download_popup">
+                    	<div class="mb_download_popup_header"></div>
+                        <div class="mb_download_popup_body">
+                            <ul>
+                                <li><a href="#">HD 720p, 216 МБ (MP4)</a></li>
+                                <li><a href="#">Высокое качество, 135 МБ (MP4)</a></li>
+                                <li><a href="#">Высокое качество, 21 МБ (FLV)</a></li>
+                                <li><a href="#">Среднее качество, 5 МБ (MP4)</a></li>
+                            </ul>
+						</div>
+                	</div>
+                    <!-- /download popup -->
+				</div>
+			</div>
+		</div>
+	</div>
+    <div id="mb_content_shots" class="mb_slider">
+		<div class="mb_full">
+			<div class="mb_media_info"><b></b> <span></span> <i></i></div>
+			<div class="mb_media_wrap">
+            	<div class="mb_media">
+                	<img src="temp/sliderpics/avengers_11.jpg" alt=" " />
+                    <span class="mb_media_numb">34</span>
+                    <span class="mb_media_name">Кадр № 11</span>
+                    <span class="mb_media_desc">Текст произвольный к этому кадру</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_19.jpg" alt=" " />
+                    <span class="mb_media_numb">33</span>
+                    <span class="mb_media_name">Кадр № 19</span>
+                    <span class="mb_media_desc"></span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_10.jpg" alt=" " />
+                    <span class="mb_media_numb">32</span>
+                    <span class="mb_media_name">Кадр № 10</span>
+                    <span class="mb_media_desc">Текст произвольный</span>
+				</div>
+            	<div class="mb_media">
+                	<img src="temp/sliderpics/avengers_34.jpg" alt=" " />
+                    <span class="mb_media_numb">31</span>
+                    <span class="mb_media_name">Кадр № 34</span>
+                    <span class="mb_media_desc">Опциональная подпись к этому видеоролику Опциональная подпись</span>
+				</div>
+                <div class="mb_media _wide">
+                	<img src="temp/sliderpics/avengers_35.jpg" alt=" " />
+                    <span class="mb_media_numb">30</span>
+                    <span class="mb_media_name">Мстители (The Avengers), кадр № 35</span>
+                    <span class="mb_media_desc">Подпись к этому</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_63.jpg" alt=" " />
+                    <span class="mb_media_numb">29</span>
+                    <span class="mb_media_name">Мстители (The Avengers), кадр № 63</span>
+                    <span class="mb_media_desc"></span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_36.jpg" alt=" " />
+                    <span class="mb_media_numb">28</span>
+                    <span class="mb_media_name">кадр № 36</span>
+                    <span class="mb_media_desc"></span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_37.jpg" alt=" " />
+                    <span class="mb_media_numb">27</span>
+                    <span class="mb_media_name">Мстители трейлер 8</span>
+                    <span class="mb_media_desc">The Avengers</span>
+				</div>
+                <div class="mb_media _wide">
+                	<img src="temp/sliderpics/avengers_66.jpg" alt=" " />
+                    <span class="mb_media_numb">26</span>
+                    <span class="mb_media_name">The Avengers, кадр №66</span>
+                    <span class="mb_media_desc">Кадр высокого разрешения</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_12.jpg" alt=" " />
+                    <span class="mb_media_numb">25</span>
+                    <span class="mb_media_name">Кадр № 12</span>
+                    <span class="mb_media_desc">Опциональная подпись</span>
+				</div>
+                <div class="mb_media _wide">
+                	<img src="temp/sliderpics/avengers_65.jpg" alt=" " />
+                    <span class="mb_media_numb">24</span>
+                    <span class="mb_media_name">Трейлер №7</span>
+                    <span class="mb_media_desc"></span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_67.jpg" alt=" " />
+                    <span class="mb_media_numb">23</span>
+                    <span class="mb_media_name">The Avengers кадр 67</span>
+                    <span class="mb_media_desc">Mstiteli/Avengers</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_68.jpg" alt=" " />
+                    <span class="mb_media_numb">22</span>
+                    <span class="mb_media_name">Мстители кадр № 68</span>
+                    <span class="mb_media_desc">Мстители кадр № 68</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_20.jpg" alt=" " />
+                    <span class="mb_media_numb">21</span>
+                    <span class="mb_media_name">Мстители кадр № 68</span>
+                    <span class="mb_media_desc">Мстители кадр № 68</span>
+				</div>
+                <div class="mb_media">
+                	<img src="temp/sliderpics/avengers_69.jpg" alt=" " />
+                    <span class="mb_media_numb">20</span>
+                    <span class="mb_media_name">Мстители (The Avengers), кадр № 69</span>
+                    <span class="mb_media_desc">Небольшой постер</span>
+				</div>
+            </div>
+			<div class="mb_buttons clearfix">
+				<div class="mb_social clearfix">
+					<div class="mb_comments"><a href="#" title="Комментировать кадр"><span>+</span></a></div>
+					<div class="mb_share"><a href="javascript:void(0);" title="Поделиться кадром"><span>&nbsp;</span></a></div>
+					<div class="mb_share_popup">
+                    	<div class="mb_share_popup_header"></div>
+                        <div class="mb_share_popup_body">
+                        	<a href="#" class="share_vk" title="ВКонтакте">&nbsp;</a>
+                            <a href="#" class="share_fb" title="Facebook">&nbsp;</a>
+                            <a href="#" class="share_twitter" title="Twitter">&nbsp;</a>
+                            <a href="#" class="share_lj" title="LiveJournal">&nbsp;</a>
+                 		</div>
+                	</div>
+				</div>
+				<!--<div class="mb_rating">
+					<p>Оцените видео:</p>
+					<div><input name="star2" type="radio" class="star" title="1"><input name="star2" type="radio" class="star" title="2"><input name="star2" type="radio" class="star" title="3"><input name="star2" type="radio" class="star" title="4"><input name="star2" type="radio" class="star" title="5"><input name="star2" type="radio" class="star" title="6"><input name="star2" type="radio" class="star" title="7"><input name="star2" type="radio" class="star" title="8"><input name="star2" type="radio" class="star" title="9"><input name="star2" type="radio" class="star" title="10"></div>
+				</div>-->
+				<div class="mb_rating_result">
+					<p>Рейтинг:</p><span class="mb_rating_rate block_rating_result_good">56%</span><span class="mb_rating_votes">324 голоса</span>
 				</div>
 				<div class="mb_content_action">
 					<div class="mb_download"><a href="#" title="Скачать"><span>&nbsp;</span></a></div>
