@@ -365,18 +365,46 @@ div.rating-cancel {display: none;}
 .mb_tabs div {float: left; padding: 8px 15px 8px 15px; font-family: 'PTSans-NarrowBold', Tahoma; font-size: 20px; font-weight: normal; line-height: 20px; color: #ffffff; text-shadow: 0 -1px 2px #777777; white-space: nowrap;}
 .mb_tab {cursor: pointer; background-color: #b0b0b0; border-right: 4px solid #cfcfcf;}
 .mb_tab:hover {opacity: 0.80; -moz-opacity: 0.80; -khtml-opacity: 0.80; filter: alpha(opacity=80);}
-.mb_tab_active {cursor: default; background-color: #333333; border-right: 4px solid #828282;}
+.mb_tab._active {cursor: default; background-color: #333333; border-right: 4px solid #828282;}
 .mb_corner {width: 670px; height: 20px; background: url('../themes/default/mb_corner.png') no-repeat right top;}
 .mb_full {width: 640px; padding: 5px 15px 5px 15px; background-color: #333333;}
 .mb_thumbs {width: 656px; padding: 10px 7px 24px 7px; background-color: #333333; border-bottom: 4px solid #999999;}
+
 
 .mb_media_info {padding-bottom: 10px; font-size: 14px; color:#FFF; min-height:35px; overflow:hidden; text-overflow:ellipsis;}
 .mb_media_info b {font-weight: normal; color: #d70000; white-space:nowrap;}
 .mb_media_info i {display: block; font-size: 11px; color: #969696; white-space:nowrap;}
 .mb_media_info span {white-space:nowrap; }
+.mb_slider {position:relative;}
+.mb_slider .positions {
+	position:absolute;
+	left:0;
+	top:50px;
+	width:100%;
+}
+.mb_slider .positions a {
+	background-color:#000;
+	display:block;
+	overflow:hidden;
+	opacity:0;
+	text-indent:-100px;
+	width:40%;
+	height:440px;
+	transition:opacity 0.3s;
+}
+.mb_slider .positions a:hover {
+	opacity:0.3;
+}
+.mb_slider .positions a.prev {
+	float:left;
+}
+.mb_slider .positions a.next {
+	float:right;
+}
 
 .mb_media_wrap {width: 640px; min-height: 440px; overflow: hidden; text-align: center; margin: 0 auto; position:relative;}
 .mb_media {margin: 0 auto; width:100%; height:440px; display:none; position:absolute; left:0; top:0; overflow:hidden;}
+.mb_media:first-child {display:block;}
 .mb_media img {max-width:120%; max-height:120%;}
 .mb_media span {display:none;}
 

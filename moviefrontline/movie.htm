@@ -33,22 +33,41 @@ $(document).ready(function(){
 		$('.mb_download_popup').toggle();
 		return false;
 	});
-	$('.mb_slider').sliderFan({
-		interval:	6000,
+	$('#mb_content_videos').sliderFan({
+		interval:	5000,
 		start: 		2,
 		slideCls:	'mb_media',
 		infoboxCls:	'mb_media_info',
 		actCls: 	'mb_active',
 		navCls:		'mb_thumbs clearfix',
-		navCall: function(){
+		navCall: function( _num, _nv){
 			i = $(pic_cls + '_numb', $is).text();
 			$is.hasClass('_wide') ? wide = ' _wide' : wide = '';
-			$('#' + nav_id).append('<li class="' + item_cls + ' mb_poster' + wide + '"><a href="#pic-' + num + '"><span>' + i + '</span></a></li>');
-			$('a[href="#pic-' + num + '"]').css('background-image', 'url(' + src + ')');
+			$('#' + _nv).append('<li class="' + item_cls + ' mb_poster' + wide + '"><a href="#pic-' + _num + '"><span>' + i + '</span></a></li>');
+			$('a[href="#pic-' + _num + '"]', '#' + _nv).css('background-image', 'url(' + src + ')');
 		}
 	});
+	$('#mb_content_shots').sliderFan({
+		interval:	3000,
+		start: 		4,
+		slideCls:	'mb_media',
+		infoboxCls:	'mb_media_info',
+		actCls: 	'mb_active',
+		navCls:		'mb_thumbs clearfix',
+		navCall: function( _num, _nv){
+			i = $(pic_cls + '_numb', $is).text();
+			$is.hasClass('_wide') ? wide = ' _wide' : wide = '';
+			$('#' + _nv).append('<li class="' + item_cls + ' mb_poster' + wide + '"><a href="#pic-' + _num + '"><span>' + i + '</span></a></li>');
+			$('a[href="#pic-' + _num + '"]', '#' + _nv).css('background-image', 'url(' + src + ')');
+		}
+	});
+	showTab('videos', '#mb_tab_videos');
+	
 });
-
+function showTab(_tab, obj){
+	$(obj).addClass('_active').siblings().removeClass('_active');
+	$('#mb_content_' + _tab).show().siblings('.mb_slider').hide();
+}
 $(document).ready(function()
 	{$('#scrolltop').click(function(){$('html, body').animate({scrollTop:0}, 'slow'); return false;});}
 );
@@ -198,9 +217,9 @@ $(window).scroll(function()
 
 	<!-- ============ MEDIABLOCK ============ -->
 	<div class="mb_tabs clearfix">
-		<div id="mb_tab_videos" class="mb_tab_active">Видео / 16</div>
-		<div id="mb_tab_pics" class="mb_tab" onclick="alert('OK');">Кадры / 94</div>
-		<div id="mb_tab_posters" class="mb_tab" onclick="alert('OK');">Постеры / 2</div>
+		<div id="mb_tab_videos" class="mb_tab" onclick="showTab('videos', this);">Видео / 16</div>
+		<div id="mb_tab_pics" class="mb_tab" onclick="showTab('shots', this);">Кадры / 94</div>
+		<div id="mb_tab_posters" class="mb_tab" onclick="showTab('posters', this);">Постеры / 2</div>
 	</div>
 	<div class="mb_corner"></div>
 
