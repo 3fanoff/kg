@@ -34,10 +34,10 @@
 	-moz-opacity:0.5;
 	-webkit-opacity:0.5;
 	filter:alpha(opacity=50);
-	transition:opacity 0.7s;
-	-moz-transition:opacity 0.7s;
-	-webkit-transition:opacity 0.7s;
-	-o-transition:opacity 0.7s;
+	transition:opacity 0.7s ease;
+	-moz-transition:opacity 0.7s ease;
+	-webkit-transition:opacity 0.7s ease;
+	-o-transition:opacity 0.7s ease;
 }
 .section .head {
 	background:#FFD34E;
@@ -399,25 +399,35 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	color:#FFF;
 	cursor:pointer;
 	font:12px/20px Arial, Helvetica;
-	height:20px;
+	height:40px;
 	left:0;
+	padding-left:4px;
+	position:absolute;
+	width:94px;
+	opacity:0;
+	-moz-opacity:0;
+	-webkit-opacity:0;
+	filter:alpha(opacity=0);
+	transition:opacity 0.6s;
+	-moz-transition:opacity 0.6s;
+	-webkit-transition:opacity 0.6s;
+	-o-transition:opacity 0.6s;
+}
+.user_photo .change div {
 	opacity:0.7;
 	-moz-opacity:0.7;
 	-webkit-opacity:0.7;
-	padding-left:4px;
-	position:absolute;
-	visibility:hidden;
-	width:94px;
-}
-.user_photo:hover .change {
-	visibility:visible;
+	filter:alpha(opacity=70);
 }
 .user_photo .change ._icon {
-	background:url("../i/changephoto_icon.png") 0 0 no-repeat;
+	background:url("../i/changephoto_icon.png") 0 -12px no-repeat;
 	height:12px;
 	float:right;
 	margin:4px;
 	width:16px;
+}
+.user_photo .change .load ._icon {
+	background-position:0 0;
 }
 /* status */
 .user_status {
@@ -681,9 +691,11 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 .lovehate_block ._empty {color:#B3B3B3; font-size:26px;}
 
 /*	Opacities */
-.section._empty:hover,
+.section._empty.over,
 .section .but-s a:hover,
 .section li .icons .mg-icon:hover,
+.user_photo:hover .change,
+.user_photo .change div:hover,
 .user_status .change:hover,
 .status_field.act
 {

@@ -72,7 +72,16 @@ $(function(){
 	});
 	$('.status_field ._close').click(function(){
 		$(this).parent().removeClass('act');
-	})
+	});
+	$('.section._empty').hover(function(){
+		$t = $(this);
+		ovp = setTimeout(function(){
+			$t.addClass('over');
+		}, 1200);
+	}, function(){
+		clearTimeout(ovp);
+		$(this).removeClass('over');
+	});
 });
 
 function sectTab(){
