@@ -91,7 +91,7 @@ var slider = {
 					$('.' + o.naviCls + ':eq(' + slide + ')', '#' + nav_id).addClass(o.actCls).siblings().removeClass(o.actCls);
 				},
 				action: function(){
-					$(pic_cls + ':eq(' + slide + ')', elem).fadeIn(600, meth.intro()).siblings(pic_cls + ':visible').fadeOut(600);
+					$(pic_cls + ':eq(' + slide + ')', elem).fadeIn(600, meth.intro()).siblings(pic_cls).fadeOut(600, meth.hide);
 					elem.data({cur_slide: slide});
 		
 					if (o.nav) meth.active();
@@ -107,6 +107,9 @@ var slider = {
 					$(text_cls + ' i', elem).text(desc);
 			
 					if (o.infoCall) o.infoCall();
+				},
+				hide: function(){
+					$(this).hide();
 				}
 			};
 			//generate navigation
