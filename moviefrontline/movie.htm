@@ -33,31 +33,17 @@ $(document).ready(function(){
 		$('.mb_download_popup').toggle();
 		return false;
 	});
-	$('#mb_content_videos').sliderFan({
-		interval:	5000,
-		start: 		2,
+	$('.mb_slider').sliderFan({
+		interval:	6000,
+		start: 		3,
 		slideCls:	'mb_media',
 		infoboxCls:	'mb_media_info',
 		actCls: 	'mb_active',
 		navCls:		'mb_thumbs clearfix',
-		navCall: function( _num, _nv){
-			i = $(pic_cls + '_numb', $is).text();
+		navCall: function(_pic, _item, _num, _nv){
+			i = $(_pic + '_numb', $is).text();
 			$is.hasClass('_wide') ? wide = ' _wide' : wide = '';
-			$('#' + _nv).append('<li class="' + item_cls + ' mb_poster' + wide + '"><a href="#pic-' + _num + '"><span>' + i + '</span></a></li>');
-			$('a[href="#pic-' + _num + '"]', '#' + _nv).css('background-image', 'url(' + src + ')');
-		}
-	});
-	$('#mb_content_shots').sliderFan({
-		interval:	3000,
-		start: 		4,
-		slideCls:	'mb_media',
-		infoboxCls:	'mb_media_info',
-		actCls: 	'mb_active',
-		navCls:		'mb_thumbs clearfix',
-		navCall: function( _num, _nv){
-			i = $(pic_cls + '_numb', $is).text();
-			$is.hasClass('_wide') ? wide = ' _wide' : wide = '';
-			$('#' + _nv).append('<li class="' + item_cls + ' mb_poster' + wide + '"><a href="#pic-' + _num + '"><span>' + i + '</span></a></li>');
+			$('#' + _nv).append('<li class="' + _item + ' mb_poster' + wide + '"><a href="#pic-' + _num + '"><span>' + i + '</span></a></li>');
 			$('a[href="#pic-' + _num + '"]', '#' + _nv).css('background-image', 'url(' + src + ')');
 		}
 	});

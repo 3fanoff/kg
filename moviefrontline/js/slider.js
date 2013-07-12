@@ -17,77 +17,141 @@ sliderFan ver 2.0.
 var slider = {
 	index: 1,
 	init : function(options){
-		defaults = {
-			num: 1,
+		var defaults = {
+			num: 1, //start number for slides
 			start: 1,
 			autoplay: true,
-			navcenter: false,
 			interval: 4000,
 			pause: 8000,
 			slideCls: 'pic',
 			infoboxCls: 'pic_info',
 			actCls: 'active',
-			navId: 'navigation',
+			navId: 'navigation', // + index
 			navCls: 'navigation',
 			naviCls: 'item',
-			nav: true,
-			navCall: false,
-			sliderCall: false,
-			infoCall: false
+			arrowsCls: 'positions',
+			prevTxt: '&laquo;',
+			nextTxt: '&raquo;',
+			nav: true, //navigation on/off
+			arrows: true, //arrows on/off
+			navCall: false, //callback for nav items
+			startCall: false, //callback on slider start
+			infoCall: false, //callback for info generate
+			actionCall: false //callback on slide changes
 		}
-		o = $.extend(defaults, options, {});
 		
-		pic_cls = '.' + o.slideCls,
-		act_cls = o.actCls,
-		text_box = '.' + o.infoboxCls,
-		nav_cls = o.navCls,
-		item_cls = o.naviCls;
-		start = o.start - 1;
+		var initial = this.each(function(){
+			var o = $.extend(defaults, options, {}),
+				pic_cls = '.' + o.slideCls,
+				text_cls = '.' + o.infoboxCls,
+				start = o.start - 1,
+				elem = $(this),
+				num = o.num,
+				elem_pic = $(pic_cls, elem),
+				len = elem_pic.length - 1,
+				slide = o.start - 1;
+			var meth = {
+				autoplay: function(){
+					if (slide < len){
+						meth.action();
+						slide++
+					} else if (slide > len){
+						slide = 0;
+						meth.action();
+						slide++
+					} else {
+						slide = len;
+						meth.action();
+						slide = 0;
+					}
+				},
+				pause: function(){
+					if (o.autoplay){
+						clearTimeout(elem.data('pause'));
+						clearInterval(elem.data('interval'));
+						pauseTimeout = setTimeout(function() {
+							clearTimeout(elem.data('pause'));
+							playInterval = setInterval(meth.autoplay, o.interval);
+							elem.data('interval', playInterval);
+						}, o.pause);
+						elem.data('pause', pauseTimeout);
+					}
+				},
+				start: function(){
+					slide = (slide < 0) ? 0 : slide;
+					slide = (slide > len) ? len : slide;
+					
+					elem.data({cur_slide: slide});
+					$(pic_cls + ':eq(' + slide + ')', elem).show();
+					meth.intro();
+					if (o.nav) meth.active();
+					if (o.startCall) o.startCall();//additional callback
+				},
+				active: function(){
+					$('.' + o.naviCls + ':eq(' + slide + ')', '#' + nav_id).addClass(o.actCls).siblings().removeClass(o.actCls);
+				},
+				action: function(){
+					$(pic_cls + ':eq(' + slide + ')', elem).fadeIn(600, meth.intro()).siblings(pic_cls + ':visible').fadeOut(600);
+					elem.data({cur_slide: slide});
 		
-		
-		initial = this.each(function(){
-			var elem = $(this);
-			var num = o.num;
-			var elem_pic = $(pic_cls, elem);
-			var len = elem_pic.length - 1;
-			var slide = o.start - 1;
+					if (o.nav) meth.active();
+					if (o.actionCall) o.actionCall(slide);
+				},
+				intro: function(){
+					$box = $(pic_cls + ':eq(' + slide + ')', elem),
+					numb = $(pic_cls + '_numb', $box).text(),
+					name = $(pic_cls + '_name', $box).text(),
+					desc = $(pic_cls + '_desc', $box).text();
+					$(text_cls + ' b', elem).text(numb + '.');
+					$(text_cls + ' span', elem).text(name);
+					$(text_cls + ' i', elem).text(desc);
 			
+					if (o.infoCall) o.infoCall();
+				}
+			};
 			//generate navigation
 			if (o.nav){
 				var nav_id = o.navId + '-' + slider.index;
 				
-				elem.append('<ul class="' + nav_cls + '" id="' + nav_id + '" />');
-				elem.on('click', '#' + nav_id + ' .' + item_cls + ' a', function(){
+				elem.append('<ul class="' + o.navCls + '" id="' + nav_id + '" />');
+				elem.on('click', '#' + nav_id + ' .' + o.naviCls + ' > a', function(){
 					slide = $(this).parent().index();
-					slider.action(elem, slide, nav_id);
-					slider.pause(elem, slide, len, nav_id);
+					meth.action();
 					slide++;
+					meth.pause();
 					return false;
 				});
 				slider.index++;
 			}
-			elem.append('<div class="positions"><a href="#prev" class="prev">prev</a><a href="#next" class="next">next</a></div>')
-			elem.on('click', '.positions a', function(){
-				dir = $(this).attr('href').substr(1);
-				switch (dir) {
-					case 'next':
-						slide == 0 ? slide = 1 : slide;
-						slide > len ? slide = 0 : slide;
-						slide = (slide-1) == len ? 0 : slide;
-						//if (slide > len) {slide = 0; console.log(slide);}
-						break
-					case 'prev':
-						slide = slide-1 == 0 ? len : slide-2;
-						slide > len ? slide = len-1 : slide;
-						//if (slide > len) {slide = len-1; console.log(slide);}
-						break;
-				}
-				slider.action(elem, slide, nav_id);
-				slider.pause(elem, slide, len, nav_id);
-				slide++
-				return false;
-			});
-			
+			if (o.arrows){
+				elem.append('<div class="' + o.arrowsCls + '"><a href="#prev" class="prev">' + o.prevTxt + '</a><a href="#next" class="next">' + o.nextTxt + '</a></div>');
+				elem.on('click', '.' + o.arrowsCls + ' > a', function(){
+					dir = $(this).attr('href').substr(1);
+					current = elem.data().cur_slide;
+					switch (dir) {
+						case 'next':
+							slide = current+1;
+							if (slide > len) {
+								slide = current = 0;
+							} else {
+								current++
+							}
+							break
+						case 'prev':
+							slide = current-1;
+							if(slide < 0){
+								slide = current = len;
+							} else {
+								current--
+							}
+							break;
+					}
+					meth.action();
+					slide++;
+					meth.pause();
+					return false;
+				});
+			}
 			for (n=0; n <= len; n++){
 				$is = $(elem_pic[n]);
 				src = $('img', $is).attr('src');
@@ -95,84 +159,24 @@ var slider = {
 				$is.addClass('pic-' + num).hide();
 				if (o.nav) {
 					if (!o.navCall){
-						$('#' + nav_id).append('<li class="' + item_cls + '"><a href="#pic-' + num + '">' + num + '</a></li>');
+						$('#' + nav_id).append('<li class="' + o.naviCls + '"><a href="#pic-' + num + '">' + num + '</a></li>');
 					} else {
-						o.navCall(num, nav_id);
+						o.navCall(pic_cls, o.naviCls, num, nav_id);
 					}
 				}
 				num++
 			}
 			
-			slider.start(elem, slide, len, nav_id);//start slider
-			
-			if (o.sliderCall) o.sliderCall();//additional callback
+			meth.start();//start slider
 			
 			if (o.autoplay){//autoplay start
-				var playInterval = setInterval(function() {
-					togg = slider.action(elem, slide, nav_id);
-					if (slide < len){
-						togg;
-						slide++
-					} else {
-						slide = len;
-						togg;
-						slide = 0;
-					}
-				}, o.interval);
+				slide = elem.data().cur_slide+1;
+				playInterval = setInterval(meth.autoplay, o.interval);
 				elem.data('interval', playInterval);
 			}
-			
 		});
 		
 		return initial;
-	},
-	start : function(_ob, _sd, _ln, _nv){
-		_sd = (_sd < 0) ? 0 : _sd;
-		_sd = (_sd > _ln) ? _ln : _sd;
-		
-		$(pic_cls + ':eq(' + _sd + ')', _ob).show();
-		slider.intro(_ob, _sd);
-		if (o.nav) slider.active(_sd, _nv);
-	},
-	action : function(_ob, _sd, _nv){
-		$(pic_cls + ':eq(' + _sd + ')', _ob).fadeIn(600, slider.intro(_ob, _sd)).siblings(pic_cls + ':visible').fadeOut(600);
-		if (o.nav) slider.active(_sd, _nv);
-	},
-	active: function(_sd, _nv){
-		$('.' + item_cls + ':eq(' + _sd + ')', '#' + _nv).addClass(act_cls).siblings().removeClass(act_cls);
-	},
-	intro : function(_ob, _sd){
-		$box = $(pic_cls + ':eq(' + _sd + ')', _ob),
-		numb = $(pic_cls + '_numb', $box).text(),
-		name = $(pic_cls + '_name', $box).text(),
-		desc = $(pic_cls + '_desc', $box).text();
-		$(text_box + ' b', _ob).text(numb + '.');
-		$(text_box + ' span', _ob).text(name);
-		$(text_box + ' i', _ob).text(desc);
-		
-		if(o.infoCall) o.infoCall();
-	},
-	pause : function(_ob, _sd, _ln, _nv){
-		if (o.autoplay){
-			clearTimeout(_ob.data('pause'));
-			clearInterval(_ob.data('interval'));
-			pauseTimeout = setTimeout(function() {
-				clearTimeout(_ob.data('pause'));
-				playInterval = setInterval(function() {
-					togg = slider.action(_ob, _sd, _nv);
-					if (_sd < _ln){
-						togg;
-						_sd++
-					} else {
-						_sd = _ln;
-						togg;
-						_sd = 0;
-					}
-				}, o.interval);
-				_ob.data('interval', playInterval);
-			}, o.pause);
-			_ob.data('pause', pauseTimeout);
-		}
 	}
 };
 $.fn.sliderFan = function( _method ) {

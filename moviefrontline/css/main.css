@@ -383,24 +383,18 @@ div.rating-cancel {display: none;}
 	width:100%;
 }
 .mb_slider .positions a {
-	background-color:#000;
 	display:block;
 	overflow:hidden;
-	opacity:0;
 	text-indent:-100px;
 	width:40%;
 	height:440px;
-	transition:opacity 0.3s;
+	/*background-color:#000;
+	opacity:0;
+	transition:opacity 0.3s;*/
 }
-.mb_slider .positions a:hover {
-	opacity:0.3;
-}
-.mb_slider .positions a.prev {
-	float:left;
-}
-.mb_slider .positions a.next {
-	float:right;
-}
+.mb_slider .positions a:hover {}
+.mb_slider .positions a.prev {float:left;}
+.mb_slider .positions a.next {float:right;}
 
 .mb_media_wrap {width: 640px; min-height: 440px; overflow: hidden; text-align: center; margin: 0 auto; position:relative;}
 .mb_media {margin: 0 auto; width:100%; height:440px; display:none; position:absolute; left:0; top:0; overflow:hidden;}
