@@ -82,6 +82,9 @@ $(function(){
 		clearTimeout(ovp);
 		$(this).removeClass('over');
 	});
+	
+	disSubmit('.input_text','[name="add_email"]');
+	inputFlash('input_text', 'nof');
 });
 
 function sectTab(){
@@ -141,6 +144,60 @@ function statusLimit(){
 		$('input[type="submit"]', $(this).parent()).prop('disabled', true);
 	} else {
 		$('input[type="submit"]', $(this).parent()).prop('disabled', false);
+	}
+}
+/* FLASHING INPUT v.2.0 */
+function inputFlash(obj_cls, def_cls){
+	var $obj = $('.' + obj_cls),
+		type = 'type',
+		//pass = 'password',
+		text = 'text';
+	if(!obj_cls) return;
+	$obj.each(function(){
+		var $el = $(this);
+		$el.addClass(def_cls);
+		/*if(el.attr(type) == pass){
+			el.attr(type, text);
+			el.data(type, pass);
+		}*/
+		$el.focus(function(){
+			$el.removeClass(def_cls);	
+			if (this.value == this.defaultValue){
+				this.value = '';
+				/*if(el.data(type) == pass){
+					el.attr(type,pass);
+				}*/
+			}
+		});
+		$el.blur(function() {
+			if ($.trim(this.value) == ''){
+				$el.addClass(def_cls);
+				this.value = (this.defaultValue ? this.defaultValue : '');
+				/*if(el.data(type) == pass){
+					el.attr(type,text);
+				}*/
+			}
+		});
+	});
+}
+/* disabled submit button */
+function disSubmit(_area, _form){
+	var form = 'form' + _form,
+		btn = 'input[type="submit"]',
+		dis = 'disabled',
+		$ob = $(_area, $(form)),
+		deftxt = $ob.val();
+		
+	disabled($ob);
+	$ob.keyup(function(){
+		disabled($(this));
+	});
+	function disabled(_el){
+		if (_el.val() == deftxt || _el.val() == ''){
+			$(btn, $(form)).attr(dis, dis)
+		} else {
+			$(btn, $(form)).removeAttr(dis);
+		}
 	}
 }
 

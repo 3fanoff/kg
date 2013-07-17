@@ -1,4 +1,8 @@
 .clr {height:0px;}
+._sp30 {height:30px;}
+._bb {border-bottom:1px solid #D8D8D8;}
+._bt {border-top:1px solid #D8D8D8;}
+.ta-r {text-align:right;}
 /* User Sections */
 .section li .ic,
 .section li .icons .user-grade,
@@ -10,15 +14,18 @@
 }
 .a_content {
 	width:190px;
-	background:#CCC;
 	margin:20px 10px 0;
 	min-height:200px;
 	float:left;
 }
 .content_sections {
 	width:730px;
-	padding:0 10px;
-	float:left;
+	margin:0 10px;
+	float:right;
+}
+h1 {
+	color:#333;
+	font:200 26px/26px Arial, Helvetica;
 }
 .c_s {
 	width:350px;
@@ -359,8 +366,6 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	margin-left:20px;
 }
 .profile_block .user_name h1 {
-	color:#333;
-	font:200 26px/26px Arial, Helvetica;
 	float:left;
 	padding-left:180px;
 }
@@ -382,9 +387,9 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 }
 /* photo */
 .user_photo {
-	background-color:#FAF5E9;
+	background-color:#FFF;
 	background-image: url("../i/nouserphoto.png");
-	background-position:0 0;
+	background-position:50% 50%;
 	background-repeat:no-repeat;
 	border:1px solid #F6E9D0;
 	height:98px;
@@ -463,11 +468,11 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 }
 .user_status .pointer {
 	background:url("../i/status_pointer.png") 0 0 no-repeat;
-	height:33px;
+	height:18px;
 	position:absolute;
-	left:-40px;
-	top:19px;
-	width:39px;
+	left:-30px;
+	top:36px;
+	width:30px;
 }
 .user_status .fade {
 	background:url("../i/user_status_fade.png") 0 0 repeat-x;
@@ -569,6 +574,7 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	text-decoration:none;
 	text-shadow:#EEE 0 1px 0;
 	width:108px;
+	white-space:nowrap;
 }
 .profile_button[disabled]:hover,
 .profile_button[disabled]:active {
@@ -591,6 +597,14 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	line-height:23px;
 	width:78px;
 }
+.profile_button._user {
+	display:inline-block;
+	max-width:300px;
+	overflow:hidden;
+	padding:0 7px 0 34px;
+	text-overflow:ellipsis;
+	width:auto;
+}
 .profile_button ._icon {
 	background:url("../i/newmessages_icon.png") -1px -1px no-repeat;
 	height:14px;
@@ -598,6 +612,17 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	position:absolute;
 	top:-6px;
 	width:20px;
+}
+.profile_button ._userpic {
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+	background-size:cover;
+	border-radius:3px;
+	height:22px;
+	left:4px;
+	position:absolute;
+	top:3px;
+	width:22px;
 }
 
 .lovehate_block .head {
@@ -705,4 +730,93 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	filter:alpha(opacity=100);
 	visibility:visible;
 }
+/* User Settings */
+/* 17.07.2013 */
+.settings_header {
+	padding:10px 0 0;
+}
+.settings_header h1 {
+	float:left;
+	padding:0 70px 0 220px;
+}
+.settings_header ._user {float:left;}
+.content_sections._settings {
+	background-color:#F1F3F3;
+	margin-top:20px;
+	min-height:200px;
+}
+.tabs._settings .tab {
+	font:14px/40px Arial, Helvetica;
+	height:40px;
+	margin:0 -20px 0 0;
+	text-align:center;
+}
+.tabs._settings .tab._current {
+	background-color:#F1F3F3;
+}
+.tabs._settings .tab._current a {
+	color:#3C3C3C;
+	cursor:default;
+}
+.tabs._settings .tab a {
+	text-decoration:none;
+}
+
+.content_sections .tab {
+	color:#3C3C3C;
+	font:12px Arial, Helvetica;
+	margin:0 auto;
+	width:690px;
+}
+
+.box-240 {
+	float:left;
+	width:240px;
+}
+.box-450 {
+	float:left;
+	width:450px;
+}
+.ec_settings .profile_button {
+	float:left;
+	height:25px;
+	width:92px;
+}
+.ec_settings input {
+	float:left;
+	margin:0 9px 4px 0;
+}
+.ec_settings p {
+	font-size:11px;
+	line-height:14px;
+	padding-top:6px;
+	color:#808080;
+}
+.ec_settings .label {
+	line-height:25px;
+	padding-right:12px;
+}
+.err {color:#D30000 !important;}
+.input_text {
+	border:1px solid #989898;
+	box-shadow:inset #E1E1E1 0 1px;
+	font:12px/23px Arial, Helvetica;
+	height:23px;
+	padding:0 5px;
+	width:246px;
+}
+.input_text.nof {color:#ACACAC;}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
