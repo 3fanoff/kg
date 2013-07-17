@@ -1,0 +1,1429 @@
+<!doctype html>
+<html>
+<head>
+<title>Тотошко.ру</title>
+<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=1">
+<meta charset="utf-8">
+<!--<link href="http://www.kino-govno.com/css/bootstrap.min.css" rel="stylesheet" />-->
+<link rel="stylesheet" type="text/css" href="style.css" />
+<!--link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/-->
+<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+<!--<script type="text/javascript" src="http://www.kino-govno.com/js/jquery.js"></script>-->
+<script type="text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js"></script>
+<!--<script type="text/javascript" src="http://www.kino-govno.com/js/bootstrap.min.js"></script>-->
+
+<script type="text/javascript">
+function add_filter (field, status) {
+	$.getJSON('totoshko_actions.php?action=add_filter&status='+ status + '&type=' + field.split('_')[0] + '&tag='+encodeURIComponent($('#' + field).html()), function(data) {
+		if (data['refreshed']==1) {
+			$('#filters_removed').load('totoshko_actions.php?action=refresh_filters_removed');
+			$('#filters_favorites').load('totoshko_actions.php?action=refresh_filters_favorites');
+			$('#filters_bold').load('totoshko_actions.php?action=refresh_filters_bold');
+			$('#filtered_list').load('totoshko_actions.php?action=refresh_filtered_list&list=favorites&names=russian');
+		}
+	});
+}
+
+function watched (num) {
+	$.getJSON('totoshko_actions.php?action=watched&episode='+encodeURIComponent($('#episode_' + num).html()) + '&anime=' + encodeURIComponent($('#anime_' + num).html()), function(data) {
+		if (data['refreshed']==1) {
+			$('#filtered_list').load('totoshko_actions.php?action=refresh_filtered_list&list=favorites&names=russian');
+		}
+	});
+}
+
+function remove_from_filters (id) {
+	$.getJSON('totoshko_actions.php?action=remove_from_filters&id='+ id, function(data) {
+		if (data['refreshed']==1) {
+			$('#filters_removed').load('totoshko_actions.php?action=refresh_filters_removed');
+			$('#filters_favorites').load('totoshko_actions.php?action=refresh_filters_favorites');
+			$('#filters_bold').load('totoshko_actions.php?action=refresh_filters_bold');
+			$('#filtered_list').load('totoshko_actions.php?action=refresh_filtered_list&list=favorites&names=russian');
+		}
+	});
+}
+$(function(){
+	$('.left_col .line').sortable({
+		helper: 'clone',
+		items: '.animetag',
+		connectWith:'.group .tags',
+		cancel: ".episode",
+		cursor: 'move',
+		start: function(event, ui) {
+			pos = ui.item.index();//позиция тега
+		}
+	});
+	$('.group .tags').sortable({
+		items: '.animetag',
+		//connectWith:'.left_col .line .tags',
+		containment: 'parent',
+		cursor: 'move',
+		receive: function(event, ui) {
+			var $tag_i = ui.item;//оригинал
+			var $tag_c = $tag_i.clone(true);//клон
+			var $list = ui.sender;//$('.line')
+			//сохранение позиции тега в левом списке
+			if (pos == 0){
+				$tag_c.insertBefore($list.find('.animetag:first'));
+			} else {
+				$tag_c.insertAfter($list.find('.animetag:eq(' + (pos-1) + ')'));
+			}
+			$tag_i.tags('addminus');
+			var tag_name = $tag_c.find('span:first').text();//содержимое тега
+			//tag_num = 0;
+			//запрет на перемещение в набор Избранные для .Формата и .Разрешения
+			if (($tag_i.hasClass('format') || $tag_i.hasClass('resolution')) && $tag_i.parents().hasClass('favourites')){
+				$list.sortable('cancel');
+			}
+			//удаление из набора Избранные и Фильтр если перемещено в набор Удаленные
+			if ($tag_i.parents().hasClass('removed')) {
+				$('.group:not(".removed") .animetag span:contains(' + tag_name + ')').parent().remove();
+			}
+			//не добавлять если уже есть в наборе
+			$('.animetag', $tag_i.parent()).tags('delrepeat', tag_name);
+		}
+	});
+	//добавление тега в нужный набор.
+	$('.line').on('click', '.options > span', function(){
+		var $is = $(this);
+		var tag_name = $is.parents('.animetag').find('span:first').text();
+		var cls = '';
+		//tag_num = 0;
+		if ($is.hasClass('minus')) $is.tags('clone', 'removed'), cls = 'removed';
+		if ($is.hasClass('plus')) $is.tags('clone', 'favourites'), cls = 'favourites';
+		if ($is.hasClass('filter'))  $is.tags('clone', 'filterfav'), cls = 'filterfav';
+		//не добавлять если уже есть в наборе
+		$('.animetag', '.' + cls + '.group').tags('delrepeat', tag_name);
+	});
+	
+	//сворачиваем набор справа.
+	$('.head').click(function(){
+		$(this).next().slideToggle().parent().toggleClass('close');
+		if ($('.group.close').length > 2){
+			$('.main').addClass('w_auto');
+		} else {
+			$('.main').removeClass('w_auto');
+		}
+	});
+});
+(function( $ ){
+	var man = {
+		def: function(){},
+		//оставляем только иконку "минус" в теге правой колонки.
+		addminus: function(){
+			return this.each(function(){
+				$(this).find('.options').empty().append('<span class="minus">&nbsp;</span>');
+				$(this).find('span').removeAttr('id');
+				//console.log(this);
+			});
+		},
+		//не допускаем повторения
+		delrepeat: function( _tagname ){
+			var tag_num = 0;
+			if ( _tagname ){
+				return this.each(function(){
+					if ($(this).find('span:first').text() == _tagname) {
+						tag_num++
+						if (tag_num > 1) $(this).remove();
+					}
+				});
+			}
+		},
+		//клонируем тег
+		clone: function( _cls){
+			return this.each(function(){
+				var elem = $(this).parents('.animetag').clone(true).appendTo($('.' + _cls + '.group .tags'));
+				elem.tags('addminus');//+ минус
+			});
+		}
+	}
+	$.fn.tags = function(method){
+		if (man[method]) {
+			return man[method].apply(this, Array.prototype.slice.call(arguments, 1));
+		} else if (typeof method === 'object' || ! method) {
+			return man.def.apply(this, arguments);
+		} else {
+			$.error('Метод "' + method + '" не существует');
+		} 
+	};
+})(jQuery);
+</script>
+	
+</head>
+<body>
+
+<div class="main">
+	<div class="left_col">
+    	<div class="tabs">
+        	<a href="#" class="left">Избранные</a><a href="#" class="center">Отфильтрованные</a><span class="center">Всё</span><a href="#" class="right">Остатки</a>
+        </div>
+        <div class="tabs lang">
+        	<span class="left">Русские</span><a href="" class="right">Оригинальные</a>
+        </div>
+        <div class="clear"></div>
+    	<!-- FILTERED -->
+        <div id="filtered_list">
+            	<div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_0" style="display: none;">Shingeki no Kyojin</span>
+                            <span id="russian_0">Атака на Титана</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_0">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_0">HorribleSubs</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_0">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_0">1080p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="watch" onclick="watched(0);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                		<div class="animetag name">
+                    	<span id="anime_1" style="display: none;">Shingeki no Kyojin</span>
+                        <span id="russian_1">Атака на Титана</span>
+                        <div class="options">
+                        	<span class="minus">&nbsp;</span>
+                        	<span class="plus">&nbsp;</span>
+                        	<span class="filter">&nbsp;</span>
+                        </div>
+                    </div>
+                    	<div class="animetag episode">
+                    	<span id="episode_1">09</span>
+                    </div>
+                    	<div class="animetag publisher">
+                    	<span id="releaser_1">HorribleSubs</span>
+                        <div class="options">
+                        	<span class="minus">&nbsp;</span>
+                        	<span class="plus">&nbsp;</span>
+                        	<span class="filter">&nbsp;</span>
+                        </div>
+                    </div>
+                    	<div class="animetag format">
+                    	<span id="extension_1">mkv</span>
+                        <div class="options">
+                        	<span class="minus">&nbsp;</span>
+                        	<span class="filter">&nbsp;</span>
+                        </div>
+                    </div>
+                    	<div class="animetag resolution">
+                    	<span id="resolution_1">720p</span><span class="under minus one" onClick="add_filter ('resolution_1', 1);">&nbsp;</span>
+                    	<div class="options">
+                        	<span class="minus">&nbsp;</span>
+                        	<span class="filter">&nbsp;</span>
+                        </div>
+                    </div>
+                    </div>
+                    <span class="watch" onclick="watched(1);">&nbsp;</span>
+				</div>
+				<div class="line bold">
+                	<a href="#" class="cover">
+                    	<img src="http://media.kino-govno.com/anime/y/yahariorenoseishunlovecomewamachigatteiru/production/yahariorenoseishunlovecomewamachigatteiru_1s.jpg" />
+                    </a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_2" style="display: none;">Yahari Ore no Seishun Love Come wa Machigatteiru.</span>
+                            <span id="russian_2">Мой подростковый ромком не складывается, как и ожидалось</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_2">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_2">Doki</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_2">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_2">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">227,44 Мб.</span><a href="#">[Doki] Yahari Ore no Seishun. - 09 (1280x720 Hi10P AAC) [6EDD3035].mkv</a></p>
+                    <p><span class="time">02:06</span><span class="upload sid">153</span><span class="download sid">37</span></p>
+                    <span class="watch" onclick="watched(1);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_3" style="display: none;">Hentai Ouji to Warawanai Neko</span>
+                            <span id="russian_3">Хентайный принц и каменная кошка</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_3">08</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_3">Commie</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_3">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">227,44 Мб.</span><a href="#">Hentai Ouji to Warawanai Neko. - 08.mkv</a></p>
+                    <p><span class="time">01:59</span><span class="upload sid">34</span><span class="download sid">12</span></p>
+                    <span class="watch" onclick="watched(1);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<a href="#" class="cover">
+                    	<img src="http://media.kino-govno.com/anime/y/yahariorenoseishunlovecomewamachigatteiru/production/yahariorenoseishunlovecomewamachigatteiru_1s.jpg" />
+                    </a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_4" style="display: none;">Yahari Ore no Seishun Love Come wa Machigatteiru.</span>
+                            <span id="russian_4">Мой подростковый ромком не складывается, как и ожидалось</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_4">05</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_4">GotLag</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_4">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_4">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">275,99 Мб.</span><a href="#">[GotLag] Yahari_Ore_no_Seishun._-_05_[720p][E80D0894].mkv</a></p>
+                    <p><span class="time">07:06</span><span class="upload sid">0</span><span class="download sid">0</span></p>
+                    <span class="watch" onclick="watched(1);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_5" style="display: none;">Hentai Ouji to Warawanai Neko</span>
+                            <span id="russian_5">Хентайный принц и каменная кошка</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_5">08</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_5">Chihiro</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_5">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_5">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">227,44 Мб.</span><a href="#">[Doki] Yahari Ore no Seishun. - 09 (1280x720 Hi10P AAC) [6EDD3035].mkv</a></p>
+                    <p><span class="time">02:06</span><span class="upload sid">153</span><span class="download sid">37</span></p>
+                    <span class="watch" onclick="watched(5);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_6" style="display: none;">Date A Live</span>
+                            <span id="russian_6">Свидание на жизнь</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_6">10v0</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_6">FFF</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_6">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">227,44 Мб.</span><a href="#">[Doki] Yahari Ore no Seishun. - 09 (1280x720 Hi10P AAC) [6EDD3035].mkv</a></p>
+                    <p><span class="time">02:06</span><span class="upload sid">153</span><span class="download sid">37</span></p>
+                    <span class="watch" onclick="watched(6);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_7" style="display: none;">PhotoKano</span>
+                            <span id="russian_7">Девушка на фото</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_7">07</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_7">Doki</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_7">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_7">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">227,44 Мб.</span><a href="#">[Doki] Yahari Ore no Seishun. - 09 (1280x720 Hi10P AAC) [6EDD3035].mkv</a></p>
+                    <p><span class="time">02:06</span><span class="upload sid">153</span><span class="download sid">37</span></p>
+                    <span class="watch" onclick="watched(7);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_8" style="display: none;">Shingeki no Kyojin</span>
+                            <span id="russian_8">Атака на Титана</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_8">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_8">EveTaku</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_8">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_8">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">227,44 Мб.</span><a href="#">[Doki] Yahari Ore no Seishun. - 09 (1280x720 Hi10P AAC) [6EDD3035].mkv</a></p>
+                    <p><span class="time">02:06</span><span class="upload sid">153</span><span class="download sid">37</span></p>
+                    <span class="watch" onclick="watched(8);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_9" style="display: none;">Shingeki no Kyojin</span>
+                            <span id="russian_9">Атака на Титана</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_9">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_9">EveTaku</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_9">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_9">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">227,44 Мб.</span><a href="#">[Doki] Yahari Ore no Seishun. - 09 (1280x720 Hi10P AAC) [6EDD3035].mkv</a></p>
+                    <p><span class="time">02:06</span><span class="upload sid">153</span><span class="download sid">37</span></p>
+                    <span class="watch" onclick="watched(9);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<a href="#" class="cover"><img src="http://media.kino-govno.com/anime/j/jjusenjinmushibugy/posters/jjusenjinmushibugy_1s.jpg" /></a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_10" style="display: none;">Mushibugyō</span>
+                            <span id="russian_10">Жучиный магистрат</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_10">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_10">HorribleSubs</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_10">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_10">1080p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">531,96 Мб.</span><a href="#">[HorribleSubs] Mushibugyo - 09 [1080p].mkv</a></p>
+                    <p><span class="time">14:06</span><span class="upload sid">172</span><span class="download sid">12</span></p>
+                    <span class="watch" onclick="watched(13);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<a  href="#" class="cover"><img src="http://media.kino-govno.com/anime/j/jjusenjinmushibugy/posters/jjusenjinmushibugy_1s.jpg" /></a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_11" style="display: none;">Mushibugyō</span>
+                            <span id="russian_11">Жучиный магистрат</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_11">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_11">HorribleSubs</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_11">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_11">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">316,67 Мб.</span><a href="#">[HorribleSubs] Mushibugyo - 09 [720p].mkv</a></p>
+                    <p><span class="time">15:44</span><span class="upload sid">840</span><span class="download sid">83</span></p>
+                    <span class="watch" onclick="watched(13);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<a href="#" class="cover"><img src="http://media.kino-govno.com/anime/t/toarukagakunorailguns/posters/toarukagakunorailguns_1s.jpg" /></a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_12" style="display: none;">Toaru Kagaku no Railgun S</span>
+                            <span id="russian_12">Один научный Рейлган - 2</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_12">08</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_12">Commie</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_12">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">412,99 Мб.</span><a href="#">[Commie] Toaru Kagaku no Railgun S - 08 [77F1AA63].mkv</a></p>
+                    <p><span class="time">13:23</span><span class="upload sid">145</span><span class="download sid">11</span></p>
+                    <span class="watch" onclick="watched(13);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<a href="#" class="cover"><img src="http://media.kino-govno.com/anime/s/suiseinogalgantia/production/suiseinogalgantia_1t.jpg" /></a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_13" style="display: none;">Suisei no Gargantia</span>
+                            <span id="russian_13">Гаргантия на зелёной планете</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_13">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_13">UTW-Vivid</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_13">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_13">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">412,99 Мб.</span><a href="#">[UTW-Vivid]_Suisei_no_Gargantia_-_09_[h264-720p][7B0ADA1C].mkv</a></p>
+                    <p><span class="time">13:11</span><span class="upload sid">1439</span><span class="download sid">105</span></p>
+                    <span class="watch" onclick="watched(13);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<a href="#" class="cover"><img src="http://media.kino-govno.com/anime/s/suiseinogalgantia/production/suiseinogalgantia_1t.jpg"/></a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_14" style="display: none;">Suisei no Gargantia</span>
+                            <span id="russian_14">Гаргантия на зелёной планете</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_14">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_14">Commie</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_14">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">433,46 Мб.</span><a href="#">[Commie] Suisei no Gargantia - 09 [E0A5E9BB].mkv</a></p>
+                    <p><span class="time">13:02</span><span class="upload sid">247</span><span class="download sid">56</span></p>
+                    <span class="watch" onclick="watched(14);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<a href="#" class="cover">
+                    	<img src="http://media.kino-govno.com/anime/s/suiseinogalgantia/production/suiseinogalgantia_1t.jpg" />
+                    </a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_15" style="display: none;">Suisei no Gargantia</span>
+                            <span id="russian_15">Гаргантия на зелёной планете</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_15">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_15">Hadena</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_15">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_15">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">433,46 Мб.</span><a href="#">[Hadena] Suisei no Gargantia - 09 [720p] [A8D51381].mkv</a></p>
+                    <p><span class="time">13:02</span><span class="upload sid">51</span><span class="download sid">4</span></p>
+                    <span class="watch" onclick="watched(14);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<a href="#" class="cover">
+                    	<img src="http://media.kino-govno.com/anime/h/haiyorenyarukosanw/posters/haiyorenyarukosanw_1s.jpg" />
+                   	</a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_16" style="display: none;">Haiyore! Nyaruko-san W</span>
+                            <span id="russian_16">Няруко-сан: Новый хаос - 2</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_16">08</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_16">HorribleSubs</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_16">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_16">1080p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">433,46 Мб.</span><a href="#">[Hadena] Suisei no Gargantia - 09 [720p] [A8D51381].mkv</a></p>
+                    <p><span class="time">13:02</span><span class="upload sid">51</span><span class="download sid">4</span></p>
+                    <span class="watch" onclick="watched(14);">&nbsp;</span>
+			`	</div>
+            	<div class="line">
+                	<a href="#" class="cover"><img src="http://media.kino-govno.com/anime/h/haiyorenyarukosanw/posters/haiyorenyarukosanw_1s.jpg" /></a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_17" style="display: none;">Haiyore! Nyaruko-san W</span>
+                            <span id="russian_17">Няруко-сан: Новый хаос - 2</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_17">08</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_17">HorribleSubs</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_17">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_17">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">433,46 Мб.</span><a href="#">[Hadena] Suisei no Gargantia - 09 [720p] [A8D51381].mkv</a></p>
+                    <p><span class="time">13:02</span><span class="upload sid">51</span><span class="download sid">4</span></p>
+                    <span class="watch" onclick="watched(14);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<a href="#" class="cover"><img src="http://media.kino-govno.com/anime/s/suiseinogalgantia/production/suiseinogalgantia_1t.jpg" /></a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_18" style="display: none;">Suisei no Gargantia</span>
+                            <span id="russian_18">Гаргантия на зелёной планете</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_18">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_18">HorribleSubs</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_18">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_18">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">433,46 Мб.</span><a href="#">[Hadena] Suisei no Gargantia - 09 [720p] [A8D51381].mkv</a></p>
+                    <p><span class="time">13:02</span><span class="upload sid">51</span><span class="download sid">4</span></p>
+                    <span class="watch" onclick="watched(14);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_19" style="display: none;">Hentai Ouji to Warawanai Neko</span>
+                            <span id="russian_19">Хентайный принц и каменная кошка</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_19">07</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_19">Commie</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_19">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                	<span class="watch" onclick="watched(19);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_20" style="display: none;">Hentai Ouji to Warawanai Neko</span>
+                            <span id="russian_20">Хентайный принц и каменная кошка</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_20">08</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_20">HorribleSubs</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_20">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_20">1080p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">433,46 Мб.</span><a href="#">[Hadena] Suisei no Gargantia - 09 [720p] [A8D51381].mkv</a></p>
+                    <p><span class="time">13:02</span><span class="upload sid">51</span><span class="download sid">4</span></p>
+                    <span class="watch" onclick="watched(14);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_21" style="display: none;">Hentai Ouji to Warawanai Neko</span>
+                            <span id="russian_21">Хентайный принц и каменная кошка</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_21">08</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_21">HorribleSubs</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_21">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_21">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">433,46 Мб.</span><a href="#">[Hadena] Suisei no Gargantia - 09 [720p] [A8D51381].mkv</a></p>
+                    <p><span class="time">13:02</span><span class="upload sid">51</span><span class="download sid">4</span></p>
+                    <span class="watch" onclick="watched(14);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<span class="cover"><img style="height:75px; " src="http://kino-govno.com/totoshko/white.jpg"/></span>
+                	<div class="tags">
+                	<div class="animetag name">
+                    	<span id="anime_22" style="display: none;">Date A Live</span>
+                        <span id="russian_22">Свидание на жизнь</span>
+                        <div class="options">
+                        	<span class="minus">&nbsp;</span>
+                        	<span class="plus">&nbsp;</span>
+                        	<span class="filter">&nbsp;</span>
+                        </div>
+                   	</div>
+                    <div class="animetag episode">
+                    	<span id="episode_22">10v0</span>
+                    </div>
+                    <div class="animetag publisher">
+                    	<span id="releaser_22">Anime-Koi</span>
+                        <div class="options">
+                        	<span class="minus">&nbsp;</span>
+                        	<span class="plus">&nbsp;</span>
+                        	<span class="filter">&nbsp;</span>
+                        </div>
+                   	</div>
+                    <div class="animetag format">
+                    	<span id="extension_22">mkv</span>
+                        <div class="options">
+                        	<span class="minus">&nbsp;</span>
+                        	<span class="filter">&nbsp;</span>
+                        </div>
+                    </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">433,46 Мб.</span><a href="#">[Hadena] Suisei no Gargantia - 09 [720p] [A8D51381].mkv</a></p>
+                    <p><span class="time">13:02</span><span class="upload sid">51</span><span class="download sid">4</span></p>
+                    <span class="watch" onclick="watched(14);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<a href="#" class="cover">
+                    	<img src="http://media.kino-govno.com/anime/o/orenoimoutogakonnanikawaiiwakeganai2/production/orenoimoutogakonnanikawaiiwakeganai2_1s.jpg"/>
+                    </a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_23" style="display: none;">Ore no Imōto ga Konnani Kawaii Wake ga Nai.</span>
+                            <span id="russian_23">Моя сестрёнка не может быть такой милашкой - 2</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_23">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_23">EveTaku</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_23">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag resolution">
+                            <span id="resolution_23">720p</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">433,46 Мб.</span><a href="#">[Hadena] Suisei no Gargantia - 09 [720p] [A8D51381].mkv</a></p>
+                    <p><span class="time">13:02</span><span class="upload sid">51</span><span class="download sid">4</span></p>
+                    <span class="watch" onclick="watched(14);">&nbsp;</span>
+				</div>
+                <div class="line">
+                	<a href="#" class="cover">
+                    	<img src="http://media.kino-govno.com/anime/o/orenoimoutogakonnanikawaiiwakeganai2/production/orenoimoutogakonnanikawaiiwakeganai2_1s.jpg" />
+                   	</a>
+                    <div class="tags">
+                        <div class="animetag name">
+                            <span id="anime_24" style="display: none;">Ore no Imōto ga Konnani Kawaii Wake ga Nai.</span>
+                            <span id="russian_24">Моя сестрёнка не может быть такой милашкой - 2</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag episode">
+                            <span id="episode_24">09</span>
+                        </div>
+                        <div class="animetag publisher">
+                            <span id="releaser_24">Commie</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="plus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                        <div class="animetag format">
+                            <span id="extension_24">mkv</span>
+                            <div class="options">
+                                <span class="minus">&nbsp;</span>
+                                <span class="filter">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p><a href="#" class="magnet"></a><span class="sl">433,46 Мб.</span><a href="#">[Hadena] Suisei no Gargantia - 09 [720p] [A8D51381].mkv</a></p>
+                    <p><span class="time">13:02</span><span class="upload sid">51</span><span class="download sid">4</span></p>
+                    <span class="watch" onclick="watched(14);">&nbsp;</span>
+				</div>
+                <div style="clear: both; margin-top: 20px; margin-left: 60px;" id="add_more">
+                	<span style="cursor: hand; cursor: pointer; border-bottom: 1px dotted;" onclick="$.get('/totoshko_actions.php?action=refresh_filtered_list&list=favorites&names=russian&page=4&num=25', function(data){$('#add_more').remove(); $(data).appendTo('#filtered_list');});">Подгрузить ещё</span>
+              	</div>
+        </div>
+        <!--/FILTERED -->
+    </div>
+    <div class="right_col">
+    	<!-- FAVOURITES -->
+        
+        <div id="filters_favourites" class="favourites group">
+        	<div class="head">Избранные</div>
+        	<div class="tags">
+                    <div class="animetag name">
+                        <span style="display: none;">DokiDoki! Precure</span>
+                        <span>Сердца стук! Кавайненькое лекарство</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag name">
+                        <span style="display: none;">Dansai Bunri no Crime Edge</span>
+                        <span>Преступный клинок</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag name">
+                        <span style="display: none;">Persona 4 The Animation</span>
+                        <span>Персона 4</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag name">
+                        <span style="display: none;">Red Data Girl</span>
+                        <span>Девочка из Красной Книги</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag name">
+                        <span style="display: none;">Saint Seiya Omega</span>
+                        <span>Рыцари Зодика: Омега</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag name">
+                        <span style="display: none;">Uta no Prince Sama 2</span>
+                        <span>Песня для принца - 2</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag name">
+                        <span style="display: none;">Hunter X Hunter</span>
+                        <span>Охотник Х Охотник</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag publisher">
+                        <span>UTW-Vivid</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag publisher">
+                        <span>DeadFish</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                </div>
+        </div>
+        <!--/FAVOURITES -->
+        <!-- CHANGED -->
+        <div id="filters_changed" class="filterfav group">
+        	<div class="head">Отмеченное</div>
+        	<div class="tags">
+                    <div class="animetag name">
+                        <span style="display: none;">Dansai Bunri no Crime Edge</span>
+                        <span>Преступный клинок</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag name">
+                        <span style="display: none;">Saint Seiya Omega</span>
+                        <span>Рыцари Зодика: Омега</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag resolution">
+                        <span>720p</span>
+                        <div class="options">
+                            <span class="minus">&nbsp;</span>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <!--/CHANGED -->
+        <!-- REMOVED -->
+        <div id="filters_removed" class="removed group">
+       		<div class="head">Лишнее</div>
+                <div class="tags">
+                    <div class="animetag name">
+                        <span style="display: none;">Persona 4 The Animation</span>
+                        <span>Персона 4</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag name">
+                        <span style="display: none;">Red Data Girl</span>
+                        <span>Девочка из Красной Книги</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag name">
+                        <span style="display: none;">Saint Seiya Omega</span>
+                        <span>Рыцари Зодика: Омега</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag format">
+                        <span>mp4</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                    <div class="animetag name">
+                        <span style="display: none;">Uta no Prince Sama 2</span>
+                        <span>Песня для принца - 2</span>
+                        <div class="options"><span class="minus">&nbsp;</span></div>
+                    </div>
+                </div>
+            	<!--<span class="filtered" onClick="remove_from_filters(105);" id="filter_105">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Aiura
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(89);" id="filter_89">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Bleach
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(85);" id="filter_85">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Dakara Boku wa, H ga Dekinai
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(26);" id="filter_26">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Devil Survivor 2 The Animation
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(74);" id="filter_74">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Fate Zero
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(1);" id="filter_1">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Folktales from Japan
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(82);" id="filter_82">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Hayate no Gotoku! Cuties
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(23);" id="filter_23">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Hyakka Ryōran Samurai Bride
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(25);" id="filter_25">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Inazuma Eleven GO Galaxy
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(27);" id="filter_27">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Karneval
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(29);" id="filter_29">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Kidou Senshi Gundam SEED DESTINY
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(46);" id="filter_46">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Kyou Kara Ore Wa!!
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(84);" id="filter_84">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Love Live!
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(106);" id="filter_106">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Magi - The Labyrinth of Magic
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(24);" id="filter_24">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Maoyū Maō Yūsha
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(2);" id="filter_2">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Meitantei Conan
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(44);" id="filter_44">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Minami-ke Tadaima
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(49);" id="filter_49">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Mondai-Ji-tachi ga Isekai Kara Kuru Sō Desu yo?
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(39);" id="filter_39">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Naruto
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(52);" id="filter_52">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Naruto Shippuuden
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(19);" id="filter_19">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Onii-chan Dakedo Ai Sae Areba Kankei Nai yo ne—
+                </span><br>
+               	<span class="filtered" onClick="remove_from_filters(42);" id="filter_42">
+                    <span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Psycho-Pass
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(5);" id="filter_5">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Robotics;Notes
+               	</span><br>
+                <span class="filtered" onClick="remove_from_filters(75);" id="filter_75">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Saint Seiya Omega
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(28);" id="filter_28">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Saki Achiga-hen - Episode of Side-A
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(58);" id="filter_58">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Suki-tte Ii na yo.
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(51);" id="filter_51">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Tetsunoshin
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(79);" id="filter_79">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Toriko
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(20);" id="filter_20">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Uchū Kyōdai
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(47);" id="filter_47">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Uchū Senkan Yamato 2199
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(76);" id="filter_76">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Uta no Prince Sama 2
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(83);" id="filter_83">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Uta no Prince-sama - Maji Love 2000%
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(21);" id="filter_21">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Yama no Susume
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(66);" id="filter_66">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Yondemasu yo, Azazel-san Z
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(77);" id="filter_77">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Yuyushiki
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(18);" id="filter_18">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">аниме</span> Zettai Bōei Leviathan
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(68);" id="filter_68">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">формат</span> avi
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(16);" id="filter_16">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">формат</span> mp4
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(45);" id="filter_45">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">группа</span> Diogo4D-Garcias
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(88);" id="filter_88">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">группа</span> Diogo4D-Hattori
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(91);" id="filter_91">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">группа</span> Diogo4D-MDS
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(48);" id="filter_48">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">группа</span> Diogo4D-Scylla
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(55);" id="filter_55">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">группа</span> LBOni-Speed
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(92);" id="filter_92">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">группа</span> PM
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(67);" id="filter_67">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">качество</span> 360p
+                </span><br>
+                <span class="filtered" onClick="remove_from_filters(14);" id="filter_14">
+                	<span style="background-color: #ffaaaa; padding: 0 5px;">качество</span> 480p
+                </span><br>-->
+        	</div>
+        <!--/REMOVED -->
+    </div>
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,261 @@
+/* CSS Document */
+body {
+	padding: 10px; 
+	margin: 0;
+	font-size: 16px;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+a {
+    color: #0088CC;
+    text-decoration: none;
+}
+a:hover {
+	color:#005580;
+	text-decoration:underline;
+}
+.clear {
+	display:block;
+	clear:both;
+}
+.main {
+	min-width:740px;
+	position:relative;
+	display:table;
+	width:100%;
+}
+.main .left_col {
+	width:76%;
+	margin-right:24%;
+}
+.main .right_col {
+	width:24%;
+	position:absolute;
+	right:0;
+	top:0;
+}
+.main.w_auto .left_col {
+	width:auto;
+	margin-right:120px;
+}
+.main.w_auto .right_col {
+	width:120px;
+}
+
+.tabs {float:left; margin-bottom:20px; margin-left:63px;}
+.tabs.lang {float:right; margin-left:0;}
+.tabs a,
+.tabs span {
+	background-color: #FFF;
+	border: 1px solid #1F8EF3;
+	color: #1F8EF3;
+	font-size:13px;
+	padding: 6px;
+}
+.tabs .center {
+	border-left: 0 solid;
+}
+.tabs .left {
+	border-radius:5px 0 0 5px;
+}
+.tabs .right {
+	border-left: 0 solid;
+	border-radius:0 5px 5px 0;
+}
+.tabs span {background-color:#1F8EF3; color:#FFF;}
+.line img {
+    border: 0 none;
+	float:left;
+    height: auto;
+    max-width: 50px;
+}
+.line {
+	background-color:#f5f6f6;
+	clear: both;
+	padding:10px 0 6px 63px;
+	position:relative;
+	min-height:80px;
+}
+.line:nth-child(2n) {background-color:#FFF;}
+.line.bold .animetag {font-size:13px; font-weight:bold;}
+.line .cover {
+	box-shadow:0px 0px 4px #000;
+	position:absolute;
+	left:0;
+	top:8px;
+}
+.line .red {color:#F00;}
+.line p {font-size: 12px; margin:0; padding:6px 0 0 23px; color: #888888;}
+.line p .sl {}
+.line p a {color:#888; text-decoration:underline;}
+.line p a.magnet {
+	background:url("http://png-5.findicons.com/files/icons/2342/pixelophilia2/32/magnet.png") 0 0 no-repeat;
+	background-size:16px;
+	display:inline-block;
+	height:16px;
+	width:16px;
+	margin:0 4px -3px -20px;
+}
+.line p span {display:inline-block; line-height:16px;margin-right:10px;}
+.line .upload {
+	background:url("http://kino-govno.com/totoshko/upload.png") 0 0 no-repeat;
+}
+.line .download {
+	background:url("http://kino-govno.com/totoshko/download.png") 0 0 no-repeat;
+}
+.line .sid {
+	color:#000;
+	height:16px;
+	padding-left:18px;
+	opacity:0.5;
+}
+.opacity {
+	opacity: 0.2;
+}
+.line .watch {
+	background:url('images/check.png') 0 0 no-repeat ;
+	background-size:contain;
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:24px;
+  height: 24px;
+  cursor: pointer; 
+  display:block;
+  background-size: 24px;
+  opacity:0.2;
+}
+.line .watch:hover {
+	opacity:1;
+}
+.line .tags {
+	word-spacing:-1em;
+}
+.animetag {
+	border-radius:6px;
+	border:1px solid;
+	font:13px/22px Arial;
+	position:relative;
+	padding:0 10px;
+	height:22px;
+	margin:0 2px 0;
+	display: inline-block;
+	word-spacing:normal;
+}
+.name, .episode, .publisher, .format, .resolution {}
+.animetag.name {
+	background-color:#97E086;
+	border-bottom-color:#87C376;
+	border-left-color:#9ADF8A;
+	border-right-color:#9ADF8A;
+	border-top-color:#BCF99B;
+	color:#000;
+	font-size:14px;
+	text-shadow:#F6F6F6 0 1px;
+}
+.animetag.episode {
+	background-color:#EFA4A4;
+	border-bottom-color:#D57272;
+	border-left-color:#F39393;
+	border-right-color:#F39393;
+	border-top-color:#FFC8C8;
+	font-size:14px;
+	text-shadow:#F6F6F6 0 1px;
+}
+.animetag.publisher {
+	min-width:52px;
+	text-align:center;
+	background-color: #FFAD6F;
+	border:0 solid;
+	color:#FFF;
+}
+.animetag.format {
+	background-color:#87C785;
+	border:0 solid;
+	color:#FFF;
+}
+.animetag.resolution {
+	background-color: #D197EF;
+	border:0 solid;
+	color:#FFF;
+}
+.animetag .options {
+	left:50%;
+	margin-left:-42px;
+	position:absolute;
+	bottom:100%;
+	display:none;
+	padding:0 0 4px;
+	width:84px;
+}
+.animetag.resolution .options, .animetag.format .options {margin-left:-28px; width:56px;}
+.animetag:hover .options {display:block;}
+.animetag .options span {
+	background-color: #FC9;
+	background-size:18px;
+	background-repeat:no-repeat;
+	background-position:center;
+	border:1px solid #F96;
+	border-radius:3px;
+	display:block;
+	cursor:pointer;
+	width:18px;
+	height:18px;
+	float:left;
+	padding:2px;
+	margin:0 2px;
+}
+.animetag .options span:hover {background-color:#F90;}
+.animetag .options .minus {background-image: url('images/close.png');}
+.animetag .options .plus {background-image: url('images/add.png');}
+.animetag .options .filter {background-image: url('images/lightbulb.png');}
+
+/*.favourites .animetag.name {
+	display:block;
+}*/
+
+.group {
+	border:2px solid;
+	border-radius:5px;
+}
+.group .animetag {
+	display: table;
+	margin-bottom:3px;
+	padding-right:28px;
+	word-spacing:normal;
+}
+.group .options {
+	left:100%;
+	margin-left:-22px;
+	top:-1px;
+	padding:0;
+}
+.favourites {border-color: #55D344;}
+.filterfav {border-color: #236DFA;}
+.removed {border-color: #FF0000;}
+.group {margin:0 0 6px 6px; position:relative;}
+.group .head {
+	height:30px;
+	border-radius:3px 3px 0 0;
+	color:#FFF;
+	font-size:18px;
+	line-height:30px;
+	text-align:center;
+}
+.favourites .head {background-color: #55D344;}
+.filterfav .head {background-color: #236DFA;}
+.removed .head {background-color: #FF0000;}
+
+
+.group .tags {
+	padding:10px;
+	word-spacing:-1em;
+}
+
+.filtered {margin: 1px;}
+.filtered:hover {
+	cursor: hand;
+	cursor: pointer;
+	background-color: #ff0000;
+	color: #ffffff;
+}
+
