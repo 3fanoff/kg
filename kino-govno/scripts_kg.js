@@ -206,11 +206,12 @@ jQuery(function(){
 		}
 		
 		startPosition = function(_is){
-			if (_is.find(inp_type + ':' + check).length > 0){
-				posBtn = _is.find(inp_type + ':' + check).parent().position().left;
-			} else {
-				posBtn = 0;
-			}
+			posBtn = 0;
+			$(inp_type, _is).each(function(){
+				if($(this).attr(check) == check){
+					posBtn = $(this).parent().position().left;
+				}
+			});
 			getPosition(_is, posBtn, o.speedstart);
 		}
 		
