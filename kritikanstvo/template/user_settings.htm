@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html><head><title>Настройки Пользователь Константин Константинопольский</title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -14,9 +14,11 @@
 <link rel="stylesheet" type="text/css" href="css/profile.css" />
 
 <script type="text/javascript" src="js/jquery.1.8.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
 <script type="text/javascript" src="js/charCount.js"></script>
 <script type="text/javascript" src="profile_js.js"></script>
+<script type="text/javascript" src="js/main_form.js"></script>
 <!--script type="text/javascript" src="js/jquery.color.js"></script>
 <script type="text/javascript" src="js/css_browser_selector.js"></script-->
 <script type="text/javascript">
@@ -100,25 +102,78 @@ $(document).ready(function(){
             	<div class="box-240 ta-r"><span class="label">Электронная почта</span></div>
                 <div class="box-450">
                 	<form name="add_email" action="#" method="get">
-                		<input type="text" name="emaril_setting" class="input_text" value="mail@example.com"/>
+                		<input type="text" name="emaril_setting" class="input_text clearonfocus" data-placeholder-text="mail@example.com" value=""/>
                     	<input type="submit" value="Добавить" class="profile_button"/>
-                        <div class="clr"></div>
                     </form>
+                    <div class="ec_default">konstantin@konstantinopolsky.ru</div>
+                    <div class="rem">
+                    	<a href="javascript:void(0);" class="anchor remove">Удалить адрес</a>
+                        <div class="confirm_box">
+                            <p>Адрес электронной почты, привязанный к вашему профилю, будет удален.</p>
+                            <a class="profile_button _min delete" href="#">Удалить</a>
+                            <a class="profile_button _min abort" href="#">Отмена</a>
+                        </div>
+                    </div>
+                    <p class="confirm">Адрес успешно подтвержден.</p>
                     <p class="err">Адрес уже используется, либо введен неверно. Введите другой адрес.</p>
                     <p class="help">На указанный адрес будут приходить уведомления о новых личных сообщениях. Также 
                     он может понадобиться при восстановлении вашей учетной записи.</p>
+                    <p class="help">На указанный адрес было отправлено письмо со ссылкой для подтверждения. <a href="#">Отправить письмо повторно.</a></p>
                 </div>
             </div>
             <div class="clr _sp30 _bb"></div>
+            <div class="privacy_settings">
+                <div class="box-item">
+                	<div class="box _p-name">Мои подписки</div>
+                    <div class="box _p-all"></div>
+                    <div class="box _p-me"></div>
+                </div>
+                <div class="box-item">
+                    <div class="box _p-name">Мое избранное</div>
+                    <div class="box _p-all"></div>
+                    <div class="box _p-me"></div>
+                </div>
+                <div class="box-item">
+                    <div class="box _p-name">Мои комментарии</div>
+                    <div class="box _p-all"></div>
+                    <div class="box _p-me"></div>
+                </div>
+                <div class="box-item">
+                    <div class="box _p-name">Мои оценки фильмов</div>
+                    <div class="box _p-all"></div>
+                    <div class="box _p-me"></div>
+                </div>
+                <div class="box-item">
+                    <div class="box _p-name">Мои оценки игр</div>
+                    <div class="box _p-all"></div>
+                    <div class="box _p-me"></div>
+                </div>
+                <div class="box-item">
+                    <div class="box _p-name">Мое оценки критиков</div>
+                    <div class="box _p-all"></div>
+                    <div class="box _p-me"></div>
+                </div>
+            </div>
             <div class="clr _sp30 _bt"></div>
             <div class="ec_settings">
             	<div class="box-240 ta-r"><span class="label">Профиль критика</span></div>
                 <div class="box-450">
                 	<form name="add_critic" action="#" method="get">
-                		<input type="text" name="critic_setting" class="input_text" value=""/>
-                    	<input type="submit" value="Связать" class="profile_button"/>
+                		<input type="text" name="critic_bind" class="input_text clearonfocus" data-placeholder-text="Начните вводить ваше имя" value=""/>
+                    	<input type="submit" value="Связать" class="profile_button" disabled/>
                         <div class="clr"></div>
                     </form>
+                    <div class="ec_default"><a href="#">Лидия Маслова</a></div>
+                    <div class="rem">
+                    	<a href="javascript:void(0);" class="anchor remove">Разорвать связь</a>
+                        <div class="confirm_box">
+                    		<p>Связь вашего профиля с вашей страницей критика будет разорвана.</p>
+                        	<a class="profile_button _min delete" href="#">Разорвать</a>
+                        	<a class="profile_button _min abort" href="#">Отмена</a>
+                    	</div>
+                    </div>
+                    <p class="confirm">Страницы пользователя и критика связаны.</p>
+                    <p class="err">У этого критика уже есть связанная страница пользователя.</p>
                     <p class="help">Если вы являетесь профессиональным критиком и значитесь в базе «Критиканства»,
 вы можете связать свою страницу пользователя со страницей критика. На обеих
 страницах появятся соответствующие ссылки.</p>

@@ -84,7 +84,26 @@ $(function(){
 	});
 	
 	disSubmit('.input_text','[name="add_email"]');
-	inputFlash('input_text', 'nof');
+	
+	$('.ec_settings .remove').click(function(){
+		$(this).next('.confirm_box').toggle();
+		return false;
+	});
+	$('.confirm_box .profile_button').click(function(){
+		var $is = $(this);
+		if($is.hasClass('delete')){
+			$.ajax({
+				//url: 'http://3fan.ru/',
+				dataType: 'html',
+				success: function(){
+					console.log('удаляем e-mail');
+				}
+			});
+		}
+		$is.parent().hide();
+		return false;
+	});
+	 
 });
 
 function sectTab(){
@@ -145,40 +164,6 @@ function statusLimit(){
 	} else {
 		$('input[type="submit"]', $(this).parent()).prop('disabled', false);
 	}
-}
-/* FLASHING INPUT v.2.0 */
-function inputFlash(obj_cls, def_cls){
-	var $obj = $('.' + obj_cls),
-		type = 'type',
-		//pass = 'password',
-		text = 'text';
-	if(!obj_cls) return;
-	$obj.each(function(){
-		var $el = $(this);
-		$el.addClass(def_cls);
-		/*if(el.attr(type) == pass){
-			el.attr(type, text);
-			el.data(type, pass);
-		}*/
-		$el.focus(function(){
-			$el.removeClass(def_cls);	
-			if (this.value == this.defaultValue){
-				this.value = '';
-				/*if(el.data(type) == pass){
-					el.attr(type,pass);
-				}*/
-			}
-		});
-		$el.blur(function() {
-			if ($.trim(this.value) == ''){
-				$el.addClass(def_cls);
-				this.value = (this.defaultValue ? this.defaultValue : '');
-				/*if(el.data(type) == pass){
-					el.attr(type,text);
-				}*/
-			}
-		});
-	});
 }
 /* disabled submit button */
 function disSubmit(_area, _form){
