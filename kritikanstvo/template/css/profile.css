@@ -1,4 +1,5 @@
 .clr {height:0px;}
+._sp20 {height:20px;}
 ._sp30 {height:30px;}
 ._bb {border-bottom:1px solid #D8D8D8;}
 ._bt {border-top:1px solid #D8D8D8;}
@@ -624,6 +625,22 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	top:3px;
 	width:22px;
 }
+.profile_button._important {
+	background-color:#fff2b9;
+	border-color:#f9e484;
+}
+.profile_button._important:hover {
+	background-color:#ffeca2;
+	border-color:#e9d633;
+}
+.profile_button._important:active {
+	background-color:#ffeb8f;
+	border-color:#e9d6a7;
+}
+.profile_button._important[disabled] {
+	background-color:#F7F7F7;
+	border-color:#E8E8E8;
+}
 
 .lovehate_block .head {
 	background:#97E086 url("../i/lovehate_grad.png") 0 -100px repeat-x;
@@ -774,7 +791,7 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	width:240px;
 }
 .box-450 {
-	float:left;
+	float:right;
 	width:450px;
 }
 .ec_settings input.profile_button {
@@ -809,7 +826,8 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	padding-top:6px;
 	color:#808080;
 }
-.ec_settings .label {
+.ec_settings .label,
+.privacy_settings .label {
 	line-height:25px;
 	padding-right:12px;
 }
@@ -843,32 +861,82 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 .input_text.nof, .input_text.placeholder {color:#ACACAC;}
 
 .privacy_settings {position:relative; overflow:hidden;}
+.privacy_settings h2 {
+	color:#808080;
+	font-size:26px;
+	font-weight:200;
+	line-height:26px;
+	margin-bottom:10px;
+}
 .privacy_settings .box {
+	background:url("../i/privacy_icons.png") -100px 0 no-repeat;
 	float:left;
 	height:30px;
 	line-height:30px;
 }
+.privacy_settings .box input {visibility:hidden;}
 .privacy_settings .box-item {
 	background:url("../i/privacy_border.png") 100% 100% no-repeat;
 	height:30px;
 }
+.box-item.head .box {
+	color:#808080;
+	font-size:11px;
+	line-height:34px;
+	text-align:center;
+}
 .box._p-name {
-	width:210px;
+	width:208px;
 	margin-left:20px;
-	padding:0 10px 0 0;
+	padding:0 12px 0 0;
 	text-align:right;
 }
 .box._p-all {width:220px;}
-.box._p-all:hover,
-.box._p-me:hover {
+.box._p-all.def:hover {background-position:50% -31px;}
+.box._p-all.check {background-position:50% 0;}
+
+.box._p-all.def:hover,
+.box._p-me.def:hover {
 	background-color:#ddecf1;
 	height:31px;
 	margin-top:-1px;
 	cursor:pointer;
 	position:relative;
 }
-.box._p-me {
-	width:230px;
+.box._p-me {width:230px;}
+.box._p-me.def:hover {background-position:50% -93px;}
+.box._p-me.check {background-position:50% -62px;}
+
+.input_check {
+	background:url("../i/checkboxes.png") 0 -18px no-repeat;
+	cursor:pointer;
+	display:block;
+	height:18px;
+	width:18px;
+}
+.input_check input {visibility:hidden;}
+.input_check:active {background-position:-18px -18px;}
+.input_check.check {background-position:0 0;}
+.input_check.check:active {background-position:-18px 0;}
+.privacy_settings .input_check {
+	display:inline-block;
+	margin:3px 5px 0 0;
+}
+.privacy_settings .label._msg {
+	color:#808080;
+	display:inline-block;
+	vertical-align:top;
+}
+.privacy_settings .profile_button {
+	float:left;
+	margin-right:20px;
+}
+@-moz-document url-prefix() {
+   input[type="submit"].profile_button {padding-bottom:2px;}
+}
+.privacy_settings .howtosee {
+	font-size:11px;
+	line-height:29px;
 }
 /*.fade_border {
 	background-color: transparent;

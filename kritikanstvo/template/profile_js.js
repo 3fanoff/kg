@@ -103,7 +103,10 @@ $(function(){
 		$is.parent().hide();
 		return false;
 	});
-	 
+	
+	replaceRadio();
+	replaceCheck();
+	
 });
 
 function sectTab(){
@@ -185,4 +188,55 @@ function disSubmit(_area, _form){
 		}
 	}
 }
+function replaceRadio(){
+	var $item = $('.box-item .box:not("._p-name")');
+	var action = function(){
+		$(this).addClass('check').removeClass('def').find('input[type="radio"]').prop('checked',true);
+		$(this).siblings('.box:not("._p-name")').addClass('def').removeClass('check');
+	};
+	for (i = 0; i < $item.length; i++){
+		var is = $item[i];
+		if ($('input[type="radio"]', is).prop('checked') == true){
+			action.call(is);
+		}
+	}
+	$item.click(function(){
+		if(!$(this).hasClass('check')) {
+			lock.call(this);
+			action.call(this);
+		}
+	});
+}
+function replaceCheck(){
+	var $checks = $('.input_check');
+	var action = function(){
+		if ($(this).hasClass('check')){
+			var stat = false;
+		} else {
+			var stat = true;
+		}
+		$(this).toggleClass('check').children('input').prop('checked',stat);
+	};
+	for (i = 0; i < $checks.length; i++){
+		var is = $checks[i];
+		if ($('input', is).addClass('rep-inp').prop('checked') == true){
+			action.call(is);
+		}
+	}
+	$checks.click(function(){
+		lock.call(this);
+		action.call(this);
+	});
+	$('label').click(function(){
+		var id = $(this).attr('for');
+		if ($('#' + id).is('.rep-inp')){
+			var cont = $('input#' + id).parent().trigger('click');
+			return false;
+		}
+	})
+}
+function lock(){
+	$(this).parents('form').find('input[type="submit"]').prop('disabled',false);
+}
+
 
