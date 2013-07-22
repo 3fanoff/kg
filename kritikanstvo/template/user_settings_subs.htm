@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html><head><title>Управление подписками</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=1061" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" /><!-- 144x114 -->
+<link rel="shortcut icon" href="favicon.ico" />
+
+<link rel="stylesheet" type="text/css"  href="css/main.css" />
+<link rel="stylesheet" type="text/css" href="css/profile.css" />
+
+<script type="text/javascript" src="js/jquery.1.8.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery.qtip.min.js"></script>
+<script type="text/javascript" src="js/charCount.js"></script>
+<script type="text/javascript" src="profile_js.js"></script>
+<script type="text/javascript" src="js/main_form.js"></script>
+<!--script type="text/javascript" src="js/jquery.color.js"></script>
+<script type="text/javascript" src="js/css_browser_selector.js"></script-->
+<script type="text/javascript">
+// Qtip
+$(document).ready(function(){
+	$('[title]').qtip({
+		position: {
+			my: 'bottom center',
+			at: 'top center', 
+			adjust: {x: 12, y: -6}
+		}
+	});
+});
+</script>
+
+</head><body>
+
+
+
+
+<!-- ============== TOP ============== -->
+<div class="userbar clearfix">
+	<div class="guest_wrap">
+		<a href="#" class="guest_login"><span>Вход на сайт</span></a>
+		<a href="#" class="button_add" title="Добавить ссылку на рецензию">Добавить&nbsp;<b>&#43;</b></a>
+	</div>
+</div>
+
+<div class="menu clearfix">
+	<a href="#"><img src="i/logo.png" alt="" class="logo"></a>
+	<div class="search">
+		<form id="searchForm"><fieldset><input type="text" name="s" id="s" value=""><input type="submit" id="search_submit" value="OK"></fieldset></form>
+	</div>
+	<div id="tabs">
+		<ul>
+            <li><a href="javascript:void(0)" id="tab_first" class="active" onmouseover="$('[id*=subtabs_]').hide(); $('#subtabs_first').show();">Фильмы</a></li>
+            <li><a href="#" id="tab_second" class="" onmouseover="$('[id*=subtabs_]').hide(); $('#subtabs_second').show();">Игры</a></li>
+            <li><a href="#" id="tab_third" class="" onmouseover="$('[id*=subtabs_]').hide(); $('#subtabs_third').show();">Критики</a></li>
+            <li><a href="#" id="tab_fourth" class="" onmouseover="$('[id*=subtabs_]').hide(); $('#subtabs_fourth').show();">Блог</a></li>
+		</ul>
+	</div>
+</div>
+
+<div class="submenu">
+	<div style="display: block;" id="subtabs_first">
+		<ul><li><a href="#" class="">Скоро в прокате</a></li><li><a href="#" class="">Лучшие и худшие за год</a></li><li><a href="#" class="">Лучшие и худшие за всё время</a></li><li><a href="#" class="">Выбор пользователей</a></li><li><a href="#" class="">Кассовые сборы</a></li></ul>
+	</div>
+	<div style="display: none;" id="subtabs_second" onmouseover="$('#tab_second').addClass('subtabs_hover');" onmouseout="$('#tab_second').removeClass('subtabs_hover');">
+		<ul><li><a href="#" class="">Скоро в продаже</a></li><li><a href="#" class="">Лучшие и худшие за год</a></li><li><a href="#" class="">Лучшие и худшие за всё время</a></li><li><a href="#" class="">Выбор пользователей</a></li><li><a href="#" class="">Рейтинги продаж</a></li></ul>
+	</div>
+	<div style="display: none;" id="subtabs_third" onmouseover="$('#tab_third').addClass('subtabs_hover');" onmouseout="$('#tab_third').removeClass('subtabs_hover');">
+		<ul><li><a href="#" class="">Лучшие и худшие критики</a></li><li><a href="#" class="">Лучшие и худшие издания</a></li><li><a href="#" class="">Рейтинг &laquo;мудрецов&raquo;</a></li><li><a href="#" class="">Самые активные критики</a></li></ul>
+	</div>
+	<div style="display: none;" id="subtabs_fourth" onmouseover="$('#tab_fourth').addClass('subtabs_hover');" onmouseout="$('#tab_fourth').removeClass('subtabs_hover');">
+		<ul><li><a href="#" class="">Архив записей</a></li><li><a href="#" class="">Комментарии</a></li></ul>
+	</div>
+	<div style="display: none;" id="subtabs_slogan">Последний шанс для объективной критики</div>
+</div>
+<!-- ============== // TOP ============== -->
+
+
+
+<!-- ============== CONTENT ============== -->
+<div class="content clearfix">
+	<div class="settings_header">
+    	<h1>Мои настройки</h1>
+        <a class="profile_button _user" href="#">Константин Константинопольский<span class="_userpic" style="background-image:url(temp/photo4.jpg);"></span></a>
+    </div>
+	<div class="clr"></div>
+	<div class="a_content">
+    	<div class="tabs _settings">
+        	<div class="tab"><a href="#settings_privacy">Настройки и приватность</a></div>
+            <div class="tab _current"><a href="#">Управление подписками</a></div>
+            <div class="tab"><a href="#">Любимое и нелюбимое</a></div>
+        </div>
+    </div>
+	<div class="content_sections _settings" id="setting_subscriptions">
+    	<form action="#" method="post">
+        <div class="box-450 sub_help">
+            <p>Снимите отметки с подписок, которые вы хотите удалить, и нажмите<br />кнопку сохранения.</p>
+            <input type="submit" class="profile_button _important" value="Сохранить" disabled />
+            <span class="sel">Использовано 17 из 100</span>
+        </div>
+        <div class="clr _sp30"></div>
+        <div class="box-check-set">
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="zoneofgames" value="1"></div>
+                <a href="#" target="_blank">Zone of Games</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="kinoperedovaya" value="1"></div>
+                <a href="#" target="_blank">Кинопередовая</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="petrsalnikov" value="1"></div>
+                <a href="#" target="_blank">Петр Сальников</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="stopgame" value="1"></div>
+                <a href="#" target="_blank">StopGame</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="stranaigr" value="1"></div>
+                <a href="#" target="_blank">Страна Игр</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="kinogovno" value="1"></div>
+                <a href="#" target="_blank">Кино-Говно.ком</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="galenkin" value="1"></div>
+                <a href="#" target="_blank">Сергей Галёнкин</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="gameexe" value="1"></div>
+                <a href="#" target="_blank">Game.EXE</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="artemkomoliyatov" value="1"></div>
+                <a href="#" target="_blank">Артем Комолятов</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="igromania" value="1"></div>
+                <a href="#" target="_blank">Игромания</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="bestcomutergames" value="1"></div>
+                <a href="#" target="_blank">Лучшие компьютерные игры</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="meganazvanie" value="1"></div>
+                <a href="#" target="_blank">Нереально длинное супермеганаз</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="kolomiets" value="1"></div>
+                <a href="#" target="_blank">Александра Коломиец</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="varnavskiy" value="1"></div>
+                <a href="#" target="_blank">Игорь Варнавский</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="viktorzuev" value="1"></div>
+                <a href="#" target="_blank">Виктор Зуев</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="antsiferova" value="1"></div>
+                <a href="#" target="_blank">Ольга Анциферова</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="gamemagru" value="1"></div>
+                <a href="#" target="_blank">GameMag.ru</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="riotpixels" value="1"></div>
+                <a href="#" target="_blank">Riot Pixels</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="alexandrakost" value="1"></div>
+                <a href="#" target="_blank">Александра Кост</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="loginov" value="1"></div>
+                <a href="#" target="_blank">Александр Логинов</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="pimenovsergey" value="1"></div>
+                <a href="#" target="_blank">Сергей Пименов</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="playground" value="1"></div>
+                <a href="#" target="_blank">Playground</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="gamesmailru" value="1"></div>
+                <a href="#" target="_blank">Игры@mail.ru</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="goriachev" value="1"></div>
+                <a href="#" target="_blank">Владимир Горячев</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="puchkov" value="1"></div>
+                <a href="#" target="_blank">Дмитрий Пучков</a>
+            </div>
+            <div class="box-check">
+                <div class="input_check"><input type="checkbox" name="iskusstvokino" value="1"></div>
+                <a href="#" target="_blank">Искусство кино</a>
+            </div>
+        </div>
+        <div class="clr _sp20"></div>
+        <div class="box-450 sub_help">
+            <input type="submit" class="profile_button _important" value="Сохранить" disabled />
+        </div>
+        </form>
+        <!-- IF EMPTY --//
+        <div class="box-450">
+            <div class="head subs">
+                <h2>Подписок пока нет</h2>
+                <p>Вы можете отслеживать активность интересных вам <span class="t-icon _t-critic-a">изданий</span> или <span class="t-icon _t-critic-a">критиков</span>: 
+                что и как они оценивают в своих новых рецензиях.</p>
+                <p>Также вы можете наблюдать за оценками других <span class="t-icon _t-user">посетителей</span> «Критиканства» 
+                (если они не отключили такую возможность).</p>
+            </div>
+        </div>
+        // -->
+    </div>
+</div>
+<!-- ============== // CONTENT ============== -->
+
+
+
+<!-- ============== FOOTER ============== -->
+<div class="footer clearfix">
+	<div class="left">
+		<p>&copy; 2012 <span>Критиканство</span></p>
+		<p>Электронная почта: <a href="mailto:mail@kritikanstvo.ru">mail@kritikanstvo.ru</a></p>
+		<p><a href="#">О проекте</a></p>
+	</div>
+	<div class="left">
+		<p>На сайте используются материалы <a href="http://www.rottentomatoes.com" target="_blank" title="Откроется в новом окне">Rotten Tomatoes</a>, <a href="http://www.gamerankings.com" target="_blank" title="Откроется в новом окне">GameRankings</a> и других ресурсов.</p>
+	</div>
+	<div class="right"><p>Создание сайта: <a href="http://www.kino-govno.com" target="_blank" title="Откроется в новом окне">КГ.Дизайн</a></p></div>
+</div>
+<!-- ============== // FOOTER ============== -->
+
+
+
+</body></html>
+
+
+
+
+
+
+
+
+
+
+

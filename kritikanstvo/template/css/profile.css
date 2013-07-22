@@ -577,6 +577,7 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	width:108px;
 	white-space:nowrap;
 }
+input.profile_button {line-height:normal;}
 .profile_button[disabled]:hover,
 .profile_button[disabled]:active {
 	color:#999 !important;
@@ -759,41 +760,33 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 .settings_header ._user {float:left;}
 .content_sections._settings {
 	background-color:#F1F3F3;
-	margin-top:20px;
+	border-radius:4px;
+	color:#3C3C3C;
+	font:12px Arial, Helvetica;
+	margin-top:35px;
+	padding:0 20px;
 	min-height:200px;
+	width:690px;
 }
+.tabs._settings {margin-top:15px;}
 .tabs._settings .tab {
 	font:14px/40px Arial, Helvetica;
 	height:40px;
-	margin:0 -20px 0 0;
+	margin:0 -24px 0 0;
+	padding-right:4px;
 	text-align:center;
 }
 .tabs._settings .tab._current {
 	background-color:#F1F3F3;
+	border-radius:4px 0 0 4px;
 }
-.tabs._settings .tab._current a {
-	color:#3C3C3C;
-	cursor:default;
-}
-.tabs._settings .tab a {
-	text-decoration:none;
-}
+.tabs._settings .tab._current a {color:#3C3C3C;cursor:default;}
+.tabs._settings .tab a {text-decoration:none;}
 
-.content_sections .tab {
-	color:#3C3C3C;
-	font:12px Arial, Helvetica;
-	margin:0 auto;
-	width:690px;
-}
+#setting_subscriptions {padding-bottom:30px; padding-top:28px; min-height:362px;}
 
-.box-240 {
-	float:left;
-	width:240px;
-}
-.box-450 {
-	float:right;
-	width:450px;
-}
+.box-240 {float:left; width:240px;}
+.box-450 {float:right; width:450px;}
 .ec_settings input.profile_button {
 	display:inline-block;
 	vertical-align:top;
@@ -820,6 +813,7 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	position:relative;
 }
 .ec_settings .ec_default a {color:#8de3ff;}
+.ec_settings .ec_default a:hover {color:#43deff;}
 .ec_settings p {
 	font-size:11px;
 	line-height:14px;
@@ -838,9 +832,8 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	width:240px;
 	right:0;
 	top:27px;
-	padding-top:4px;
+	padding:4px 0 10px;
 	position:absolute;
-	height:78px;
 	text-align:center;
 }
 .confirm_box .profile_button {
@@ -893,7 +886,7 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 }
 .box._p-all {width:220px;}
 .box._p-all.def:hover {background-position:50% -31px;}
-.box._p-all.check {background-position:50% 0;}
+.box._p-all.check {background-position:50% -1px;}
 
 .box._p-all.def:hover,
 .box._p-me.def:hover {
@@ -905,7 +898,7 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 }
 .box._p-me {width:230px;}
 .box._p-me.def:hover {background-position:50% -93px;}
-.box._p-me.check {background-position:50% -62px;}
+.box._p-me.check {background-position:50% -63px;}
 
 .input_check {
 	background:url("../i/checkboxes.png") 0 -18px no-repeat;
@@ -924,6 +917,7 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 }
 .privacy_settings .label._msg {
 	color:#808080;
+	cursor:pointer;
 	display:inline-block;
 	vertical-align:top;
 }
@@ -953,11 +947,66 @@ li:hover .site-grade.r-none, .extend .site-grade.r-none {background-color:#CFCFC
 	background: linear-gradient(to right,  rgba(241,243,243,1) 0%,rgba(241,243,243,0) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f3f3', endColorstr='#00f1f3f3',GradientType=1 );
 }*/
-
-
-
-
-
+.box-check-set {width:720px;}
+.box-check {
+	float:left;
+	height:20px;
+	width:220px;
+	margin:20px 20px 10px 0;
+	position:relative;
+	white-space:nowrap;
+	overflow:hidden;
+}
+.box-check:after {
+	background:url("../i/subscr_fade.png") 0 0 repeat-y;
+	content:"";
+	display:block;
+	height:20px;
+	position:absolute;
+	right:0;
+	top:0;
+	width:50px;
+}
+.box-check .input_check {
+	display:inline-block;
+}
+.box-check a {
+	color:#3C3C3C;
+	display:inline-block;
+	margin-left:5px;
+	text-decoration:none;
+}
+.box-check a:hover {
+	color:#008fbf;
+}
+.sub_help {
+	color:#808080;
+	display:inline-block;
+	font-size:11px;
+}
+.sub_help p {padding-bottom:4px;}
+.sub_help ._important {
+	display:inline-block;
+	margin-top:20px;
+}
+.sub_help .sel {
+	display:inline-block;
+	padding-left:5px;
+}
+._settings .head.subs {
+	color:#808080;
+	width:320px;
+}
+._settings .head.subs p {
+    font-size:12px;
+    line-height:16px;
+    padding:10px 0 0 0;
+}
+._settings .head.subs h2 {
+	font-size:24px;
+    font-weight:200;
+    line-height:30px;
+}
 
 
 

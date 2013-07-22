@@ -85,30 +85,13 @@ $(function(){
 	
 	disSubmit('.input_text','[name="add_email"]');
 	
-	$('.ec_settings .remove').click(function(){
-		$(this).next('.confirm_box').toggle();
-		return false;
-	});
-	$('.confirm_box .profile_button').click(function(){
-		var $is = $(this);
-		if($is.hasClass('delete')){
-			$.ajax({
-				//url: 'http://3fan.ru/',
-				dataType: 'html',
-				success: function(){
-					console.log('удаляем e-mail');
-				}
-			});
-		}
-		$is.parent().hide();
-		return false;
-	});
 	
+	confirmBox();
 	replaceRadio();
 	replaceCheck();
 	
 });
-
+//табы секций
 function sectTab(){
 	$is = $(this);
 	$(this).addClass('act').siblings().removeClass('act');
@@ -128,6 +111,7 @@ function sectTab(){
 		}
 	});
 }
+//подгрузка в секции 
 function addMore(){
 	$is = $(this);
 	$cx = $is.parents('ul.list');
@@ -188,6 +172,7 @@ function disSubmit(_area, _form){
 		}
 	}
 }
+//кастомизация радио и чекбоксов
 function replaceRadio(){
 	var $item = $('.box-item .box:not("._p-name")');
 	var action = function(){
@@ -237,6 +222,37 @@ function replaceCheck(){
 }
 function lock(){
 	$(this).parents('form').find('input[type="submit"]').prop('disabled',false);
+	$('a.howtosee').hide();
+}
+//попапы подтверждений
+function confirmBox(){
+	var ec_s = '.ec_settings',
+		c_box = '.confirm_box';
+	$('.remove', ec_s).click(function(){
+		$(this).parents(ec_s).siblings().find(c_box).hide();
+		$(this).next(c_box).toggle();
+		return false;
+	});
+	$(c_box + ', .remove', ec_s).click(function(e){
+		e.stopPropagation();
+	})
+	$('body').click(function(){
+		$(c_box, ec_s).hide();
+	});
+	$(c_box + ' .profile_button').click(function(){
+		var $is = $(this);
+		if($is.hasClass('delete')){
+			$.ajax({
+				//url: 'http://3fan.ru/',
+				dataType: 'html',
+				success: function(){
+					console.log('удаляем e-mail');
+				}
+			});
+		}
+		$is.parent().hide();
+		return false;
+	});
 }
 
 

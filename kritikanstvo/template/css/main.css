@@ -9,6 +9,7 @@ i {font-style: normal;}
 .clearfix {display: block;}
 html[xmlns] .clearfix {display: block;}
 * html .clearfix {height: 1%;}
+input, textarea {outline:none;}
 
 
 

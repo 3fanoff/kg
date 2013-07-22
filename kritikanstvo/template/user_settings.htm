@@ -95,112 +95,110 @@ $(document).ready(function(){
             <div class="tab"><a href="#">Любимое и нелюбимое</a></div>
         </div>
     </div>
-	<div class="content_sections _settings">
-    	<div id="settings_privacy" class="tab">
-        	<div class="_sp30"></div>
-            <div class="ec_settings">
-            	<div class="box-240 ta-r"><span class="label">Электронная почта</span></div>
-                <div class="box-450">
-                	<form name="add_email" action="#" method="get">
-                		<input type="text" name="emaril_setting" class="input_text clearonfocus" data-placeholder-text="mail@example.com" value=""/>
-                    	<input type="submit" value="Добавить" class="profile_button"/>
-                    </form>
-                    <div class="ec_default">konstantin@konstantinopolsky.ru</div>
-                    <div class="rem">
-                    	<a href="javascript:void(0);" class="anchor remove">Удалить адрес</a>
-                        <div class="confirm_box">
-                            <p>Адрес электронной почты, привязанный к вашему профилю, будет удален.</p>
-                            <a class="profile_button _min delete" href="#">Удалить</a>
-                            <a class="profile_button _min abort" href="#">Отмена</a>
-                        </div>
+	<div class="content_sections _settings" id="setting_privacy">
+        <div class="_sp30"></div>
+        <div class="ec_settings">
+            <div class="box-240 ta-r"><span class="label">Электронная почта</span></div>
+            <div class="box-450">
+                <form name="add_email" action="#" method="get">
+                    <input type="text" name="emaril_setting" class="input_text clearonfocus" data-placeholder-text="mail@example.com" value="" maxlength="45"/>
+                    <input type="submit" value="Добавить" class="profile_button"/>
+                </form>
+                <div class="ec_default">konstantin@konstantinopolsky.ru</div>
+                <div class="rem">
+                    <a href="javascript:void(0);" class="anchor remove">Удалить адрес</a>
+                    <div class="confirm_box">
+                        <p>Адрес электронной почты, привязанный к вашему профилю, будет удален.</p>
+                        <a class="profile_button _min delete" href="#">Удалить</a>
+                        <a class="profile_button _min abort" href="#">Отмена</a>
                     </div>
-                    <p class="confirm">Адрес успешно подтвержден.</p>
-                    <p class="err">Адрес уже используется, либо введен неверно. Введите другой адрес.</p>
-                    <p class="help">На указанный адрес будут приходить уведомления о новых личных сообщениях. Также 
-                    он может понадобиться при восстановлении вашей учетной записи.</p>
-                    <p class="help">На указанный адрес было отправлено письмо со ссылкой для подтверждения. <a href="#">Отправить письмо повторно.</a></p>
                 </div>
+                <p class="confirm">Адрес успешно подтвержден.</p>
+                <p class="err">Адрес уже используется, либо введен неверно. Введите другой адрес.</p>
+                <p class="help">На указанный адрес будут приходить уведомления о новых личных сообщениях. Также 
+                он может понадобиться при восстановлении вашей учетной записи.</p>
+                <p class="help">На указанный адрес было отправлено письмо со ссылкой для подтверждения. <a href="#">Отправить письмо повторно.</a></p>
             </div>
-            <div class="clr _sp30 _bb"></div>
-            <div class="privacy_settings">
-            <form name="privacy" action="#" method="get">
-            	<div class="clr _sp30"></div>
-                <div class="box-450"><h2>Приватность</h2></div>
-                <div class="clr"></div>
-            	<div class="box-item head">
-                	<div class="box _p-name"></div>
-                    <div class="box _p-all">Видны всем</div>
-                    <div class="box _p-me">Видны только мне</div>
-                </div>
-                <div class="box-item">
-                	<div class="box _p-name">Мои подписки</div>
-                    <div class="box _p-all def"><input type="radio" value="1" name="p-subs"/></div>
-                    <div class="box _p-me def"><input type="radio" value="2" name="p-subs"/></div>
-                </div>
-                <div class="box-item">
-                    <div class="box _p-name">Мое избранное</div>
-                    <div class="box _p-all def"><input type="radio" value="1" name="p-favs"/></div>
-                    <div class="box _p-me def"><input type="radio" value="2" name="p-favs"/></div>
-                </div>
-                <div class="box-item">
-                    <div class="box _p-name">Мои комментарии</div>
-                    <div class="box _p-all def"><input type="radio" value="1" name="p-comm"/></div>
-                    <div class="box _p-me def"><input type="radio" value="2" name="p-comm"/></div>
-                </div>
-                <div class="box-item">
-                    <div class="box _p-name">Мои оценки фильмов</div>
-                    <div class="box _p-all def"><input type="radio" value="1" name="p-movs"/></div>
-                    <div class="box _p-me def"><input type="radio" value="2" name="p-movs"/></div>
-                </div>
-                <div class="box-item">
-                    <div class="box _p-name">Мои оценки игр</div>
-                    <div class="box _p-all def"><input type="radio" value="1" name="p-gams"/></div>
-                    <div class="box _p-me def"><input type="radio" value="2" name="p-gams"/></div>
-                </div>
-                <div class="box-item">
-                    <div class="box _p-name">Мое оценки критиков</div>
-                    <div class="box _p-all def"><input type="radio" value="1" name="p-crit"/></div>
-                    <div class="box _p-me def"><input type="radio" value="2" name="p-crit"/></div>
-                </div>
+        </div>
+        <div class="clr _sp30 _bb"></div>
+        <div class="privacy_settings">
+        <form name="privacy" action="#" method="get">
+            <div class="clr _sp30"></div>
+            <div class="box-450"><h2>Приватность</h2></div>
+            <div class="clr"></div>
+            <div class="box-item head">
+                <div class="box _p-name"></div>
+                <div class="box _p-all">Видны всем</div>
+                <div class="box _p-me">Видны только мне</div>
+            </div>
+            <div class="box-item">
+                <div class="box _p-name">Мои подписки</div>
+                <div class="box _p-all def"><input type="radio" value="1" name="p-subs"/></div>
+                <div class="box _p-me def"><input type="radio" value="2" name="p-subs"/></div>
+            </div>
+            <div class="box-item">
+                <div class="box _p-name">Мое избранное</div>
+                <div class="box _p-all def"><input type="radio" value="1" name="p-favs"/></div>
+                <div class="box _p-me def"><input type="radio" value="2" name="p-favs"/></div>
+            </div>
+            <div class="box-item">
+                <div class="box _p-name">Мои комментарии</div>
+                <div class="box _p-all def"><input type="radio" value="1" name="p-comm"/></div>
+                <div class="box _p-me def"><input type="radio" value="2" name="p-comm"/></div>
+            </div>
+            <div class="box-item">
+                <div class="box _p-name">Мои оценки фильмов</div>
+                <div class="box _p-all def"><input type="radio" value="1" name="p-movs"/></div>
+                <div class="box _p-me def"><input type="radio" value="2" name="p-movs"/></div>
+            </div>
+            <div class="box-item">
+                <div class="box _p-name">Мои оценки игр</div>
+                <div class="box _p-all def"><input type="radio" value="1" name="p-gams"/></div>
+                <div class="box _p-me def"><input type="radio" value="2" name="p-gams"/></div>
+            </div>
+            <div class="box-item">
+                <div class="box _p-name">Мое оценки критиков</div>
+                <div class="box _p-all def"><input type="radio" value="1" name="p-crit"/></div>
+                <div class="box _p-me def"><input type="radio" value="2" name="p-crit"/></div>
+            </div>
+            <div class="_sp30"></div>
+            <div class="box-240 ta-r"><span class="label">Личные сообщения</span></div>
+            <div class="box-450">
+                <div class="input_check"><input type="checkbox" name="msg-me" id="mgs-me" value="1"></div>
+                <label for="mgs-me"><span class="label _msg">Разрешить другим пользователям отправлять мне сообщения</span></label>
                 <div class="_sp30"></div>
-                <div class="box-240 ta-r"><span class="label">Личные сообщения</span></div>
-                <div class="box-450">
-                    <div class="input_check"><input type="checkbox" name="msg-me" id="mgs-me" value="1"></div>
-                	<label for="mgs-me"><span class="label _msg">Разрешить другим пользователям отправлять мне сообщения</span></label>
-                    <div class="_sp30"></div>
-                    <input type="submit" class="profile_button _important" value="Сохранить" disabled/>
-                    <a href="#" class="howtosee">Как видят мой профиль другие</a>
-                    <div class="clr _sp30"></div>
-                </div>
-            </form>   
+                <input type="submit" class="profile_button _important" value="Сохранить" disabled/>
+                <a href="#" class="howtosee">Как видят мой профиль другие</a>
+                <div class="clr _sp30"></div>
             </div>
-            <div class="clr _sp30 _bt"></div>
-            <div class="ec_settings">
-            	<div class="box-240 ta-r"><span class="label">Профиль критика</span></div>
-                <div class="box-450">
-                	<form name="add_critic" action="#" method="get">
-                		<input type="text" name="critic_bind" class="input_text clearonfocus" data-placeholder-text="Начните вводить ваше имя" value=""/>
-                    	<input type="submit" value="Связать" class="profile_button" disabled/>
-                        <div class="clr"></div>
-                    </form>
-                    <div class="ec_default"><a href="#">Лидия Маслова</a></div>
-                    <div class="rem">
-                    	<a href="javascript:void(0);" class="anchor remove">Разорвать связь</a>
-                        <div class="confirm_box">
-                    		<p>Связь вашего профиля с вашей страницей критика будет разорвана.</p>
-                        	<a class="profile_button _min delete" href="#">Разорвать</a>
-                        	<a class="profile_button _min abort" href="#">Отмена</a>
-                    	</div>
+        </form>   
+        </div>
+        <div class="clr _sp30 _bt"></div>
+        <div class="ec_settings">
+            <div class="box-240 ta-r"><span class="label">Профиль критика</span></div>
+            <div class="box-450">
+                <form name="add_critic" action="#" method="get">
+                    <input type="text" name="critic_bind" class="input_text clearonfocus" data-placeholder-text="Начните вводить ваше имя" value="" maxlength="45"/>
+                    <input type="submit" value="Связать" class="profile_button" disabled/>
+                    <div class="clr"></div>
+                </form>
+                <div class="ec_default"><a href="#">Лидия Маслова</a></div>
+                <div class="rem">
+                    <a href="javascript:void(0);" class="anchor remove">Разорвать связь</a>
+                    <div class="confirm_box">
+                        <p>Связь вашего профиля с вашей страницей критика будет разорвана.</p>
+                        <a class="profile_button _min delete" href="#">Разорвать</a>
+                        <a class="profile_button _min abort" href="#">Отмена</a>
                     </div>
-                    <p class="confirm">Страницы пользователя и критика связаны.</p>
-                    <p class="err">У этого критика уже есть связанная страница пользователя.</p>
-                    <p class="help">Если вы являетесь профессиональным критиком и значитесь в базе «Критиканства»,
+                </div>
+                <p class="confirm">Страницы пользователя и критика связаны.</p>
+                <p class="err">У этого критика уже есть связанная страница пользователя.</p>
+                <p class="help">Если вы являетесь профессиональным критиком и значитесь в базе «Критиканства»,
 вы можете связать свою страницу пользователя со страницей критика. На обеих
 страницах появятся соответствующие ссылки.</p>
-                </div>
             </div>
-            <div class="clr _sp30"></div>
         </div>
+        <div class="clr _sp30"></div>
     </div>
 </div>
 <!-- ============== // CONTENT ============== -->
