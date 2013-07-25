@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html><head><title>Управление подписками</title>
+<html><head><title>Любимое и нелюбимое</title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -17,6 +17,8 @@
 <script type="text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery.qtip.min.js"></script>
 <script type="text/javascript" src="js/charCount.js"></script>
+<script type="text/javascript" src="js/selectbox.js"></script>
+<script type="text/javascript" src="profile_select.js"></script>
 <script type="text/javascript" src="profile_js.js"></script>
 <script type="text/javascript" src="js/main_form.js"></script>
 <!--script type="text/javascript" src="js/jquery.color.js"></script>
@@ -79,7 +81,11 @@ $(document).ready(function(){
 </div>
 <!-- ============== // TOP ============== -->
 
-
+<div class="confirm_box _lh">
+    <p>Подтвердите удаление записи</p>
+    <a class="profile_button _min delete" href="#">Удалить</a>
+    <a class="profile_button _min abort" href="#">Отмена</a>
+</div>
 
 <!-- ============== CONTENT ============== -->
 <div class="content clearfix">
@@ -95,125 +101,84 @@ $(document).ready(function(){
             <div class="tab"><a href="#">Любимое и нелюбимое</a></div>
         </div>
     </div>
-	<div class="content_sections _settings" id="setting_subscriptions">
-    	<form action="#" method="post">
-        <div class="box-450 sub_help">
-            <p>Снимите отметки с подписок, которые вы хотите удалить, и нажмите<br />кнопку сохранения.</p>
-            <input type="submit" class="profile_button _important" value="Сохранить" disabled />
-            <span class="sel">Использовано 17 из 100</span>
-        </div>
-        <div class="clr _sp30"></div>
-        <div class="box-check-set">
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="zoneofgames" value="1" checked></div>
-                <a href="#" target="_blank">Zone of Games</a>
+	<div class="content_sections _settings _lovehate" id="setting_lovehate">
+    	<div class="type _love">
+            <div class="chapter">
+                <div class="box-240"><span class="title_box">Я люблю</span></div>
             </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="kinoperedovaya" value="1" checked></div>
-                <a href="#" target="_blank">Кинопередовая</a>
+            <div class="box-item">
+            	<div class="box-240"><span class="title_box">Фильмы</span></div>
+                <div class="box-450 items">
+                    <div class="lh-name"><i>&nbsp;</i><a href="#" target="_blank">Призраки в Коннектикуте - Часть 2: Тени мегасуперзлоебучего прошлого</a></div>
+                    <div class="lh-add _inp"><i>&nbsp;</i><span>Добавить</span></div>
+                    <div class="holder" style="display:none;">
+                    	<input type="text" name="add_movie" class="input_text" placeholder="Начните вводить название">
+                    </div>
+                </div>
+			</div>
+            <div class="box-item">
+                <div class="box-240"><span class="title_box">Киножанры</span></div>
+                <div class="box-450 items">
+                    	<div class="lh-name"><i>&nbsp;</i><a href="#" target="_blank">боевик</a></div>
+                        <div class="lh-add _sel"><i>&nbsp;</i><span>Добавить</span></div>
+                        <div class="holder" style="display:none;">
+                            <select class="genre" name="add_genre">
+                                    <option>Выберите жанр</option>
+                                    <option value="01">комедия</option> 
+                                    <option value="02">триллер</option>
+                                    <option value="03">мелодрама</option>
+                                    <option value="04" selected>боевик</option>
+                                    <option value="05">криминал</option>
+                                    <option value="06">приключения</option>
+                                    <option value="07">ужасы</option>
+                                    <option value="08">фэнтези</option>
+                                    <option value="09">фантастика</option>
+                                    <option value="10">аниме</option>
+                            </select>
+                        </div>
+                </div>
             </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="petrsalnikov" value="1" checked></div>
-                <a href="#" target="_blank">Петр Сальников</a>
+            <div class="box-item">
+                <div class="box-240"><span class="title_box">Игры</span></div>
+                <div class="box-450 items">
+                    	<div class="lh-name">
+                        	<i>&nbsp;</i><a href="#" target="_blank">Metal Gear Solid 4: Guns of the Patriots</a>
+                        </div>
+                        <div class="lh-add _inp"><i>&nbsp;</i><span>Добавить</span></div>
+                        <div class="holder" style="display:none;">
+                    		<input type="text" name="add_game" class="input_text" placeholder="Начните вводить название">
+                    	</div>
+                </div>
             </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="stopgame" value="1" checked></div>
-                <a href="#" target="_blank">StopGame</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="stranaigr" value="1" checked></div>
-                <a href="#" target="_blank">Страна Игр</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="kinogovno" value="1" checked></div>
-                <a href="#" target="_blank">Кино-Говно.ком</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="galenkin" value="1" checked></div>
-                <a href="#" target="_blank">Сергей Галёнкин</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="gameexe" value="1" checked></div>
-                <a href="#" target="_blank">Game.EXE</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="artemkomoliyatov" value="1" checked></div>
-                <a href="#" target="_blank">Артем Комолятов</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="igromania" value="1" checked></div>
-                <a href="#" target="_blank">Игромания</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="bestcomutergames" value="1" checked></div>
-                <a href="#" target="_blank">Лучшие компьютерные игры</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="meganazvanie" value="1" checked></div>
-                <a href="#" target="_blank">Нереально длинное супермеганаз</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="kolomiets" value="1" checked></div>
-                <a href="#" target="_blank">Александра Коломиец</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="varnavskiy" value="1" checked></div>
-                <a href="#" target="_blank">Игорь Варнавский</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="viktorzuev" value="1" checked></div>
-                <a href="#" target="_blank">Виктор Зуев</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="antsiferova" value="1" checked></div>
-                <a href="#" target="_blank">Ольга Анциферова</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="gamemagru" value="1" checked></div>
-                <a href="#" target="_blank">GameMag.ru</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="riotpixels" value="1" checked></div>
-                <a href="#" target="_blank">Riot Pixels</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="alexandrakost" value="1" checked></div>
-                <a href="#" target="_blank">Александра Кост</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="loginov" value="1" checked></div>
-                <a href="#" target="_blank">Александр Логинов</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="pimenovsergey" value="1" checked></div>
-                <a href="#" target="_blank">Сергей Пименов</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="playground" value="1" checked></div>
-                <a href="#" target="_blank">Playground</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="gamesmailru" value="1" checked></div>
-                <a href="#" target="_blank">Игры@mail.ru</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="goriachev" value="1" checked></div>
-                <a href="#" target="_blank">Владимир Горячев</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="puchkov" value="1" checked></div>
-                <a href="#" target="_blank">Дмитрий Пучков</a>
-            </div>
-            <div class="box-check">
-                <div class="input_check"><input type="checkbox" name="iskusstvokino" value="1" checked></div>
-                <a href="#" target="_blank">Искусство кино</a>
+            <div class="box-item">
+                <div class="box-240"><span class="title_box">Игровые платформы</span></div>
+                <div class="box-450 items">
+                        <div class="lh-add _sel"><i>&nbsp;</i><span>Добавить</span></div>
+                        <div class="holder" style="display:none;">
+                            <select class="platform" name="add_platform">
+                                <option>Выберите платформу</option>
+                                <option value="01">PC</option> 
+                                <option value="02">Xbox 360</option>
+                                <option value="03">PlayStation 3</option>
+                                <option value="04">PlayStation 2</option>
+                                <option value="05">Mac</option>
+                                <option value="06">Xbox</option>
+                                <option value="07">iOS</option>
+                                <option value="08">ZX Spectrum</option>
+                                <option value="09">PlayStation</option>
+                                <option value="10">Wii</option>
+                                <option value="11">PSP</option>
+                                <option value="12">PS Vita</option>
+                            </select>
+                        </div>
+                </div>
             </div>
         </div>
-        <div class="clr _sp20"></div>
-        <div class="box-450 sub_help">
-            <input type="submit" class="profile_button _important" value="Сохранить" disabled />
+        <div class="type _hate">
+            <div class="chapter">
+                <div class="box-240"><span class="title_box">Я не люблю</span></div>
+            </div>
         </div>
-        </form>
         <!-- IF EMPTY --//
         <div class="box-450">
             <div class="head subs">

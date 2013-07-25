@@ -90,6 +90,96 @@ $(function(){
 	replaceRadio();
 	replaceCheck();
 	
+	var testWords = ['Англия','Австралия','Австрия','Аргентина','Болгария','Бутан','Белоруссия','Вьетнам','Венесуэла','Ватикан','Гондурас'];
+	
+	$('._lovehate input[type="text"]').autocomplete({
+		source: testWords,
+		select: function(e, ui){
+			var valu = ui.item.value,
+				name = ui.item.label,
+				inpt = $(this),
+				box = inpt.parent();
+			$.ajax({
+				dataType: 'html',
+				beforeSend: savingBefore(inpt, box, name),
+				data: {'name': name, 'value': valu},
+				success: savingSuccess(box)
+			}); 
+		}
+	});
+	
+	$('._lovehate select').customSel({
+		onSelect: function(){
+			if ($(this).hasClass('act')){
+				$(this).parents('.box-item').css('z-index', 2000).siblings().css('z-index', 100);
+			}
+		},
+		onOption: function(){
+			var $is = $(this),
+				name = $is.text(),
+				valu = $is.attr('value'),
+				slct = $is.parents('.select_block'),
+				box = slct.parent();
+			$.ajax({
+				dataType: 'html',
+				beforeSend: savingBefore(slct, box, name),
+				data: {'name': name, 'value': valu},
+				success: savingSuccess(box)
+			}); 
+		}
+	});
+	
+	/* Добавления в список Селекта или Инпута */
+	$(document).on('click','.lh-add > i' , function(){
+		var $parent = $(this).parent(),
+			$contxt = $(this).parents('.items');
+		if ($parent.hasClass('_inp')){
+			var $inp = $('input', $contxt);
+			// добавляем элемент списка
+			$parent.hide().before('<div class="lh-inp _inp"><i /></div>');
+			$inp.val('');// очищаем инпут
+			//добавляем инпут в элемент списка и ставим события ввода
+			$inp.appendTo($parent.prev())
+			.after('<span class="err _msg">Вариант не выбран</span>')
+			.focus(function(){
+				$(this).removeClass('err');
+			})
+			.blur(function() {
+				$(this).addClass('err');
+			})
+			.focus();
+		}
+		if ($parent.hasClass('_sel')){
+			var $sel = $('.select_block', $contxt);
+			//удаляем уже выбранную опцию
+			$('option[selected]', $sel).remove();
+			//собираем селект
+			$('select', $sel).customSel('build');
+			//добавляем элемент списка
+			$parent.hide().before('<div class="lh-inp _sel"><i /></div>');
+			//добавляем селект в элемент списка
+			$sel.appendTo($parent.prev());
+		}
+		
+	});
+	/* Отмена добавления в список */
+	$(document).on('click','.lh-inp > i' , function(){
+		var $fld = $(this).next();
+		$fld.appendTo($(this).parent().nextAll('.holder'));
+		$(this).parent().next().show().prev().remove();
+	});
+	
+	$('.lh-name > i').data('opend', 0);
+	$('.lh-name > i').click(function(e){
+		if($(this).data().opend == 0){
+			$(this).data().opend = 1;
+			$('.confirm_box').css({'left': $(this).offset().left+21, 'top': $(this).offset().top+21, 'z-index': 9000}).show();
+		} else if($(this).data().opend == 1){
+			$('.confirm_box').hide();
+			$(this).data().opend = 0;
+		}
+	});
+	
 });
 //табы секций
 function sectTab(){
@@ -239,7 +329,7 @@ function confirmBox(){
 	$('body').click(function(){
 		$(c_box, ec_s).hide();
 	});
-	$(c_box + ' .profile_button').click(function(){
+	$(c_box + ' .profile_button', ec_s).click(function(){
 		var $is = $(this);
 		if($is.hasClass('delete')){
 			$.ajax({
@@ -255,4 +345,33 @@ function confirmBox(){
 	});
 }
 
-
+function boxIndex (_ind){
+	var zi = 1000;
+	$('._lovehate .box-item').each(function(){
+		$(this).css('zIndex', zi);
+		switch (_ind){
+			case 'plus':
+			zi++
+			break
+			case 'minus':
+			zi--
+			break
+		}	
+	});
+}
+function savingBefore( _inp, _box, _name){
+	_inp.appendTo(_inp.parent().nextAll('.holder'));
+	_box.before('<div class="lh-name"><span class="save" /><a href="javascript:void(0);" target="_blank">' + _name + '</a></div>').hide();
+}
+function savingSuccess( _box ){
+	var href = '#data_link';// полученная с сервера ссылка
+	setTimeout(function(){ //temp
+		_box.prev().children('a').attr('href', href).prev('.save').replaceWith('<i />');
+		if($('.lh-name', _box.parent()).length < 3){
+			_box.next().show();
+		} else {
+			_box.next().remove();
+		}
+		_box.remove();
+	}, 1000);
+}

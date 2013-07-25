@@ -1175,16 +1175,16 @@ div.button_years_down, div.years_block_down {cursor: default; display: inline-bl
 .years .selectbox .select .text:hover, .years .selectbox .select .text:active {border-bottom: 1px dotted #69e1ff;}
 .years .selectbox .trigger .arrow {position: absolute; top: 48%; right: -10px; width: 0; height: 0; overflow: hidden; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid #b6edff;}
 
-.years .selectbox ul.dropdown, .range .selectbox ul.dropdown, .filterset .selectbox ul.dropdown {padding: 4px 0 4px 0; margin: 0; font: normal 14px Arial; text-align: left; border: 1px solid #c6cbd0; background: #ffffff; box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.20); -moz-box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.20); -webkit-box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.20);}
+.years .selectbox ul.dropdown, .range .selectbox ul.dropdown, .filterset .selectbox ul.dropdown, ._lovehate .selectbox ul.dropdown {padding: 4px 0 4px 0; margin: 0; font: normal 14px Arial; text-align: left; border: 1px solid #c6cbd0; background: #ffffff; box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.20); -moz-box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.20); -webkit-box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.20);}
 .years .selectbox ul.dropdown, .range .selectbox ul.dropdown {left: -4px; width: 80px;}
-.filterset .selectbox ul.dropdown {left: -60px; width: 220px; word-wrap: normal;}
+.filterset .selectbox ul.dropdown, ._lovehate .selectbox ul.dropdown {left: -60px; width: 220px; word-wrap: normal;}
 .years .selectbox ul.dropdown {top: 32px;}
 .range .selectbox ul.dropdown {top: 26px;}
-.filterset .selectbox ul.dropdown {top: 20px;}
-.range .selectbox li, .years .selectbox li, .filterset .selectbox li {padding: 3px 10px 4px 5px; color: #231F20;}
-.range .selectbox li:hover, .range .selectbox li.selected, .years .selectbox li:hover, .years .selectbox li.selected, .filterset .selectbox li:hover, .filterset .selectbox li.selected {background: #4dbade; color: #ffffff;}
-.range .selectbox li.disabled, .years .selectbox li.disabled, .filterset .selectbox li.disabled {color: #aaaaaa;}
-.range .selectbox li.disabled:hover, .years .selectbox li.disabled:hover, .filterset .selectbox li.disabled:hover {background: none;}
+.filterset .selectbox ul.dropdown, ._lovehate .selectbox ul.dropdown {top: 20px;}
+.range .selectbox li, .years .selectbox li, .filterset .selectbox li, ._lovehate .selectbox li {padding: 3px 10px 4px 5px; color: #231F20;}
+.range .selectbox li:hover, .range .selectbox li.selected, .years .selectbox li:hover, .years .selectbox li.selected, .filterset .selectbox li:hover, .filterset .selectbox li.selected, ._lovehate .selectbox li:hover, ._lovehate .selectbox li.selected {background: #4dbade; color: #ffffff;}
+.range .selectbox li.disabled, .years .selectbox li.disabled, .filterset .selectbox li.disabled, ._lovehate .selectbox li.disabled {color: #aaaaaa;}
+.range .selectbox li.disabled:hover, .years .selectbox li.disabled:hover, .filterset .selectbox li.disabled:hover, ._lovehate .selectbox li.disabled:hover {background: none;}
 
 .navigator_submit {float: left;}
 .navigator_submit input, .filters_submit input, .filters_reset input {display: inline-block; vertical-align: middle; height: 24px; padding: 2px 12px 0 10px; margin: -2px 0 0 5px; font-size: 12px; line-height: 12px; color: #484643; text-shadow: 0 1px 1px #fffdf2; text-decoration: none; cursor: pointer; outline: none; -webkit-appearance: none; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; border-bottom: 1px solid #bb8527; background-color: #f0de78; background: #f0de78; background: -moz-linear-gradient(top,  #fff7a3 0%, #e2c44e 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fff7a3), color-stop(100%,#e2c44e)); background: -webkit-linear-gradient(top,  #fff7a3 0%,#e2c44e 100%); background: -o-linear-gradient(top,  #fff7a3 0%,#e2c44e 100%); background: -ms-linear-gradient(top,  #fff7a3 0%,#e2c44e 100%); background: linear-gradient(to bottom,  #fff7a3 0%,#e2c44e 100%); box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.30); -moz-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.30); -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.30);}
