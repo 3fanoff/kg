@@ -858,7 +858,7 @@ input.profile_button {line-height:normal;}
 	margin:10px 7px 0;
 	position:relative;
 }
-.confirm_box._lh {width:210px;}
+.confirm_box._lh {width:210px; z-index:7000;}
 .err {color:#D30000 !important;}
 .confirm {color:#00a900 !important;}
 .input_text {
@@ -1008,7 +1008,7 @@ input.profile_button {line-height:normal;}
 ._settings .head.subs p {
     font-size:12px;
     line-height:16px;
-    padding:10px 0 0 0;
+    padding-top:10px;
 }
 ._settings .head.subs h2 {
 	font-size:24px;
@@ -1016,6 +1016,14 @@ input.profile_button {line-height:normal;}
     line-height:30px;
 }
 /* LOVEHATE setings*/
+._lovehate .head.subs {
+	padding:20px 0 30px;
+	width:auto;
+}
+._lovehate .head.subs p.min {
+	font-size:11px;
+	line-height:15px;
+}
 ._lovehate .box-240 {text-align:right;}
 ._lovehate .chapter {
 	height:40px;
@@ -1055,6 +1063,9 @@ input.profile_button {line-height:normal;}
 	position:relative;
 	_z-index:1;
 }
+._lovehate .type {padding-bottom:15px;}
+._lovehate .type._love .box-item:last-child,
+._lovehate .type._hate .box-item:last-child {background:none;}
 ._lovehate .box-item:after {
 	content:"";
 	clear:both;
@@ -1115,6 +1126,8 @@ input.profile_button {line-height:normal;}
 	position:absolute;
 	left:0;
 	top:4px;
+	overflow:hidden;
+	text-indent:100%;
 	width:16px;
 }
 ._lovehate .items > div > i:hover {background-position:-16px -28px;}

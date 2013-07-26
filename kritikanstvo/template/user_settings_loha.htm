@@ -83,8 +83,8 @@ $(document).ready(function(){
 
 <div class="confirm_box _lh">
     <p>Подтвердите удаление записи</p>
-    <a class="profile_button _min delete" href="#">Удалить</a>
-    <a class="profile_button _min abort" href="#">Отмена</a>
+    <a class="profile_button _min delete" href="#" onClick="delItem(this); return false;">Удалить</a>
+    <a class="profile_button _min abort" href="#" onClick="abortDel(this); return false;">Отмена</a>
 </div>
 
 <!-- ============== CONTENT ============== -->
@@ -102,6 +102,15 @@ $(document).ready(function(){
         </div>
     </div>
 	<div class="content_sections _settings _lovehate" id="setting_lovehate">
+        <div class="box-450">
+            <div class="head subs">
+                <p>Расскажите всем о своих предпочтениях. О фильмах, которые вы любите больше всего. Об играх, которые ненавидите. 
+                О критиках, мнению которых вы доверяете. Или об изданиях, которые терпеть не можете.</p>
+                <p class="min">Предпочтения помогут вам найти друзей по интересам, а мы сможем давать вам более точные рекомендации. Поэтому лучше обойтись 
+                без полутонов: перечислите только <em>самое</em> любимое и нелюбимое. По три в каждом разделе.</p>
+            </div>
+        </div>
+        <div class="clr"></div>
     	<div class="type _love">
             <div class="chapter">
                 <div class="box-240"><span class="title_box">Я люблю</span></div>
@@ -173,23 +182,137 @@ $(document).ready(function(){
                         </div>
                 </div>
             </div>
+            <div class="box-item">
+                <div class="box-240"><span class="title_box">Игровые жанры</span></div>
+                <div class="box-450 items">
+                        <div class="lh-add _sel"><i>&nbsp;</i><span>Добавить</span></div>
+                        <div class="holder" style="display:none;">
+                            <select class="game_genre" name="add_game_genre">
+                                <option>Выберите жанр</option>
+                                <option value="01">Action</option> 
+                                <option value="02">Strategy</option>
+                                <option value="03">Shooter</option>
+                                <option value="04">Adventure</option>
+                                <option value="05">Role-Playing</option>
+                                <option value="06">Driving</option>
+                                <option value="07">Action Adventure</option>
+                                <option value="08">Sports</option>
+                                <option value="09">Simulation</option>
+                                <option value="10">Fighting</option>
+                            </select>
+                        </div>
+                </div>
+            </div>
+            <div class="box-item">
+                <div class="box-240"><span class="title_box">Критики и издания</span></div>
+                <div class="box-450 items">
+                        <div class="lh-add _inp"><i>&nbsp;</i><span>Добавить</span></div>
+                        <div class="holder" style="display:none;">
+                    		<input type="text" name="add_critics" class="input_text" placeholder="Начните вводить название">
+                    	</div>
+                </div>
+            </div>
         </div>
         <div class="type _hate">
             <div class="chapter">
                 <div class="box-240"><span class="title_box">Я не люблю</span></div>
             </div>
-        </div>
-        <!-- IF EMPTY --//
-        <div class="box-450">
-            <div class="head subs">
-                <h2>Подписок пока нет</h2>
-                <p>Вы можете отслеживать активность интересных вам <span class="t-icon _t-critic-a">изданий</span> или <span class="t-icon _t-critic-a">критиков</span>: 
-                что и как они оценивают в своих новых рецензиях.</p>
-                <p>Также вы можете наблюдать за оценками других <span class="t-icon _t-user">посетителей</span> «Критиканства» 
-                (если они не отключили такую возможность).</p>
+            <div class="box-item">
+            	<div class="box-240"><span class="title_box">Фильмы</span></div>
+                <div class="box-450 items">
+                    <div class="lh-name"><i>&nbsp;</i><a href="#" target="_blank">Терминатор 3</a></div>
+                    <div class="lh-name"><i>&nbsp;</i><a href="#" target="_blank">Крепкий орешек: Хороший день, чтобы умереть</a></div>
+                    <div class="lh-name"><i>&nbsp;</i><a href="#" target="_blank">Мерзлая земля</a></div>
+                    <div class="lh-add _inp"><i>&nbsp;</i><span>Добавить</span></div>
+                    <div class="holder" style="display:none;">
+                    	<input type="text" name="add_movie_hate" class="input_text" placeholder="Начните вводить название">
+                    </div>
+                </div>
+			</div>
+            <div class="box-item">
+                <div class="box-240"><span class="title_box">Киножанры</span></div>
+                <div class="box-450 items">
+                        <div class="lh-add _sel"><i>&nbsp;</i><span>Добавить</span></div>
+                        <div class="holder" style="display:none;">
+                            <select class="genre" name="add_genre_hate">
+                                    <option>Выберите жанр</option>
+                                    <option value="01">комедия</option> 
+                                    <option value="02">триллер</option>
+                                    <option value="03">мелодрама</option>
+                                    <option value="04" selected>боевик</option>
+                                    <option value="05">криминал</option>
+                                    <option value="06">приключения</option>
+                                    <option value="07">ужасы</option>
+                                    <option value="08">фэнтези</option>
+                                    <option value="09">фантастика</option>
+                                    <option value="10">аниме</option>
+                            </select>
+                        </div>
+                </div>
+            </div>
+            <div class="box-item">
+                <div class="box-240"><span class="title_box">Игры</span></div>
+                <div class="box-450 items">
+                        <div class="lh-add _inp"><i>&nbsp;</i><span>Добавить</span></div>
+                        <div class="holder" style="display:none;">
+                    		<input type="text" name="add_game_hate" class="input_text" placeholder="Начните вводить название">
+                    	</div>
+                </div>
+            </div>
+            <div class="box-item">
+                <div class="box-240"><span class="title_box">Игровые платформы</span></div>
+                <div class="box-450 items">
+                        <div class="lh-add _sel"><i>&nbsp;</i><span>Добавить</span></div>
+                        <div class="holder" style="display:none;">
+                            <select class="platform" name="add_platform_hate">
+                                <option>Выберите платформу</option>
+                                <option value="01">PC</option> 
+                                <option value="02">Xbox 360</option>
+                                <option value="03">PlayStation 3</option>
+                                <option value="04">PlayStation 2</option>
+                                <option value="05">Mac</option>
+                                <option value="06">Xbox</option>
+                                <option value="07">iOS</option>
+                                <option value="08">ZX Spectrum</option>
+                                <option value="09">PlayStation</option>
+                                <option value="10">Wii</option>
+                                <option value="11">PSP</option>
+                                <option value="12">PS Vita</option>
+                            </select>
+                        </div>
+                </div>
+            </div>
+            <div class="box-item">
+                <div class="box-240"><span class="title_box">Игровые жанры</span></div>
+                <div class="box-450 items">
+                        <div class="lh-add _sel"><i>&nbsp;</i><span>Добавить</span></div>
+                        <div class="holder" style="display:none;">
+                            <select class="game_genre" name="add_game_genre_hate">
+                                <option>Выберите жанр</option>
+                                <option value="01">Action</option> 
+                                <option value="02">Strategy</option>
+                                <option value="03">Shooter</option>
+                                <option value="04">Adventure</option>
+                                <option value="05">Role-Playing</option>
+                                <option value="06">Driving</option>
+                                <option value="07">Action Adventure</option>
+                                <option value="08">Sports</option>
+                                <option value="09">Simulation</option>
+                                <option value="10">Fighting</option>
+                            </select>
+                        </div>
+                </div>
+            </div>
+            <div class="box-item">
+                <div class="box-240"><span class="title_box">Критики и издания</span></div>
+                <div class="box-450 items">
+                        <div class="lh-add _inp"><i>&nbsp;</i><span>Добавить</span></div>
+                        <div class="holder" style="display:none;">
+                    		<input type="text" name="add_critics_hate" class="input_text" placeholder="Начните вводить название">
+                    	</div>
+                </div>
             </div>
         </div>
-        // -->
     </div>
 </div>
 <!-- ============== // CONTENT ============== -->

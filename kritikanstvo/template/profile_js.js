@@ -90,9 +90,15 @@ $(function(){
 	replaceRadio();
 	replaceCheck();
 	
+	/********
+		Любимое и нелюбимое
+	********/
+	// тестовые слова для автозап.
 	var testWords = ['Англия','Австралия','Австрия','Аргентина','Болгария','Бутан','Белоруссия','Вьетнам','Венесуэла','Ватикан','Гондурас'];
 	
+	// тестовое автозаполнение для инпута
 	$('._lovehate input[type="text"]').autocomplete({
+		open: boxIndex,
 		source: testWords,
 		select: function(e, ui){
 			var valu = ui.item.value,
@@ -107,13 +113,9 @@ $(function(){
 			}); 
 		}
 	});
-	
+	/* Запуск кастомизации селекта profile_select.js */
 	$('._lovehate select').customSel({
-		onSelect: function(){
-			if ($(this).hasClass('act')){
-				$(this).parents('.box-item').css('z-index', 2000).siblings().css('z-index', 100);
-			}
-		},
+		onSelect: boxIndex,
 		onOption: function(){
 			var $is = $(this),
 				name = $is.text(),
@@ -129,58 +131,35 @@ $(function(){
 		}
 	});
 	
+	/* Активация кнопки добавления пункта */
+	$('.box-item .items').each(function(){
+		if ($('.lh-name', this).length >= 3){
+			$('.lh-add', this).hide().children('i').data('clicked', 0);
+		} else {
+			$('.lh-add', this).children('i').data('clicked', 1);
+		}
+	});
 	/* Добавления в список Селекта или Инпута */
-	$(document).on('click','.lh-add > i' , function(){
-		var $parent = $(this).parent(),
-			$contxt = $(this).parents('.items');
-		if ($parent.hasClass('_inp')){
-			var $inp = $('input', $contxt);
-			// добавляем элемент списка
-			$parent.hide().before('<div class="lh-inp _inp"><i /></div>');
-			$inp.val('');// очищаем инпут
-			//добавляем инпут в элемент списка и ставим события ввода
-			$inp.appendTo($parent.prev())
-			.after('<span class="err _msg">Вариант не выбран</span>')
-			.focus(function(){
-				$(this).removeClass('err');
-			})
-			.blur(function() {
-				$(this).addClass('err');
-			})
-			.focus();
+	$('.lh-add > i').bind('click.addstart', function(){
+		if ($(this).data('clicked') == 1){
+			addItem(this);
 		}
-		if ($parent.hasClass('_sel')){
-			var $sel = $('.select_block', $contxt);
-			//удаляем уже выбранную опцию
-			$('option[selected]', $sel).remove();
-			//собираем селект
-			$('select', $sel).customSel('build');
-			//добавляем элемент списка
-			$parent.hide().before('<div class="lh-inp _sel"><i /></div>');
-			//добавляем селект в элемент списка
-			$sel.appendTo($parent.prev());
-		}
-		
 	});
 	/* Отмена добавления в список */
-	$(document).on('click','.lh-inp > i' , function(){
+	$(document).on('click.addremove','.lh-inp > i' , function(){
 		var $fld = $(this).next();
 		$fld.appendTo($(this).parent().nextAll('.holder'));
 		$(this).parent().next().show().prev().remove();
 	});
 	
-	$('.lh-name > i').data('opend', 0);
-	$('.lh-name > i').click(function(e){
-		if($(this).data().opend == 0){
-			$(this).data().opend = 1;
-			$('.confirm_box').css({'left': $(this).offset().left+21, 'top': $(this).offset().top+21, 'z-index': 9000}).show();
-		} else if($(this).data().opend == 1){
-			$('.confirm_box').hide();
-			$(this).data().opend = 0;
-		}
+	$(document).on('addbox','.lh-name > i', function(){
+		$('.lh-name > i').data('opend', 0);
 	});
-	
+	$('.lh-name > i').trigger('addbox');
+	/* Попап подтверждения удаления пункта */
+	$(document).on('click.delete','.lh-name > i', confirmBoxDel);
 });
+
 //табы секций
 function sectTab(){
 	$is = $(this);
@@ -345,33 +324,90 @@ function confirmBox(){
 	});
 }
 
-function boxIndex (_ind){
-	var zi = 1000;
-	$('._lovehate .box-item').each(function(){
-		$(this).css('zIndex', zi);
-		switch (_ind){
-			case 'plus':
-			zi++
-			break
-			case 'minus':
-			zi--
-			break
-		}	
-	});
-}
+
+/* Процесс сохранения пункта */
 function savingBefore( _inp, _box, _name){
 	_inp.appendTo(_inp.parent().nextAll('.holder'));
 	_box.before('<div class="lh-name"><span class="save" /><a href="javascript:void(0);" target="_blank">' + _name + '</a></div>').hide();
 }
+/* Сохранение пункта */
 function savingSuccess( _box ){
 	var href = '#data_link';// полученная с сервера ссылка
 	setTimeout(function(){ //temp
 		_box.prev().children('a').attr('href', href).prev('.save').replaceWith('<i />');
+		_box.prev().children('i').trigger('addbox');
 		if($('.lh-name', _box.parent()).length < 3){
-			_box.next().show();
+			_box.next().show().children('i').data('clicked', 1)
 		} else {
-			_box.next().remove();
+			_box.next().children('i').data('clicked', 0);
 		}
 		_box.remove();
-	}, 1000);
+	}, 1100);
 }
+/* Позиционирование .box-item */
+function boxIndex(){
+	$(this).parents('.box-item').css('z-index', 2000).siblings().css('z-index', 100);
+}
+/* Удаление пункта */
+function delItem( _i ){
+	var $obj = $( _i ).data('ob');
+		abortDel( _i );
+	if($obj.parents('.items').children('.lh-inp').length == 0){
+		$obj.parents('.items').find('.lh-add').show().children('i').data('clicked', 1);
+	}
+	$obj.parent().remove();
+}
+/* Отмена удаления пункта */
+function abortDel( _i ){
+		$i = $( _i ).data('ob');
+		$('.confirm_box._lh').hide();
+		$i.data().opend = 0;
+}
+/* Попап подтверждения удаления пункта */
+function confirmBoxDel(){
+	var $i = $(this),
+		$i_left = $i.offset().left + 21,
+		$i_top = $i.offset().top + 21,
+		$conbox = $('.confirm_box._lh');
+		
+	$conbox.find('a').data('ob', $i);
+	if($i.data().opend == 0){
+		$('.lh-name > i').trigger('addbox');
+		$i.data().opend = 1;
+		$conbox.css({'left': $i_left , 'top': $i_top}).show();
+	} else {
+		$('.lh-name > i').trigger('addbox');
+		$i.data().opend = 0;
+		$conbox.hide();
+	}
+}
+/* Добавление пункта в список */
+function addItem( _is ){
+	var $parent = $(_is).parent(),
+		$contxt = $(_is).parents('.items');
+	if ($parent.hasClass('_inp')){
+		var $inp = $('input', $contxt);
+		
+		$parent.hide().before('<div class="lh-inp _inp"><i /></div>');// добавляем элемент списка
+		$inp.val('');// очищаем инпут
+		$inp.appendTo($parent.prev())// добавляем инпут в элемент списка и ставим события ввода
+		.after('<span class="err _msg">Вариант не выбран</span>')
+		.focus(function(){
+			$(this).removeClass('err');
+		})
+		.blur(function() {
+			$(this).addClass('err');
+		})
+		.focus();
+	}
+	if ($parent.hasClass('_sel')){
+		var $sel = $('.select_block', $contxt);
+		
+		$('option[selected]', $sel).remove();// удаляем уже выбранную опцию
+		$('select', $sel).customSel('build');// заново собираем селект
+		
+		$parent.hide().before('<div class="lh-inp _sel"><i /></div>');// добавляем элемент списка
+		$sel.appendTo($parent.prev());// добавляем селект в элемент списка
+	}
+}
+
