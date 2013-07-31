@@ -366,7 +366,7 @@ function abortDel( _i ){
 /* Попап подтверждения удаления пункта */
 function confirmBoxDel(){
 	var $i = $(this),
-		$i_left = $i.offset().left + 21,
+		$i_left = $i.offset().left + 19,
 		$i_top = $i.offset().top + 21,
 		$conbox = $('.confirm_box._lh');
 		

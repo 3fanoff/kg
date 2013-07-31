@@ -1071,7 +1071,7 @@ input.profile_button {line-height:normal;}
 	clear:both;
 	display:block;
 }
-._lovehate .type._love .box-item .title_box {line-height:25px;}
+._lovehate .type .box-item .title_box {line-height:25px;}
 ._lovehate .type._love .box-item .title_box:after {background-position:-16px -14px;}
 ._lovehate .type._hate .box-item .title_box:after {background-position:-16px 0;}
 
